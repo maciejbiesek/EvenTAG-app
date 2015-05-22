@@ -9,4 +9,5 @@
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
     <color name="windowBackground">#DDD</color>
+    <color name="button">#5A5A5A</color>
 </resources>

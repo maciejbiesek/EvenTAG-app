@@ -5,43 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_tag_list">TagListActivity</string>
 
-    <string name="tag_name1">#pubquiz</string>
-    <string name="tag_name2">#bilard</string>
-    <string name="tag_name3">#karaoke</string>
-    <string name="tag_name4">#spacer</string>
-    
-    <string name="tag_description1">Grawitacja Pub, Zamkowa 5</string>
-    <string name="tag_description2">Pub Hades, niezła impra</string>
-    <string name="tag_description3">Karałoki w Tafli, wbijać ludzie!</string>
-    <string name="tag_description4">Park Chopina, kto dołączy?</string>
-    
-    <string name="tag_owner1">Maciej Biesek</string>
-    <string name="tag_owner2">Piotr Kostecki</string>
-    <string name="tag_owner3">Tosia Krawczyk</string>
-    <string name="tag_owner4">Jan Kowalski</string>
-
-    <string name="tag_localisation1">52.409295, 16.932099</string>
-    <string name="tag_localisation2">52.408150, 16.918482</string>
-    <string name="tag_localisation3">52.406598, 16.933136</string>
-    <string name="tag_localisation4">52.405089, 16.935120</string>
-
-    <string name="tag_audience">public</string>
-
-    <string name="tag_date1">24.04.2015 20:36:06</string>
-    <string name="tag_date2">23.04.2015 18:31:08</string>
-    <string name="tag_date3">26.04.2015 21:37:54</string>
-    <string name="tag_date4">24.04.2015 15:06:24</string>
-
-    <string name="tag_duration1">1800</string>
-    <string name="tag_duration2">7200</string>
-    <string name="tag_duration3">1800</string>
-    <string name="tag_duration4">2700</string>
-
     <string name="description"><u>Opis</u></string>
-    <string name="owner"><u>Kto?</u></string>
-    <string name="audience"><u>Do kogo?</u></string>
     <string name="localisation"><u>Lokalizacja</u></string>
-    <string name="date"><u>Data</u></string>
-    <string name="duration"><u>Czas trwania</u></string>
+    <string name="shutdown"><u>Data wygaśnięcia</u></string>
 
 </resources>
