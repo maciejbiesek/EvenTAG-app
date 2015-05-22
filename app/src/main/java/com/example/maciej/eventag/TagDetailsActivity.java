@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.example.maciej.eventag.R;
 
-import org.w3c.dom.Text;
-
 public class TagDetailsActivity extends ActionBarActivity {
 
     public static final String TAG_KEY = "tag";
@@ -30,18 +28,23 @@ public class TagDetailsActivity extends ActionBarActivity {
     }
 
     private void showTag(Tag tag) {
-        //ImageView photo = (ImageView) findViewById(R.id.photo);
+        ImageView photo = (ImageView) findViewById(R.id.photo);
         TextView name = (TextView) findViewById(R.id.name);
         TextView description = (TextView) findViewById(R.id.description);
-        TextView shutdown = (TextView) findViewById(R.id.shutdown);
+        TextView owner = (TextView) findViewById(R.id.owner);
         TextView localisation = (TextView) findViewById(R.id.localisation);
+        TextView audience = (TextView) findViewById(R.id.audience);
+        TextView date = (TextView) findViewById(R.id.date);
+        TextView duration = (TextView) findViewById(R.id.duration);
 
-        //photo.setImageResource(tag.getPhotoId());
-        name.setText(tag.getName());
-        description.setText(tag.getDescription());
-        shutdown.setText(tag.getShutdownTime());
-        String localisationString = "" + tag.getLat() + ", " + tag.getLng();
-        localisation.setText(localisationString);
+        photo.setImageResource(tag.getPhotoId());
+        name.setText(tag.getNameId());
+        description.setText(tag.getDescriptionId());
+        owner.setText(tag.getOwnerId());
+        localisation.setText(tag.getLocalisationId());
+        audience.setText(tag.getAudienceId());
+        date.setText(tag.getDateId());
+        duration.setText(tag.getDurationId());
     }
 
 }

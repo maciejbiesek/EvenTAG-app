@@ -21,7 +21,7 @@
         android:layout_height="40dp"/>
 
     <TextView
-        android:id="@+id/tag_shutdown"
+        android:id="@+id/tag_date"
         style="@style/SecondaryText"
         android:layout_toRightOf="@+id/tag_photo"
         android:layout_alignParentRight="true"

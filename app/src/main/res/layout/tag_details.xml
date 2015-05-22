@@ -23,12 +23,12 @@
                     android:textSize="18dp"
                     android:textColor="#222"/>
 
-                <!--ImageView
+                <ImageView
                     android:id="@+id/photo"
                     android:layout_marginTop="10dp"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"/-->
+                    android:layout_height="200dp"/>
 
                 <TextView
                     style="@style/SecondaryText"
@@ -40,6 +40,21 @@
                 <TextView
                     style="@style/SecondaryText"
                     android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:text="@string/owner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:id="@+id/owner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -62,14 +77,44 @@
 
                 <TextView
                     style="@style/SecondaryText"
-                    android:text="@string/shutdown"
+                    android:text="@string/audience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"/>
 
                 <TextView
                     style="@style/SecondaryText"
-                    android:id="@+id/shutdown"
+                    android:id="@+id/audience"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:text="@string/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:text="@string/duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:id="@+id/duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

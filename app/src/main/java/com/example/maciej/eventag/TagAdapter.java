@@ -8,32 +8,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class TagAdapter extends BaseAdapter {
 
-    private List<Tag> tagList = new ArrayList<>();
+    private TagProvider provider;
     private Context context;
 
     public TagAdapter(Context context) {
         this.context = context;
-    }
-
-    public void setTags(Collection<Tag> tags) {
-        tagList.clear();
-        tagList.addAll(tags);
+        this.provider = new TagProvider(context);
     }
 
     @Override
     public int getCount() {
-        return tagList.size();
+        return provider.getTagsNumber();
     }
 
     @Override
     public Tag getItem(int position) {
-        return tagList.get(position);
+        return provider.getTag(position);
     }
 
     @Override
@@ -43,27 +35,27 @@ public class TagAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View tagView;
+        View recipeView;
 
         if (convertView == null) {
-            tagView = LayoutInflater.from(context).inflate(R.layout.tag_row, parent, false);
+            recipeView = LayoutInflater.from(context).inflate(R.layout.tag_row, parent, false);
         } else {
-            tagView = convertView;
+            recipeView = convertView;
         }
 
-        bindTagToView(getItem(position), tagView);
+        bindRecipeToView(getItem(position), recipeView);
 
-        return tagView;
+        return recipeView;
     }
 
-    private void bindTagToView(Tag tag, View tagView) {
+    private void bindRecipeToView(Tag tag, View tagView) {
         ImageView tagPhoto = (ImageView) tagView.findViewById(R.id.tag_photo);
         tagPhoto.setImageResource(tag.getPhotoId());
 
         TextView tagLabel = (TextView) tagView.findViewById(R.id.tag_label);
-        tagLabel.setText(tag.getName());
+        tagLabel.setText(tag.getNameId());
 
-        TextView tagLocalisation = (TextView) tagView.findViewById(R.id.tag_shutdown);
-        tagLocalisation.setText(tag.getShutdownTime());
+        TextView tagDate = (TextView) tagView.findViewById(R.id.tag_date);
+        tagDate.setText(tag.getDateId());
     }
 }
