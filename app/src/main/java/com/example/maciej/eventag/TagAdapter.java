@@ -1,6 +1,7 @@
 package com.example.maciej.eventag;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import com.squareup.picasso.Picasso;
 
 public class TagAdapter extends BaseAdapter {
 
@@ -52,14 +55,23 @@ public class TagAdapter extends BaseAdapter {
         }
 
         bindTagToView(getItem(position), tagView);
+        loadImage(getItem(position), tagView);
 
         return tagView;
     }
 
-    private void bindTagToView(Tag tag, View tagView) {
-        ImageView tagPhoto = (ImageView) tagView.findViewById(R.id.tag_photo);
-       // tagPhoto.setImageResource(tag.getPhotoId());
+    private void loadImage(Tag tag, View tagView) {
+        final ImageView tagPhoto = (ImageView) tagView.findViewById(R.id.tag_photo);
+        tagPhoto.setImageBitmap(null);
 
+        loadImageWithPicasso(tag, tagPhoto);
+    }
+
+    private void loadImageWithPicasso(Tag tag, ImageView tagPhoto) {
+        Picasso.with(context).load(tag.getOwner().getAvatarUrl()).into(tagPhoto);
+    }
+
+    private void bindTagToView(Tag tag, View tagView) {
         TextView tagLabel = (TextView) tagView.findViewById(R.id.tag_label);
         tagLabel.setText(tag.getName());
 

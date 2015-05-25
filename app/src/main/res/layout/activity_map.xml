@@ -19,9 +19,7 @@
         android:layout_width="30dp"
         android:layout_height="50dp"
         android:text="&lt;"
-        android:background="@color/button_material_dark"
-        android:textColor="#EEEEEE"
         android:id="@+id/button_left"
-        android:layout_centerVertical="true" />
+        android:layout_gravity="left|center_vertical" />
 
 </fragment>

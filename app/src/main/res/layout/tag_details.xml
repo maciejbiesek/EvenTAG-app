@@ -23,12 +23,12 @@
                     android:textSize="18dp"
                     android:textColor="#222"/>
 
-                <!--ImageView
+                <ImageView
                     android:id="@+id/photo"
                     android:layout_marginTop="10dp"
                     android:scaleType="centerCrop"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"/-->
+                    android:layout_height="200dp"/>
 
                 <TextView
                     style="@style/SecondaryText"

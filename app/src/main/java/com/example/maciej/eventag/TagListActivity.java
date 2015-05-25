@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ViewAnimator;
 
 import org.json.JSONException;
 
@@ -126,7 +127,7 @@ public class TagListActivity extends ActionBarActivity {
         public boolean onFling(MotionEvent event1, MotionEvent event2,
                                float velocityX, float velocityY) {
 
-            if(event2.getX() < event1.getX() ) { //&& Math.abs(event2.getY() - event1.getY()) < 50){
+            if(event2.getX() < event1.getX() && Math.abs(event2.getY() - event1.getY()) < 50){
                 finish();
                 overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
             }
