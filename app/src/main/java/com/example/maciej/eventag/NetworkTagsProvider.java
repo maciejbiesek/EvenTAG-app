@@ -24,9 +24,10 @@ import java.util.List;
  */
 public class NetworkTagsProvider {
 
-    private static final String URL = "http://eventag.websource.com.pl/tags";
     private final Context context;
     private  final List<Tag> tags = new ArrayList<>();
+    private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
+    private final String USERS_URL = "http://eventag.websource.com.pl/users/";
 
     public interface OnTagsDownloadedListener {
         void onTagsDownloaded();
@@ -37,13 +38,18 @@ public class NetworkTagsProvider {
     }
 
     public void getTags(OnTagsDownloadedListener listener) throws IOException, JSONException {
-        String s = downloadTags();
+        String s = downloadFromUrl(TAGS_URL);
         JSONArray jArray = new JSONArray(s);
         for (int i = 0; i < jArray.length(); i++) {
             JSONObject jsonData = jArray.getJSONObject(i);
+            int id = jsonData.getInt("user_id");
+            String userString = downloadFromUrl(USERS_URL + id);
+            JSONObject jsonUser = new JSONObject(userString);
+            User user = new User(jsonUser.getInt("id"), jsonUser.getString("name"), jsonUser.getString("first_name"),
+                    jsonUser.getString("last_name"), jsonUser.getString("gender"), jsonUser.getString("avatar"));
 
             Tag tag = new Tag(jsonData.getInt("id"), jsonData.getString("name"), jsonData.getString("message"),
-                    jsonData.getString("shutdown_time"), jsonData.getString("lat"), jsonData.getString("lng"));
+                    jsonData.getString("shutdown_time"), jsonData.getString("lat"), jsonData.getString("lng"), user);
             tags.add(tag);
         }
 
@@ -58,7 +64,7 @@ public class NetworkTagsProvider {
         return tags;
     }
 
-    private String downloadTags() throws IOException {
+    private String downloadFromUrl(String URL) throws IOException {
         InputStream is = null;
 
         try {

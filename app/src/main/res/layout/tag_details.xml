@@ -75,6 +75,23 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="20dp"/>
 
+                <TextView
+                    style="@style/SecondaryText"
+                    android:text="@string/owner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    style="@style/SecondaryText"
+                    android:id="@+id/owner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"/>
+
+
+
             </LinearLayout>
     </ScrollView>
 </FrameLayout>

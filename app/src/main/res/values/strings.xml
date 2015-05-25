@@ -8,5 +8,6 @@
     <string name="description"><u>Opis</u></string>
     <string name="localisation"><u>Lokalizacja</u></string>
     <string name="shutdown"><u>Data wygaśnięcia</u></string>
+    <string name="owner"><u>Kto dodał?</u></string>
 
 </resources>

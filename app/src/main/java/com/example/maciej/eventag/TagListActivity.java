@@ -61,14 +61,14 @@ public class TagListActivity extends ActionBarActivity {
     }
 
     private void fetchTags() throws IOException, JSONException {
-        final NetworkTagsProvider networkTasksProvider = new NetworkTagsProvider(this);
-        networkTasksProvider.getTags(new NetworkTagsProvider.OnTagsDownloadedListener() {
+        final NetworkTagsProvider networkTagsProvider = new NetworkTagsProvider(this);
+        networkTagsProvider.getTags(new NetworkTagsProvider.OnTagsDownloadedListener() {
             public void onTagsDownloaded() {
                 handler.post(new Runnable() {
 
                     @Override
                     public void run() {
-                        adapter.setTags(networkTasksProvider.getAllTasks());
+                        adapter.setTags(networkTagsProvider.getAllTasks());
                         adapter.notifyDataSetChanged();
                     }
                 });

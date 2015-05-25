@@ -58,7 +58,7 @@ public class TagAdapter extends BaseAdapter {
 
     private void bindTagToView(Tag tag, View tagView) {
         ImageView tagPhoto = (ImageView) tagView.findViewById(R.id.tag_photo);
-        tagPhoto.setImageResource(tag.getPhotoId());
+       // tagPhoto.setImageResource(tag.getPhotoId());
 
         TextView tagLabel = (TextView) tagView.findViewById(R.id.tag_label);
         tagLabel.setText(tag.getName());

@@ -35,6 +35,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         TextView description = (TextView) findViewById(R.id.description);
         TextView shutdown = (TextView) findViewById(R.id.shutdown);
         TextView localisation = (TextView) findViewById(R.id.localisation);
+        TextView owner = (TextView) findViewById(R.id.owner);
 
         //photo.setImageResource(tag.getPhotoId());
         name.setText(tag.getName());
@@ -42,6 +43,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         shutdown.setText(tag.getShutdownTime());
         String localisationString = "" + tag.getLat() + ", " + tag.getLng();
         localisation.setText(localisationString);
+        owner.setText(tag.getOwner().getName());
     }
 
 }
