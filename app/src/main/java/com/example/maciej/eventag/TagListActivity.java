@@ -126,7 +126,7 @@ public class TagListActivity extends ActionBarActivity {
 
     private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, List<Tag>> {
 
-        NetworkTagsProvider networkTagsProvider;
+        private NetworkTagsProvider networkTagsProvider;
 
         @Override
         protected void onPostExecute(List<Tag> result) {
@@ -140,10 +140,18 @@ public class TagListActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            networkTagsProvider = new NetworkTagsProvider();
         }
 
         @Override
         protected List<Tag> doInBackground(String... params) {
+            try {
+                networkTagsProvider.getTagsFromServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return networkTagsProvider.getAllTags();
         }
 

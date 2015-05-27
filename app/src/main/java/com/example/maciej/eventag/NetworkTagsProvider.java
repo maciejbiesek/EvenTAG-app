@@ -24,7 +24,7 @@ public class NetworkTagsProvider {
 
     public NetworkTagsProvider() { this.tags = new ArrayList<Tag>(); }
 
-    public void getTagsFromServ() throws IOException, JSONException {
+    public void getTagsFromServer() throws IOException, JSONException {
 
         String s = downloadFromUrl(TAGS_URL);
         JSONArray jArray = new JSONArray(s);
@@ -74,14 +74,7 @@ public class NetworkTagsProvider {
         return total.toString();
     }
 
-    public List<Tag> getAllTags() {
-        try {
-            getTagsFromServ();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return tags;
-    }
+    public List<Tag> getAllTags() { return tags; }
+
+    public Tag getLastTag() { return tags.get(tags.size() - 1); }
 }
