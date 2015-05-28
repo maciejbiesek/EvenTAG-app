@@ -20,7 +20,7 @@ public class NetworkTagsProvider {
     private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
     private final String USERS_URL = "http://eventag.websource.com.pl/users/";
 
-    private List<Tag> tags;
+    public List<Tag> tags;
 
     public NetworkTagsProvider() { this.tags = new ArrayList<Tag>(); }
 

@@ -42,26 +42,27 @@ public class TagListActivity extends ActionBarActivity {
 
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
+    private List<Tag> tagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tag_list);
 
+        Intent i = getIntent();
+        tagList = (ArrayList<Tag>) i.getSerializableExtra("list");
+
         gestureDetectorCompat = new GestureDetectorCompat(this, new My2ndGestureListener());
 
-        if (isOnline()) {
-            initializeList();
-        }
-        else {
-            Toast.makeText(this, "No internet access", Toast.LENGTH_LONG).show();
-            finish();
-        }
+        initializeList();
     }
 
     private void initializeList() {
         ListView list = (ListView) findViewById(R.id.tag_list);
         adapter = new TagAdapter(this);
+
+        adapter.setTags(tagList);
+
         list.setAdapter(adapter);
 
         list.setOnTouchListener(new OnTouchListener() {
@@ -79,8 +80,6 @@ public class TagListActivity extends ActionBarActivity {
                 showTag(tag);
             }
         });
-
-        (new AsyncNetworkTagsProvider()).execute();
     }
 
     private void showTag(Tag tag) {
@@ -114,46 +113,4 @@ public class TagListActivity extends ActionBarActivity {
         }
     }
 
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
-
-
-
-
-    private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, List<Tag>> {
-
-        private NetworkTagsProvider networkTagsProvider;
-
-        @Override
-        protected void onPostExecute(List<Tag> result) {
-            super.onPostExecute(result);
-            adapter.setTags(result);
-            adapter.notifyDataSetChanged();
-            ViewAnimator animator = (ViewAnimator) findViewById(R.id.animator);
-            animator.setDisplayedChild(1);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            networkTagsProvider = new NetworkTagsProvider();
-        }
-
-        @Override
-        protected List<Tag> doInBackground(String... params) {
-            try {
-                networkTagsProvider.getTagsFromServer();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return networkTagsProvider.getAllTags();
-        }
-
-    }
 }
