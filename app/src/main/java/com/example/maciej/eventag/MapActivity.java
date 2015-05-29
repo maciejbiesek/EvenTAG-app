@@ -100,6 +100,7 @@ public class MapActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(List<Tag> result) {
             super.onPostExecute(result);
+            tagList.clear();
             tagList.addAll(result);
             ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
             viewAnimator.setDisplayedChild(1);
