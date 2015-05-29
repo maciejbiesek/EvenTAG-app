@@ -6,6 +6,7 @@ import java.util.Random;
 public class Tag implements Serializable {
 
     private int id;
+    private int userId;
     private String name;
     private String description;
     private String shutdownTime;
@@ -16,16 +17,29 @@ public class Tag implements Serializable {
 
     public Tag(int id, String name, String description, String shutdownTime, String lat, String lng, User owner) {
         this.id = id;
+        this.userId = 0;
         this.name = name;
         this.description = description;
         this.shutdownTime = shutdownTime;
         this.lat = lat;
         this.lng = lng;
         this.owner = owner;
-
     }
 
+    public Tag(int id, int userId, String name, String description, String shutdownTime, String lat, String lng) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.shutdownTime = shutdownTime;
+        this.lat = lat;
+        this.lng = lng;
+        this.owner = null;
+    }
+
+
     public int getId() { return id; }
+    public int getUserId() { return userId; }
     public String getName() { return name; }
     public String getDescription() { return description; }
     public String getShutdownTime() { return shutdownTime; }

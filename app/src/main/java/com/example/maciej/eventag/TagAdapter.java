@@ -9,8 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.squareup.picasso.Picasso;
@@ -75,7 +79,40 @@ public class TagAdapter extends BaseAdapter {
         TextView tagLabel = (TextView) tagView.findViewById(R.id.tag_label);
         tagLabel.setText(tag.getName());
 
-        TextView tagLocalisation = (TextView) tagView.findViewById(R.id.tag_shutdown);
-        tagLocalisation.setText(tag.getShutdownTime());
+        TextView tagShutdown = (TextView) tagView.findViewById(R.id.tag_shutdown);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date shutdownDate = null;
+
+        try {
+            shutdownDate = df.parse(tag.getShutdownTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String dateInfo = getTimeDiff(shutdownDate);
+
+        tagShutdown.setText(dateInfo);
+    }
+
+    private String getTimeDiff(Date shutdownDate) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timeDiff = "";
+        Date todayDate = new Date();
+        if (todayDate.before(shutdownDate)) {
+            long diff = shutdownDate.getTime() - todayDate.getTime();
+            long minutes = diff / (1000 * 60);
+            if (minutes > 60) {
+                long hours = minutes / 60;
+                timeDiff += hours + " h";
+            }
+            else {
+                timeDiff += minutes + "min";
+            }
+            timeDiff += " do końca";
+        }
+        else {
+            timeDiff += "Zdarzenie wygasło " + df.format(shutdownDate);
+        }
+        return timeDiff;
+
     }
 }
