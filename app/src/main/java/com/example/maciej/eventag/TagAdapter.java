@@ -102,10 +102,17 @@ public class TagAdapter extends BaseAdapter {
             long minutes = diff / (1000 * 60);
             if (minutes > 60) {
                 long hours = minutes / 60;
-                timeDiff += hours + " h";
+                minutes = minutes % 60;
+                if (minutes == 0) {
+                    timeDiff += hours + " h";
+                }
+                else {
+                    timeDiff += hours + " h " + minutes + " m";
+                }
+
             }
             else {
-                timeDiff += minutes + "min";
+                timeDiff += minutes + " min";
             }
             timeDiff += " do końca";
         }

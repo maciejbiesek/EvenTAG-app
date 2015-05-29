@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +60,7 @@ public class AddTagActivity extends ActionBarActivity {
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
+
                 String shutdownTime = null;
 
                 int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -94,7 +96,8 @@ public class AddTagActivity extends ActionBarActivity {
                     gpsTracker.showSettingsAlert();
                 }
 
-                Tag tag = new Tag(index, 1, name, description, shutdownTime, latitude, longitude);
+                int userId = 1;
+                Tag tag = new Tag(index, userId, name, description, shutdownTime, latitude, longitude);
 
                 if (!name.isEmpty()) {
                     if (isOnline()) {
@@ -131,7 +134,6 @@ public class AddTagActivity extends ActionBarActivity {
             OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
             os.write(jsonObject);
             os.flush();
-            os.close();
             is = conn.getInputStream();
 
             return readStream(is);
@@ -209,5 +211,3 @@ public class AddTagActivity extends ActionBarActivity {
     }
 }
 
-
-// na koniec finish()

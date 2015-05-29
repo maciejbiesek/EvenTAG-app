@@ -75,6 +75,8 @@ public class MapActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
+        viewAnimator.setDisplayedChild(0);
         if (isOnline()) {
             (new AsyncNetworkTagsProvider()).execute();
         }
