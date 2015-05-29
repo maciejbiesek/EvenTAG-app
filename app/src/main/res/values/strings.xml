@@ -9,5 +9,6 @@
     <string name="localisation"><u>Lokalizacja</u></string>
     <string name="shutdown"><u>Data wygaśnięcia</u></string>
     <string name="owner"><u>Kto dodał?</u></string>
+    <string name="title_activity_add_tag">AddTagActivity</string>
 
 </resources>

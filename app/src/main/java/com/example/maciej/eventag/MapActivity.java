@@ -48,14 +48,26 @@ public class MapActivity extends ActionBarActivity {
             Toast.makeText(this, "No internet access", Toast.LENGTH_LONG).show();
         }
 
-        Button button = (Button) findViewById(R.id.button_left);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button leftButton = (Button) findViewById(R.id.button_left);
+        leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, TagListActivity.class);
                 intent.putExtra("list", (java.io.Serializable) tagList);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
+            }
+        });
+
+        Button addButton = (Button) findViewById(R.id.button_add);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
+                intent.putExtra("index", tagList.get(tagList.size() - 1).getId());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
+
             }
         });
     }
