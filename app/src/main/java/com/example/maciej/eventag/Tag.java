@@ -26,8 +26,7 @@ public class Tag implements Serializable {
         this.owner = owner;
     }
 
-    public Tag(int id, int userId, String name, String description, String shutdownTime, String lat, String lng) {
-        this.id = id;
+    public Tag(int userId, String name, String description, String shutdownTime, String lat, String lng) {
         this.userId = userId;
         this.name = name;
         this.description = description;

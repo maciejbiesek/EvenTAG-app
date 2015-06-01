@@ -51,9 +51,6 @@ public class AddTagActivity extends ActionBarActivity {
         final EditText descriptionEditText = (EditText) findViewById(R.id.new_tag_description);
         final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioList);
 
-        Intent i = getIntent();
-        final int index = i.getIntExtra("index", 0) + 1;
-
         Button addTag = (Button) findViewById(R.id.new_tag_save);
         addTag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +94,7 @@ public class AddTagActivity extends ActionBarActivity {
                 }
 
                 int userId = 1;
-                Tag tag = new Tag(index, userId, name, description, shutdownTime, latitude, longitude);
+                Tag tag = new Tag(userId, name, description, shutdownTime, latitude, longitude);
 
                 if (!name.isEmpty()) {
                     if (isOnline()) {

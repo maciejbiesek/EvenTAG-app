@@ -64,7 +64,6 @@ public class MapActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
-                intent.putExtra("index", tagList.get(tagList.size() - 1).getId());
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
 
