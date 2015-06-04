@@ -7,7 +7,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:name="com.google.android.gms.maps.MapFragment"
     android:animationCache="false"
-    tools:context=".MapActivity">
+    tools:context=".MapActivity"
+    class="com.google.android.gms.maps.SupportMapFragment">
 
     <!--<TextView android:text="Tu będzie mapa" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,5 +40,4 @@
         android:text="Otaguj się!"
         android:id="@+id/button_add"
         android:layout_gravity="bottom|center_horizontal" />
-
 </fragment>

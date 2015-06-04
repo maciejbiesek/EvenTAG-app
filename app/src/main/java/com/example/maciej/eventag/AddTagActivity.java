@@ -20,7 +20,6 @@ import android.widget.ViewAnimator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,7 +102,7 @@ public class AddTagActivity extends ActionBarActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(AddTagActivity.this, "No internet access", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddTagActivity.this, "Brak dostępu do sieci", Toast.LENGTH_LONG).show();
                     }
                 }
                 else Toast.makeText(AddTagActivity.this, "Najpierw podaj tytuł!", Toast.LENGTH_SHORT).show();
@@ -178,9 +177,6 @@ public class AddTagActivity extends ActionBarActivity {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
-
-
-
 
 
     private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, String> {
