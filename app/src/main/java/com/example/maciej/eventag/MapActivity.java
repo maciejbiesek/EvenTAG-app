@@ -1,5 +1,11 @@
 package com.example.maciej.eventag;
 
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -7,14 +13,9 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,9 +30,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,9 +81,9 @@ public class MapActivity extends ActionBarActivity implements
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
-
             }
         });
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -94,13 +93,11 @@ public class MapActivity extends ActionBarActivity implements
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // setUpMapIfNeeded();
         mGoogleApiClient.connect();
         ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
         viewAnimator.setDisplayedChild(0);
@@ -188,7 +185,6 @@ public class MapActivity extends ActionBarActivity implements
             tagList.addAll(result);
             ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
             viewAnimator.setDisplayedChild(1);
-
         }
 
         @Override
@@ -208,7 +204,5 @@ public class MapActivity extends ActionBarActivity implements
             }
             return networkTagsProvider.getAllTags();
         }
-
     }
-
 }
