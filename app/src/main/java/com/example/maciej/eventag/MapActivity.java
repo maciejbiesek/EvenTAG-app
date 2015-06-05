@@ -30,9 +30,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
 import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -48,6 +50,8 @@ public class MapActivity extends ActionBarActivity implements
     LatLng user_location;
     public static final String TAG = MapActivity.class.getSimpleName();
     private List<Tag> tagList = new ArrayList<>();
+    private ArrayList<MyMarker> mMyMarkersArray = new ArrayList<>();
+    private HashMap<Marker, MyMarker> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
@@ -84,6 +88,18 @@ public class MapActivity extends ActionBarActivity implements
             }
         });
 
+        // Initialize the HashMap for Markers and MyMarker object
+        mMarkersHashMap = new HashMap<>();
+
+        mMyMarkersArray.add(new MyMarker(1, "Brasil", "icon1", Double.parseDouble("-28.5971788"), Double.parseDouble("-52.7309824")));
+        mMyMarkersArray.add(new MyMarker(2, "United States", "icon2", Double.parseDouble("33.7266622"), Double.parseDouble("-87.1469829")));
+        mMyMarkersArray.add(new MyMarker(3, "Canada", "icon3", Double.parseDouble("51.8917773"), Double.parseDouble("-86.0922954")));
+        mMyMarkersArray.add(new MyMarker(4, "England", "icon4", Double.parseDouble("52.4435047"), Double.parseDouble("-3.4199249")));
+        mMyMarkersArray.add(new MyMarker(5, "Espa?a", "icon5", Double.parseDouble("41.8728262"), Double.parseDouble("-0.2375882")));
+        mMyMarkersArray.add(new MyMarker(6, "Portugal", "icon6", Double.parseDouble("40.8316649"), Double.parseDouble("-4.936009")));
+        mMyMarkersArray.add(new MyMarker(7, "Deutschland", "icon7", Double.parseDouble("51.1642292"), Double.parseDouble("10.4541194")));
+        mMyMarkersArray.add(new MyMarker(8, "Atlantic Ocean", "icondefault", Double.parseDouble("-13.1294607"), Double.parseDouble("-19.9602353")));
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -93,6 +109,41 @@ public class MapActivity extends ActionBarActivity implements
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
+
+        setUpMap();
+
+        plotMarkers(mMyMarkersArray);
+
+    }
+
+    private void setUpMap()
+    {
+        if (map == null)
+        {
+            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        }
+    }
+
+    private void plotMarkers(ArrayList<MyMarker> markers)
+    {
+        if(markers.size() > 0)
+        {
+            for (MyMarker myMarker : markers)
+            {
+                // Create user marker with custom icon and other options
+                MarkerOptions markerOption = new MarkerOptions().position(new LatLng(myMarker.getmLatitude(), myMarker.getmLongitude()));
+                markerOption.icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                /*
+                TO DO
+                markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
+                 */
+
+                Marker currentMarker = map.addMarker(markerOption);
+                mMarkersHashMap.put(currentMarker, myMarker);
+
+            }
+        }
     }
 
     @Override
@@ -146,9 +197,6 @@ public class MapActivity extends ActionBarActivity implements
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
         location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (map == null) {
-            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        }
         user_location_latitude = location.getLatitude();
         user_location_longitude = location.getLongitude();
         user_location = new LatLng(user_location_latitude, user_location_longitude);
