@@ -10,12 +10,6 @@
     tools:context=".MapActivity"
     class="com.google.android.gms.maps.SupportMapFragment">
 
-    <!--<TextView android:text="Tu będzie mapa" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView" />-->
-
     <ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/animator"
         android:layout_width="match_parent"
