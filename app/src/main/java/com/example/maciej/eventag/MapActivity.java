@@ -107,41 +107,6 @@ public class MapActivity extends ActionBarActivity implements
                 .findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        setUpMap();
-
-        plotMarkers(mMyMarkersArray);
-
-    }
-
-
-    private void setUpMap()
-    {
-        if (map == null)
-        {
-            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        }
-    }
-
-    private void plotMarkers(ArrayList<MyMarker> markers)
-    {
-        if(markers.size() > 0)
-        {
-            for (MyMarker myMarker : markers)
-            {
-                // Create user marker with custom icon and other options
-                MarkerOptions markerOption = new MarkerOptions().position(new LatLng(myMarker.getmLatitude(), myMarker.getmLongitude()));
-                markerOption.icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                /*
-                TO DO
-                markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
-                 */
-
-                Marker currentMarker = map.addMarker(markerOption);
-                mMarkersHashMap.put(currentMarker, myMarker);
-
-            }
-        }
     }
 
     @Override
@@ -189,6 +154,40 @@ public class MapActivity extends ActionBarActivity implements
                 .title("test")
                 .icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+        setUpMap();
+
+        plotMarkers(mMyMarkersArray);
+    }
+
+    private void setUpMap()
+    {
+        if (map == null)
+        {
+            map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        }
+    }
+
+    private void plotMarkers(ArrayList<MyMarker> markers)
+    {
+        if(markers.size() > 0)
+        {
+            for (MyMarker myMarker : markers)
+            {
+                // Create user marker with custom icon and other options
+                MarkerOptions markerOption = new MarkerOptions().position(new LatLng(myMarker.getmLatitude(), myMarker.getmLongitude()));
+                markerOption.icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                /*
+                TO DO
+                markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
+                 */
+
+                Marker currentMarker = map.addMarker(markerOption);
+                mMarkersHashMap.put(currentMarker, myMarker);
+
+            }
+        }
     }
 
     @Override
