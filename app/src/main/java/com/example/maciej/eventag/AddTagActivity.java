@@ -9,12 +9,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
@@ -35,79 +39,106 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class AddTagActivity extends ActionBarActivity {
+public class AddTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
     private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
+    private Spinner spinner;
+    private static final String[] shutdown = {"15 minut", "30 minut", "1 godzina", "2 godziny"};
+    private String latitude;
+    private String longitude;
+    private int which;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_tag);
 
-        final GPSTracker gpsTracker = new GPSTracker(this);
+        Intent i = getIntent();
+        latitude = i.getStringExtra("lat");
+        longitude = i.getStringExtra("lng");
 
-        final EditText nameEditText = (EditText) findViewById(R.id.new_tag_name);
-        final EditText descriptionEditText = (EditText) findViewById(R.id.new_tag_description);
-        final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioList);
+        spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
+                android.R.layout.simple_spinner_item, shutdown);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0);
+        spinner.setOnItemSelectedListener(this);
+    }
 
-        Button addTag = (Button) findViewById(R.id.new_tag_save);
-        addTag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = nameEditText.getText().toString();
-                String description = descriptionEditText.getText().toString();
+    private void addTag() {
+        EditText nameEditText = (EditText) findViewById(R.id.new_tag_name);
+        EditText descriptionEditText = (EditText) findViewById(R.id.new_tag_description);
 
-                String shutdownTime = null;
+        String name = nameEditText.getText().toString();
+        String description = descriptionEditText.getText().toString();
 
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-                final RadioButton checkedRatio = (RadioButton) findViewById(selectedId);
-                int which = radioGroup.indexOfChild(checkedRatio);
+        String shutdownTime = null;
 
-                switch (which) {
-                    case 1:
-                        shutdownTime = addTime(15);
-                        break;
-                    case 2:
-                        shutdownTime = addTime(30);
-                        break;
-                    case 3:
-                        shutdownTime = addTime(60);
-                        break;
-                    case 4:
-                        shutdownTime = addTime(120);
-                        break;
-                }
+        switch (which) {
+            case 0:
+                shutdownTime = addTime(15);
+                break;
+            case 1:
+                shutdownTime = addTime(30);
+                break;
+            case 2:
+                shutdownTime = addTime(60);
+                break;
+            case 3:
+                shutdownTime = addTime(120);
+                break;
+        }
 
-                String latitude = "";
-                String longitude = "";
-                if (gpsTracker.getIsGPSTrackingEnabled()) {
-                    latitude = String.valueOf(gpsTracker.latitude);
-                    longitude = String.valueOf(gpsTracker.longitude);
-                }
-                else
-                {
-                    // can't get location
-                    // GPS or Network is not enabled
-                    // Ask user to enable GPS/network in settings
-                    gpsTracker.showSettingsAlert();
-                }
+        int userId = 1;
+        Tag tag = new Tag(userId, name, description, shutdownTime, latitude, longitude);
 
-                int userId = 1;
-                Tag tag = new Tag(userId, name, description, shutdownTime, latitude, longitude);
-
-                if (!name.isEmpty()) {
-                    if (isOnline()) {
-                        (new AsyncNetworkTagsProvider()).execute(createJSON(tag));
-                        Toast.makeText(AddTagActivity.this, "Dodano nowe zdarzenie", Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                    else {
-                        Toast.makeText(AddTagActivity.this, "Brak dostępu do sieci", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else Toast.makeText(AddTagActivity.this, "Najpierw podaj tytuł!", Toast.LENGTH_SHORT).show();
+        if (!name.isEmpty()) {
+            if (isOnline()) {
+                Toast.makeText(AddTagActivity.this, createJSON(tag), Toast.LENGTH_SHORT).show();
+                (new AsyncNetworkTagsProvider()).execute(createJSON(tag));
+                Toast.makeText(AddTagActivity.this, "Dodano nowe zdarzenie", Toast.LENGTH_SHORT).show();
+                finish();
             }
-        });
+            else {
+                Toast.makeText(AddTagActivity.this, "Brak dostępu do sieci", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else Toast.makeText(AddTagActivity.this, "Najpierw podaj tytuł!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+        which = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_add_tag, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.add: {
+                addTag();
+                finish();
+                return true;
+            }
+
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     public String addTime(int minutes) {

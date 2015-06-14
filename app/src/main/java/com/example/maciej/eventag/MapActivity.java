@@ -46,7 +46,7 @@ public class MapActivity extends ActionBarActivity implements
     Location location;
     LatLng user_location;
     public static final String TAG = MapActivity.class.getSimpleName();
-    private List<Tag> tagList = new ArrayList<>();
+    public static List<Tag> tagList = new ArrayList<>();
     private ArrayList<MyMarker> mMyMarkersArray = new ArrayList<>();
     private HashMap<Marker, MyMarker> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
@@ -80,6 +80,8 @@ public class MapActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
+                intent.putExtra("lat", String.valueOf(user_location_latitude));
+                intent.putExtra("lng", String.valueOf(user_location_longitude));
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
             }
@@ -228,7 +230,6 @@ public class MapActivity extends ActionBarActivity implements
             super.onPostExecute(result);
             tagList.clear();
             tagList.addAll(result);
-            Toast.makeText(MapActivity.this, "" + tagList.size(), Toast.LENGTH_LONG).show();
             ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
             viewAnimator.setDisplayedChild(1);
         }

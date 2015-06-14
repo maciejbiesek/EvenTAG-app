@@ -8,8 +8,8 @@
         android:layout_height="wrap_content"
         android:hint="Tytuł"
         android:id="@+id/new_tag_name"
-        android:layout_marginBottom="24dp"
-        android:layout_above="@+id/new_tag_description"
+        android:layout_marginTop="121dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -20,63 +20,28 @@
         android:layout_height="wrap_content"
         android:hint="Opis (opcjonalnie)"
         android:inputType="textMultiLine"
-        android:ems="10"
         android:id="@+id/new_tag_description"
-        android:layout_above="@+id/radioList"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="29dp"
+        android:layout_below="@+id/new_tag_name"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-
-    <RadioGroup
-        android:id="@+id/radioList"
+    <TextView
+        android:id="@+id/text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="95dp"
-        android:layout_above="@+id/new_tag_save"
-        android:layout_alignLeft="@+id/new_tag_save"
-        android:layout_alignStart="@+id/new_tag_save">
+        android:text="Czas trwania"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Czas trwania"/>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio1"
-            android:text="15 minut"
-            android:checked="true" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio2"
-            android:text="30 minut" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio3"
-            android:text="1 godzina"/>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/radio4"
-            android:text="2 godziny"/>
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/new_tag_save"
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Otaguj się!"/>
+        android:layout_alignLeft="@+id/text_view"
+        android:layout_alignStart="@+id/text_view"
+        android:layout_alignTop="@+id/new_tag_name" />
+
 </RelativeLayout>
