@@ -95,7 +95,6 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
 
         if (!name.isEmpty()) {
             if (isOnline()) {
-                Toast.makeText(AddTagActivity.this, createJSON(tag), Toast.LENGTH_SHORT).show();
                 (new AsyncNetworkTagsProvider()).execute(createJSON(tag));
                 Toast.makeText(AddTagActivity.this, "Dodano nowe zdarzenie", Toast.LENGTH_SHORT).show();
                 finish();
@@ -215,6 +214,21 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
+            if (result != null) {
+                try {
+                    JSONObject jsonTag = new JSONObject(result);
+                    Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
+                            jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"),
+                            new User(1, "Mrs. Ena Medhurst III", "Lee", "Spencer", "female", "images/tdayeycfgayvnkmkhsz"));
+                    MapActivity.tagList.add(tag);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            else Toast.makeText(AddTagActivity.this, "Ups, coś poszło nie tak", Toast.LENGTH_SHORT).show();
+
         }
 
         @Override

@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MapActivity extends ActionBarActivity implements
@@ -58,10 +60,10 @@ public class MapActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_map);
 
         if (isOnline()) {
-            (new AsyncNetworkTagsProvider()).execute();
+            startService(new Intent(this, DownloadTagService.class));
         }
         else {
-            Toast.makeText(this, "No internet access", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Brak połączenia z internetem", Toast.LENGTH_LONG).show();
         }
 
         Button leftButton = (Button) findViewById(R.id.button_left);
@@ -86,6 +88,8 @@ public class MapActivity extends ActionBarActivity implements
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
             }
         });
+
+        updateUI();
 
         // Initialize the HashMap for Markers and MyMarker object
         mMarkersHashMap = new HashMap<>();
@@ -115,14 +119,35 @@ public class MapActivity extends ActionBarActivity implements
     protected void onResume() {
         super.onResume();
         mGoogleApiClient.connect();
-        ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
-        viewAnimator.setDisplayedChild(0);
-        if (isOnline()) {
-            (new AsyncNetworkTagsProvider()).execute();
-        }
-        else {
-            Toast.makeText(this, "No internet access", Toast.LENGTH_LONG).show();
-        }
+    }
+
+    private void updateUI() {
+        final ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+
+                while (DownloadTagService.tags.isEmpty()) {
+                    // wait for server (don't ask me wtf is that shit, kinda awful, but it works)
+                }
+
+                if (!DownloadTagService.tags.isEmpty() && tagList != DownloadTagService.tags) {
+                    tagList.clear();
+                    tagList.addAll(DownloadTagService.tags);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            viewAnimator.setDisplayedChild(1);
+                        }
+                    });
+                }
+            }
+        };
+
+        Timer timer = new Timer();
+        long delay = 0;
+        long intevalPeriod = 60 * 1000;
+        timer.scheduleAtFixedRate(task, delay, intevalPeriod);
     }
 
     @Override
@@ -221,35 +246,4 @@ public class MapActivity extends ActionBarActivity implements
         }
     }
 
-    private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, List<Tag>> {
-
-        private NetworkTagsProvider networkTagsProvider;
-
-        @Override
-        protected void onPostExecute(List<Tag> result) {
-            super.onPostExecute(result);
-            tagList.clear();
-            tagList.addAll(result);
-            ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
-            viewAnimator.setDisplayedChild(1);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            networkTagsProvider = new NetworkTagsProvider();
-        }
-
-        @Override
-        protected List<Tag> doInBackground(String... params) {
-            try {
-                networkTagsProvider.getTagsFromServer();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return networkTagsProvider.getAllTags();
-        }
-    }
 }
