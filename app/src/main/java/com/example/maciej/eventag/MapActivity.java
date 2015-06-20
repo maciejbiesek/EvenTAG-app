@@ -79,8 +79,8 @@ public class MapActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
-                intent.putExtra("lat", String.valueOf(user_location_latitude));
-                intent.putExtra("lng", String.valueOf(user_location_longitude));
+                intent.putExtra("lat", user_location_latitude);
+                intent.putExtra("lng", user_location_longitude);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
             }

@@ -54,8 +54,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         setContentView(R.layout.add_tag);
 
         Intent i = getIntent();
-        //latitude = i.getStringExtra("lat");
-        //longitude = i.getStringExtra("lng");
+        latitude = i.getDoubleExtra("lat", 0);
+        longitude = i.getDoubleExtra("lng", 0);
 
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
