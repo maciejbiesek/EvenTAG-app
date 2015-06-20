@@ -47,7 +47,6 @@ public class MapActivity extends ActionBarActivity implements
     LatLng user_location;
     public static final String TAG = MapActivity.class.getSimpleName();
     public static List<Tag> tagList = new ArrayList<>();
-    //private ArrayList<MyMarker> mMyMarkersArray = new ArrayList<>();
     private HashMap<Marker, Tag> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -89,15 +88,6 @@ public class MapActivity extends ActionBarActivity implements
 
         // Initialize the HashMap for Markers and MyMarker object
         mMarkersHashMap = new HashMap<>();
-
-        /*mMyMarkersArray.add(new MyMarker(1, "Brasil", "icon1", Double.parseDouble("-28.5971788"), Double.parseDouble("-52.7309824")));
-        mMyMarkersArray.add(new MyMarker(2, "United States", "icon2", Double.parseDouble("33.7266622"), Double.parseDouble("-87.1469829")));
-        mMyMarkersArray.add(new MyMarker(3, "Canada", "icon3", Double.parseDouble("51.8917773"), Double.parseDouble("-86.0922954")));
-        mMyMarkersArray.add(new MyMarker(4, "England", "icon4", Double.parseDouble("52.4435047"), Double.parseDouble("-3.4199249")));
-        mMyMarkersArray.add(new MyMarker(5, "Espa?a", "icon5", Double.parseDouble("41.8728262"), Double.parseDouble("-0.2375882")));
-        mMyMarkersArray.add(new MyMarker(6, "Portugal", "icon6", Double.parseDouble("40.8316649"), Double.parseDouble("-4.936009")));
-        mMyMarkersArray.add(new MyMarker(7, "Deutschland", "icon7", Double.parseDouble("51.1642292"), Double.parseDouble("10.4541194")));
-        mMyMarkersArray.add(new MyMarker(8, "Atlantic Ocean", "icondefault", Double.parseDouble("-13.1294607"), Double.parseDouble("-19.9602353")));*/
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -159,8 +149,6 @@ public class MapActivity extends ActionBarActivity implements
 
         setUpMap();
 
-        //plotMarkers(mMyMarkersArray);
-
     }
 
     private void setUpMap()
@@ -175,10 +163,8 @@ public class MapActivity extends ActionBarActivity implements
     {
         if(tags.size() > 0)
         {
-            Log.i(TAG, "(plotmarkers) tags.size > 0");
             for (Tag tag : tags)
             {
-                Log.i(TAG, "(plotmarkers) drawing marker");
                 // Create user marker with custom icon and other options
                     MarkerOptions markerOption = new MarkerOptions().position(new LatLng(tag.getLat(), tag.getLng()));
                 markerOption.icon(BitmapDescriptorFactory
@@ -192,7 +178,7 @@ public class MapActivity extends ActionBarActivity implements
                 mMarkersHashMap.put(currentMarker, tag);
 
             }
-        } else Log.i(TAG, "(plotmarkers) tags.size < 0");
+        }
     }
 
     @Override
