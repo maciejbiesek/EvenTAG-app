@@ -44,8 +44,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
     private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
     private Spinner spinner;
     private static final String[] shutdown = {"15 minut", "30 minut", "1 godzina", "2 godziny"};
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
     private int which;
 
     @Override
@@ -54,8 +54,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         setContentView(R.layout.add_tag);
 
         Intent i = getIntent();
-        latitude = i.getStringExtra("lat");
-        longitude = i.getStringExtra("lng");
+        //latitude = i.getStringExtra("lat");
+        //longitude = i.getStringExtra("lng");
 
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
