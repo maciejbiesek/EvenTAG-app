@@ -95,9 +95,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
 
         if (!name.isEmpty()) {
             if (isOnline()) {
-                Toast.makeText(AddTagActivity.this, createJSON(tag), Toast.LENGTH_SHORT).show();
                 (new AsyncNetworkTagsProvider()).execute(createJSON(tag));
-                Toast.makeText(AddTagActivity.this, "Dodano nowe zdarzenie", Toast.LENGTH_SHORT).show();
                 finish();
             }
             else {
@@ -162,7 +160,9 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
             os.write(jsonObject);
             os.flush();
             is = conn.getInputStream();
+            int code = conn.getResponseCode();
 
+            Toast.makeText(AddTagActivity.this, "Dodano nowe zdarzenie", Toast.LENGTH_SHORT).show();
             return readStream(is);
         }
         catch (Exception e) {
@@ -173,7 +173,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 is.close();
             }
         }
-        return jsonObject;
+        return "ERROR";
     }
 
     public String createJSON(Tag tag) {
@@ -215,6 +215,19 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+
+            if (result != null && result != "ERROR") {
+                try {
+                    JSONObject jsonTag = new JSONObject(result);
+                    Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
+                            jsonTag.getString("shutdown_time"), jsonTag.getDouble("lat"), jsonTag.getDouble("lng"),
+                            new User(1, "Mrs. Ena Medhurst III", "Lee", "Spencer", "female", "images/tdayeycfgayvnkmkhsz"));
+                    MapActivity.tagList.add(tag);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else Toast.makeText(AddTagActivity.this, "Serwer zwrócił niepoprawne dane", Toast.LENGTH_SHORT).show();
         }
 
         @Override

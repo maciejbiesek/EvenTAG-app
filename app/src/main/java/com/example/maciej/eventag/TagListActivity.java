@@ -42,7 +42,7 @@ public class TagListActivity extends ActionBarActivity {
 
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
-    private List<Tag> tagList;
+    private List<Tag> tagList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,8 @@ public class TagListActivity extends ActionBarActivity {
         setContentView(R.layout.tag_list);
 
         Intent i = getIntent();
-        tagList = (ArrayList<Tag>) i.getSerializableExtra("list");
+        tagList.clear();
+        tagList.addAll((ArrayList<Tag>) i.getSerializableExtra("list"));
 
         gestureDetectorCompat = new GestureDetectorCompat(this, new My2ndGestureListener());
 
