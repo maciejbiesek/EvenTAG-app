@@ -166,9 +166,8 @@ public class MapActivity extends ActionBarActivity implements
             for (Tag tag : tags)
             {
                 // Create user marker with custom icon and other options
-                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(tag.getLat(), tag.getLng()));
-                markerOption.icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(tag.getLat(), tag.getLng())).title(tag.getName()).snippet(tag.getDescription());
+                markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 /*
                 TO DO
                 markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
