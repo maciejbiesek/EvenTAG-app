@@ -44,8 +44,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
     private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
     private Spinner spinner;
     private static final String[] shutdown = {"15 minut", "30 minut", "1 godzina", "2 godziny"};
-    private Double latitude;
-    private Double longitude;
+    private String latitude;
+    private String longitude;
     private int which;
 
     @Override
@@ -54,8 +54,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         setContentView(R.layout.add_tag);
 
         Intent i = getIntent();
-        latitude = i.getDoubleExtra("lat", 0);
-        longitude = i.getDoubleExtra("lng", 0);
+        latitude = i.getStringExtra("lat");
+        longitude = i.getStringExtra("lng");
 
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
@@ -220,7 +220,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 try {
                     JSONObject jsonTag = new JSONObject(result);
                     Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
-                            jsonTag.getString("shutdown_time"), jsonTag.getDouble("lat"), jsonTag.getDouble("lng"),
+                            jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"),
                             new User(1, "Mrs. Ena Medhurst III", "Lee", "Spencer", "female", "images/tdayeycfgayvnkmkhsz"));
                     MapActivity.tagList.add(tag);
                 } catch (JSONException e) {
