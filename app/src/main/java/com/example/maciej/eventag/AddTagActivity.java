@@ -173,7 +173,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 is.close();
             }
         }
-        return "ERROR";
+        return jsonObject;
     }
 
     public String createJSON(Tag tag) {
