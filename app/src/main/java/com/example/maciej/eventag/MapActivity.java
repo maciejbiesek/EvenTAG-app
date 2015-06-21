@@ -128,6 +128,7 @@ public class MapActivity extends ActionBarActivity implements
                     runOnUiThread(new Runnable() {
                         public void run() {
                             viewAnimator.setDisplayedChild(1);
+                            plotMarkers(tagList);
                         }
                     });
                 }
