@@ -37,7 +37,7 @@ public class NetworkTagsProvider {
                     jsonUser.getString("last_name"), jsonUser.getString("gender"), jsonUser.getString("avatar"));
 
             Tag tag = new Tag(jsonData.getInt("id"), jsonData.getString("name"), jsonData.getString("message"),
-                    jsonData.getString("shutdown_time"), jsonData.getDouble("lat"), jsonData.getDouble("lng"), user);
+                    jsonData.getString("shutdown_time"), jsonData.getString("lat"), jsonData.getString("lng"), user);
             tags.add(tag);
         }
     }

@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 public class TagAdapter extends BaseAdapter {
 
-    private List<Tag> tagList = new ArrayList<>();
+    private List<Tag> tagList = new ArrayList<Tag>();
     private Context context;
 
     public TagAdapter(Context context) {

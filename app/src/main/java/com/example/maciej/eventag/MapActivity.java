@@ -48,7 +48,7 @@ public class MapActivity extends ActionBarActivity implements
     Location location;
     LatLng user_location;
     public static final String TAG = MapActivity.class.getSimpleName();
-    public static List<Tag> tagList = new ArrayList<>();
+    public static List<Tag> tagList = new ArrayList<Tag>();
     private HashMap<Marker, Tag> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -81,8 +81,8 @@ public class MapActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
-                intent.putExtra("lat", user_location_latitude);
-                intent.putExtra("lng", user_location_longitude);
+                intent.putExtra("lat", String.valueOf(user_location_latitude));
+                intent.putExtra("lng", String.valueOf(user_location_longitude));
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
             }
@@ -91,7 +91,7 @@ public class MapActivity extends ActionBarActivity implements
         updateUI();
 
         // Initialize the HashMap for Markers and MyMarker object
-        mMarkersHashMap = new HashMap<>();
+        mMarkersHashMap = new HashMap<Marker, Tag>();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -193,7 +193,7 @@ public class MapActivity extends ActionBarActivity implements
             for (Tag tag : tags)
             {
                 // Create user marker with custom icon and other options
-                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(tag.getLat(), tag.getLng())).title(tag.getName()).snippet(tag.getDescription());
+                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(tag.getLat()), Double.parseDouble(tag.getLng()))).title(tag.getName()).snippet(tag.getDescription());
                 markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                 /*
                 TO DO

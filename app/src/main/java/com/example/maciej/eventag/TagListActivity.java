@@ -42,7 +42,7 @@ public class TagListActivity extends ActionBarActivity {
 
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
-    private List<Tag> tagList = new ArrayList<>();
+    private List<Tag> tagList = new ArrayList<Tag>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
