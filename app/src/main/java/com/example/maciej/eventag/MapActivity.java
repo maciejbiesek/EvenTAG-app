@@ -188,7 +188,7 @@ public class MapActivity extends ActionBarActivity implements
 
     private void plotMarkers(List<Tag> tags)
     {
-        if(tags.size() > 0)
+        /*if(tags.size() > 0)
         {
             for (Tag tag : tags)
             {
@@ -198,13 +198,13 @@ public class MapActivity extends ActionBarActivity implements
                 /*
                 TO DO
                 markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
-                 */
+
 
                 Marker currentMarker = map.addMarker(markerOption);
                 mMarkersHashMap.put(currentMarker, tag);
 
             }
-        }
+        }*/
     }
 
     @Override
