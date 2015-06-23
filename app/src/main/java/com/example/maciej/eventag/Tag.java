@@ -48,7 +48,5 @@ public class Tag implements Serializable {
     public User getOwner() { return owner; }
     public String getAddress() { return address; }
 
-    public void setAddress(String _address) {
-        address = _address;
-    }
+    public void setAddress(String _address) { address = _address; }
 }
