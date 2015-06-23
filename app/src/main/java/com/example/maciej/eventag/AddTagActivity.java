@@ -2,6 +2,8 @@ package com.example.maciej.eventag;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 
 public class AddTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
@@ -212,6 +215,30 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         return (networkInfo != null && networkInfo.isConnected());
     }
 
+    private void getAdress(Tag tag) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        double latitude = Double.parseDouble(tag.getLat());
+        double longitude = Double.parseDouble(tag.getLng());
+
+        if (latitude < 60 && longitude < 60) {
+            addresses = null;
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (!addresses.isEmpty()) {
+                String address = addresses.get(0).getAddressLine(0);
+                String city = addresses.get(0).getLocality();
+                tag.setAddress(address);
+            }
+            else tag.setAddress(latitude + ", " + longitude);
+        } else tag.setAddress("Niewłaściwe współrzędne");
+    }
+
 
     private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, String> {
 
@@ -225,6 +252,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                     Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
                             jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"),
                             new User(1, "Mrs. Ena Medhurst III", "Lee", "Spencer", "female", "images/tdayeycfgayvnkmkhsz"));
+                    getAdress(tag);
                     MapActivity.tagList.add(tag);
                 } catch (JSONException e) {
                     e.printStackTrace();

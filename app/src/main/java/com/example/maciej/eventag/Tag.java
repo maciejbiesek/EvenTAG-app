@@ -13,6 +13,7 @@ public class Tag implements Serializable {
     private String lat;
     private String lng;
     private User owner;
+    private String address;
 
 
     public Tag(int id, String name, String description, String shutdownTime, String lat, String lng, User owner) {
@@ -45,4 +46,9 @@ public class Tag implements Serializable {
     public String getLat() { return lat; }
     public String getLng() { return lng; }
     public User getOwner() { return owner; }
+    public String getAddress() { return address; }
+
+    public void setAddress(String _address) {
+        address = _address;
+    }
 }

@@ -3,6 +3,8 @@ package com.example.maciej.eventag;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -123,6 +126,7 @@ public class MapActivity extends ActionBarActivity implements
                 if (!DownloadTagService.tags.isEmpty() && tagList != DownloadTagService.tags) {
                     tagList.clear();
                     tagList.addAll(DownloadTagService.tags);
+                    getAdresses();
                     runOnUiThread(new Runnable() {
                         public void run() {
                             viewAnimator.setDisplayedChild(1);
@@ -139,10 +143,45 @@ public class MapActivity extends ActionBarActivity implements
         timer.scheduleAtFixedRate(task, delay, intevalPeriod);
     }
 
+    private void getAdresses() {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        for (Tag tag : tagList) {
+            double latitude = Double.parseDouble(tag.getLat());
+            double longitude = Double.parseDouble(tag.getLng());
+
+            if (latitude < 60 && longitude < 60) {
+                addresses = null;
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (!addresses.isEmpty()) {
+                    String address = addresses.get(0).getAddressLine(0);
+                    String city = addresses.get(0).getLocality();
+                    tag.setAddress(address);
+                }
+                else tag.setAddress("Nie znalazłem adresu o współrzędnych: " + latitude + ", " + longitude);
+            } else tag.setAddress("Niewłaściwe współrzędne");
+        }
+
+    }
+
 
     @Override
     protected  void onPause() {
         super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    protected  void onStop() {
+        super.onStop();
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }

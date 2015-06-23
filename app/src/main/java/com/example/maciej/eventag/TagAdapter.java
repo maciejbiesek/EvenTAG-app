@@ -86,14 +86,7 @@ public class TagAdapter extends BaseAdapter {
         tagLabel.setText(tag.getName());
 
         TextView tagPlace = (TextView) tagView.findViewById(R.id.tag_place);
-        String address = null;
-        try {
-            address = getAdress(tag.getLat(), tag.getLng());
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("dupa", e.toString());
-        }
-        tagPlace.setText(address);
+        tagPlace.setText(tag.getAddress());
 
 
         TextView tagShutdown = (TextView) tagView.findViewById(R.id.tag_shutdown);
@@ -138,24 +131,5 @@ public class TagAdapter extends BaseAdapter {
         }
         return timeDiff;
 
-    }
-
-    private String getAdress(String lat, String lng) throws IOException {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(context, Locale.getDefault());
-
-        double latitude = Double.parseDouble(lat);
-        double longitude = Double.parseDouble(lng);
-
-        if (latitude < 60 && longitude < 60) {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (!addresses.isEmpty()) {
-                String address = addresses.get(0).getAddressLine(0);
-                String city = addresses.get(0).getLocality();
-                return address;
-            }
-            else return lat + ", " + lng;
-        } else return lat + ", " + lng;
     }
 }
