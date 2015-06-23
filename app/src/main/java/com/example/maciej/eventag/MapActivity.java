@@ -1,5 +1,6 @@
 package com.example.maciej.eventag;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -71,7 +72,9 @@ public class MapActivity extends ActionBarActivity implements
         showActionBar();
 
         if (isOnline()) {
-            startService(new Intent(this, DownloadTagService.class));
+            if (!isMyServiceRunning(DownloadTagService.class)) {
+                startService(new Intent(this, DownloadTagService.class));
+            }
         }
         else {
             Toast.makeText(this, "Brak połączenia z internetem", Toast.LENGTH_LONG).show();
@@ -148,9 +151,11 @@ public class MapActivity extends ActionBarActivity implements
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
 
-        for (Tag tag : tagList) {
-            double latitude = Double.parseDouble(tag.getLat());
-            double longitude = Double.parseDouble(tag.getLng());
+
+        for (int i = tagList.size() - 1; i >= 0; i--) {
+
+            double latitude = Double.parseDouble(tagList.get(i).getLat());
+            double longitude = Double.parseDouble(tagList.get(i).getLng());
 
             if (latitude < 60 && longitude < 60) {
                 addresses = null;
@@ -159,13 +164,13 @@ public class MapActivity extends ActionBarActivity implements
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (!addresses.isEmpty()) {
+                if (addresses != null && !addresses.isEmpty()) {
                     String address = addresses.get(0).getAddressLine(0);
                     String city = addresses.get(0).getLocality();
-                    tag.setAddress(address);
+                    tagList.get(i).setAddress(address);
                 }
-                else tag.setAddress("Nie znalazłem adresu o współrzędnych: " + latitude + ", " + longitude);
-            } else tag.setAddress("Niewłaściwe współrzędne");
+                else tagList.get(i).setAddress("Nie znalazłem adresu o współrzędnych: " + latitude + ", " + longitude);
+            } else tagList.get(i).setAddress("Niewłaściwe współrzędne");
         }
 
     }
@@ -192,6 +197,16 @@ public class MapActivity extends ActionBarActivity implements
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
