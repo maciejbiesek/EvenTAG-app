@@ -2,13 +2,18 @@ package com.example.maciej.eventag;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +21,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.squareup.picasso.Picasso;
 
@@ -79,6 +85,17 @@ public class TagAdapter extends BaseAdapter {
         TextView tagLabel = (TextView) tagView.findViewById(R.id.tag_label);
         tagLabel.setText(tag.getName());
 
+        TextView tagPlace = (TextView) tagView.findViewById(R.id.tag_place);
+        String address = null;
+        try {
+            address = getAdress(tag.getLat(), tag.getLng());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("dupa", e.toString());
+        }
+        tagPlace.setText(address);
+
+
         TextView tagShutdown = (TextView) tagView.findViewById(R.id.tag_shutdown);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date shutdownDate = null;
@@ -117,9 +134,28 @@ public class TagAdapter extends BaseAdapter {
             timeDiff += " do końca";
         }
         else {
-            timeDiff += "Zdarzenie wygasło " + df.format(shutdownDate);
+            timeDiff += "Wygasło " + df.format(shutdownDate);
         }
         return timeDiff;
 
+    }
+
+    private String getAdress(String lat, String lng) throws IOException {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(context, Locale.getDefault());
+
+        double latitude = Double.parseDouble(lat);
+        double longitude = Double.parseDouble(lng);
+
+        if (latitude < 60 && longitude < 60) {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (!addresses.isEmpty()) {
+                String address = addresses.get(0).getAddressLine(0);
+                String city = addresses.get(0).getLocality();
+                return address;
+            }
+            else return lat + ", " + lng;
+        } else return lat + ", " + lng;
     }
 }

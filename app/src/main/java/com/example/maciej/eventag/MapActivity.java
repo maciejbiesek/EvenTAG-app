@@ -8,12 +8,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
+import android.support.v7.app.ActionBar.LayoutParams;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -57,6 +65,7 @@ public class MapActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        showActionBar();
 
         if (isOnline()) {
             startService(new Intent(this, DownloadTagService.class));
@@ -64,17 +73,6 @@ public class MapActivity extends ActionBarActivity implements
         else {
             Toast.makeText(this, "Brak połączenia z internetem", Toast.LENGTH_LONG).show();
         }
-
-        Button leftButton = (Button) findViewById(R.id.button_left);
-        leftButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MapActivity.this, TagListActivity.class);
-                intent.putExtra("list", (java.io.Serializable) tagList);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
-            }
-        });
 
         Button addButton = (Button) findViewById(R.id.button_add);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -236,4 +234,43 @@ public class MapActivity extends ActionBarActivity implements
         }
     }
 
+    // MENU
+
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        View cView = getLayoutInflater().inflate(R.layout.custom_map_menu, null);
+        LayoutParams layout = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        actionBar.setCustomView(cView, layout);
+    }
+
+    public void clickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.left: {
+                if (!tagList.isEmpty()) {
+                    Intent intent = new Intent(MapActivity.this, TagListActivity.class);
+                    intent.putExtra("list", (java.io.Serializable) tagList);
+                    intent.putExtra("lat", String.valueOf(user_location_latitude));
+                    intent.putExtra("lng", String.valueOf(user_location_longitude));
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
+                }
+                else {
+                    Toast.makeText(this, "Dane nie zostały jezcze załadowane", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case R.id.logo: {
+                Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
+    }
+
+
 }
+

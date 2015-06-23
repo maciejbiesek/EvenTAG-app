@@ -21,17 +21,13 @@
             android:layout_gravity="center"/>
 
         <Button
-            android:layout_width="30dp"
-            android:layout_height="50dp"
-            android:text="&lt;"
-            android:id="@+id/button_left"
-            android:layout_gravity="left|center_vertical" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Otaguj się!"
+            android:id="@+id/button_add"
+            android:layout_gravity="bottom|center_horizontal" />
+
     </ViewAnimator>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Otaguj się!"
-        android:id="@+id/button_add"
-        android:layout_gravity="bottom|center_horizontal" />
+
 </fragment>

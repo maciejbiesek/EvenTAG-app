@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,15 +44,20 @@ public class TagListActivity extends ActionBarActivity {
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
     private List<Tag> tagList = new ArrayList<Tag>();
+    private String latitude;
+    private String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tag_list);
+        showActionBar();
 
         Intent i = getIntent();
         tagList.clear();
         tagList.addAll((ArrayList<Tag>) i.getSerializableExtra("list"));
+        latitude = i.getStringExtra("lat");
+        longitude = i.getStringExtra("lng");
 
         gestureDetectorCompat = new GestureDetectorCompat(this, new My2ndGestureListener());
 
@@ -111,6 +117,42 @@ public class TagListActivity extends ActionBarActivity {
             }
 
             return true;
+        }
+    }
+
+
+    // MENU
+
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        View cView = getLayoutInflater().inflate(R.layout.custom_tag_list_menu, null);
+        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+
+        actionBar.setCustomView(cView, layout);
+    }
+
+    public void clickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.left: {
+                // something
+                break;
+            }
+            case R.id.logo: {
+                Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.right: {
+                Intent intent = new Intent(TagListActivity.this, AddTagActivity.class);
+                intent.putExtra("lat", latitude);
+                intent.putExtra("lng", longitude);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
+                finish();
+            }
         }
     }
 

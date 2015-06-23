@@ -4,7 +4,7 @@
     tools:context="com.example.maciej.eventag.AddTagActivity">
 
     <item android:id="@+id/add"
-        android:icon="@drawable/plus"
+        android:icon="@drawable/ic_grade_white_36dp"
         app:showAsAction="always"
         android:title="Add new tag" />
 </menu>
