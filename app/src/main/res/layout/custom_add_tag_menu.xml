@@ -5,12 +5,12 @@
     android:weightSum="3" >
 
     <ImageButton
-        android:id="@+id/left"
+        android:id="@+id/back"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:layout_weight="1"
-        android:src="@drawable/ico_zda"
+        android:src="@drawable/ico_back"
         android:onClick="clickEvent" />
 
     <ImageButton
@@ -23,12 +23,12 @@
         android:onClick="clickEvent" />
 
     <ImageButton
-        android:id="@+id/right"
+        android:id="@+id/yes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:layout_weight="1"
-        android:src="@drawable/ico_wyda"
+        android:src="@drawable/ico_yes"
         android:onClick="clickEvent" />
 
 </LinearLayout>

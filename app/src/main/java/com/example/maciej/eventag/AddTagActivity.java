@@ -2,11 +2,13 @@ package com.example.maciej.eventag;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,6 +58,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_tag);
+        showActionBar();
 
         Intent i = getIntent();
         latitude = i.getStringExtra("lat");
@@ -63,7 +66,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
 
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
-                android.R.layout.simple_spinner_item, shutdown);
+                R.layout.spinner_item, shutdown);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
@@ -94,7 +97,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 break;
         }
 
-        int userId = 1;
+        int userId = 5;
         Tag tag = new Tag(userId, name, description, shutdownTime, latitude, longitude);
 
         if (!name.isEmpty()) {
@@ -116,31 +119,6 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_add_tag, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.add: {
-                addTag();
-                finish();
-                return true;
-            }
-
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
-        }
     }
 
     public String addTime(int minutes) {
@@ -251,9 +229,9 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                     JSONObject jsonTag = new JSONObject(result);
                     Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
                             jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"),
-                            new User(1, "Mrs. Ena Medhurst III", "Lee", "Spencer", "female", "images/tdayeycfgayvnkmkhsz"));
+                            new User(5, "Ernestina Gerhold", "Maciej", "Biesek", "", "images/maciej.jpg"));
                     getAdress(tag);
-                    MapActivity.tagList.add(tag);
+                    MapActivity.tagList.add(0, tag);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -276,6 +254,38 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
             return null;
         }
 
+    }
+
+
+
+    // MENU
+
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        View cView = getLayoutInflater().inflate(R.layout.custom_add_tag_menu, null);
+        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+
+        actionBar.setCustomView(cView, layout);
+    }
+
+    public void clickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.back: {
+                finish();
+                break;
+            }
+            case R.id.logo: {
+                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.yes: {
+                addTag();
+            }
+        }
     }
 }
 

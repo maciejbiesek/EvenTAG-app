@@ -10,7 +10,12 @@ import android.widget.Toast;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,6 +54,7 @@ public class DownloadTagService extends Service {
                 }
                 tags.clear();
                 tags.addAll(networkTagsProvider.getAllTags());
+
                 Log.e("log", "Pobrano z serwera");
                 Log.e("ile", "" + tags.size());
             }

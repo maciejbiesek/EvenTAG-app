@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
@@ -61,6 +62,7 @@ public class MapActivity extends ActionBarActivity implements
     LatLng user_location;
     public static final String TAG = MapActivity.class.getSimpleName();
     public static List<Tag> tagList = new ArrayList<Tag>();
+    private boolean isOK = false;
     private HashMap<Marker, Tag> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -80,7 +82,7 @@ public class MapActivity extends ActionBarActivity implements
             Toast.makeText(this, "Brak połączenia z internetem", Toast.LENGTH_LONG).show();
         }
 
-        Button addButton = (Button) findViewById(R.id.button_add);
+        ImageButton addButton = (ImageButton) findViewById(R.id.button_add);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,9 +129,10 @@ public class MapActivity extends ActionBarActivity implements
                 }
 
                 if (!DownloadTagService.tags.isEmpty() && tagList != DownloadTagService.tags) {
+                    isOK = false;
                     tagList.clear();
                     tagList.addAll(DownloadTagService.tags);
-                    getAdresses();
+                    getAdressesAndDistance();
                     runOnUiThread(new Runnable() {
                         public void run() {
                             viewAnimator.setDisplayedChild(1);
@@ -146,7 +149,7 @@ public class MapActivity extends ActionBarActivity implements
         timer.scheduleAtFixedRate(task, delay, intevalPeriod);
     }
 
-    private void getAdresses() {
+    private void getAdressesAndDistance() {
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -171,7 +174,17 @@ public class MapActivity extends ActionBarActivity implements
                 }
                 else tagList.get(i).setAddress("Nie znalazłem adresu o współrzędnych: " + latitude + ", " + longitude);
             } else tagList.get(i).setAddress("Niewłaściwe współrzędne");
+
+            Double latDouble = Double.parseDouble(tagList.get(i).getLat());
+            Double lngDouble = Double.parseDouble(tagList.get(i).getLng());
+            Location tagLocation = new Location("tagLocation");
+            tagLocation.setLatitude(latDouble);
+            tagLocation.setLongitude(lngDouble);
+
+            tagList.get(i).setDistance(location.distanceTo(tagLocation));
+            Log.i("distance", "" + tagList.get(i).getDistance());
         }
+        isOK = true;
 
     }
 
@@ -305,7 +318,7 @@ public class MapActivity extends ActionBarActivity implements
     public void clickEvent(View v) {
         switch (v.getId()) {
             case R.id.left: {
-                if (!tagList.isEmpty()) {
+                if (isOK) {
                     Intent intent = new Intent(MapActivity.this, TagListActivity.class);
                     intent.putExtra("list", (java.io.Serializable) tagList);
                     intent.putExtra("lat", String.valueOf(user_location_latitude));
@@ -319,7 +332,7 @@ public class MapActivity extends ActionBarActivity implements
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
                 break;
             }
         }

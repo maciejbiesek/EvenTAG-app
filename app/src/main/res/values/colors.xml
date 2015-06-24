@@ -9,7 +9,8 @@
     <color name="primary_text">#df6231</color>
     <color name="secondary_text">#5f5e5e</color>
     <color name="header_grey_text">#7b7a7a</color>
-    <color name="icons">#f1cabb</color>
+    <color name="icons">#5f5e5e</color>
     <color name="divider">#B6B6B6</color>
+    <color name="white">#FFF</color>
     <color name="windowBackground">#f8f5f5</color>
 </resources>

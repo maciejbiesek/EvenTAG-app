@@ -1,17 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/animator2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tags_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
-            style="@style/HeaderText"
-            android:text="W Twojej okolicy"/>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
-        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tags_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                style="@style/HeaderText"
+                android:text="W Twojej okolicy"/>
+
+            <ListView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/tag_list"
                 android:layout_below="@+id/tags_header"
                 android:divider="#4a4848"
@@ -19,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+</ViewAnimator>
 
 

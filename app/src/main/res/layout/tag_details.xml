@@ -44,19 +44,24 @@
                     android:layout_margin="10dp"
                     android:layout_below="@id/divider">
 
-                    <ImageView
-                        android:id="@+id/place_icon"
+                    <ImageButton
+                        android:id="@+id/to_map"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
+                        android:background="@android:color/transparent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_centerInParent="true"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/place"/>
+                        android:src="@drawable/to_map"/>
 
                     <TextView
                         style="@style/SecondaryText"
                         android:id="@+id/localisation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/place_icon"/>
+                        android:layout_gravity="center_vertical"
+                        android:layout_centerInParent="true"
+                        android:layout_toLeftOf="@+id/to_map"/>
 
                 </RelativeLayout>
 
@@ -68,19 +73,11 @@
                     android:layout_margin="10dp"
                     android:layout_below="@id/rel1">
 
-                    <ImageView
-                        android:id="@+id/time_icon"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/time"/>
-
                     <TextView
                         style="@style/SecondaryText"
                         android:id="@+id/shutdown"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/time_icon" />
+                        android:layout_height="wrap_content" />
 
                 </RelativeLayout>
 
@@ -103,7 +100,7 @@
                     android:layout_height="80dp"
                     android:scaleType="centerCrop"
                     app:border="true"
-                    app:border_width="4dp"
+                    app:border_width="2dp"
                     app:border_color="#df6231" />
 
             </RelativeLayout>

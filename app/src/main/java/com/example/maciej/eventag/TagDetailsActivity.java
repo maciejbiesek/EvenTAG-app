@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         TextView shutdown = (TextView) findViewById(R.id.shutdown);
         TextView localisation = (TextView) findViewById(R.id.localisation);
         TextView members = (TextView) findViewById(R.id.members);
+        ImageButton toMap = (ImageButton) findViewById(R.id.to_map);
 
         name.setText(tag.getName());
         description.setText(tag.getDescription());
@@ -67,6 +69,13 @@ public class TagDetailsActivity extends ActionBarActivity {
         else members.setText("Biorą udział");
 
         loadImageWithPicasso(tag, photo);
+
+        toMap.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void loadImageWithPicasso(Tag tag, ImageView tagPhoto) {
@@ -115,7 +124,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
-        View cView = getLayoutInflater().inflate(R.layout.custom_map_menu, null);
+        View cView = getLayoutInflater().inflate(R.layout.custom_details_menu, null);
         ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
 
         actionBar.setCustomView(cView, layout);
@@ -123,12 +132,12 @@ public class TagDetailsActivity extends ActionBarActivity {
 
     public void clickEvent(View v) {
         switch (v.getId()) {
-            case R.id.left: {
-                Toast.makeText(this, "Dane nie zostały jezcze załadowane", Toast.LENGTH_SHORT).show();
+            case R.id.back: {
+                finish();
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
                 break;
             }
         }

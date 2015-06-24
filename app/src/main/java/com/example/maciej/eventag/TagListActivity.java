@@ -35,9 +35,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +50,8 @@ public class TagListActivity extends ActionBarActivity {
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
     private List<Tag> tagList = new ArrayList<Tag>();
+    private boolean isSorted = false;
+    private ViewAnimator viewAnimator;
     private String latitude;
     private String longitude;
 
@@ -62,9 +67,64 @@ public class TagListActivity extends ActionBarActivity {
         latitude = i.getStringExtra("lat");
         longitude = i.getStringExtra("lng");
 
+        sortTagList();
+
         gestureDetectorCompat = new GestureDetectorCompat(this, new My2ndGestureListener());
 
-        initializeList();
+        viewAnimator = (ViewAnimator) findViewById(R.id.animator2);
+        
+        if (isSorted) {
+            viewAnimator.setDisplayedChild(1);
+            initializeList();
+        }
+    }
+
+    private void sortTagList() {
+        viewAnimator = (ViewAnimator) findViewById(R.id.animator2);
+        isSorted = false;
+        viewAnimator.setDisplayedChild(0);
+        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date todayDate = new Date();
+        Collections.sort(tagList, new Comparator<Tag>() {
+            public int compare(Tag t1, Tag t2) {
+                Date date1 = null;
+                Date date2 = null;
+                try {
+                    date1 = df.parse(t1.getShutdownTime());
+                    date2 = df.parse(t2.getShutdownTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return date2.compareTo(date1);
+            }
+        });
+        ArrayList tmpList1 = new ArrayList<Tag>();
+        ArrayList tmpList2 = new ArrayList<Tag>();
+        for (Tag tag : tagList) {
+            Date tagDate = null;
+            try {
+                tagDate = df.parse(tag.getShutdownTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (todayDate.before(tagDate)) {
+                tmpList1.add(tag);
+            }
+            else {
+                tmpList2.add(tag);
+            }
+        }
+        Collections.sort(tmpList1, new Comparator<Tag>() {
+            public int compare(Tag t1, Tag t2) {
+                return t1.getDistance().compareTo(t2.getDistance());
+            }
+        });
+        ArrayList tmpList3 = new ArrayList<Tag>();
+        tmpList3.addAll(tmpList1);
+        tmpList3.addAll(tmpList2);
+        tagList.clear();
+        tagList.addAll(tmpList3);
+        isSorted = true;
     }
 
     private void initializeList() {
@@ -140,21 +200,22 @@ public class TagListActivity extends ActionBarActivity {
 
     public void clickEvent(View v) {
         switch (v.getId()) {
-            case R.id.left: {
-                // something
+            case R.id.back: {
+                finish();
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
                 break;
             }
-            case R.id.right: {
+            case R.id.add_new: {
                 Intent intent = new Intent(TagListActivity.this, AddTagActivity.class);
                 intent.putExtra("lat", latitude);
                 intent.putExtra("lng", longitude);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
                 finish();
+                break;
             }
         }
     }

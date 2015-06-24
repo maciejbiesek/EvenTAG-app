@@ -1,48 +1,59 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Tytuł"
-        android:id="@+id/new_tag_name"
-        android:layout_marginTop="121dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Opis (opcjonalnie)"
-        android:inputType="textMultiLine"
-        android:id="@+id/new_tag_description"
-        android:layout_below="@+id/new_tag_name"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Czas trwania"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignTop="@+id/text_view"
-        android:layout_alignLeft="@+id/text_view"
-        android:layout_alignStart="@+id/text_view"
-        android:layout_alignRight="@+id/text_view"
-        android:layout_alignEnd="@+id/text_view" />
+        android:layout_margin="30dp">
 
-</RelativeLayout>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tytuł"
+            android:textCursorDrawable="@null"
+            style="@style/SecondaryText"
+            android:textColorHint="#c4c6c4"
+            android:id="@+id/new_tag_name"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="@drawable/edit_text_style"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:hint="Opis (opcjonalnie)"
+            android:textCursorDrawable="@null"
+            style="@style/SecondaryText"
+            android:textColorHint="#c4c6c4"
+            android:inputType="textMultiLine"
+            android:gravity="top|left"
+            android:id="@+id/new_tag_description"
+            android:layout_below="@+id/new_tag_name"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="@drawable/edit_text_style"/>
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Czas trwania"
+            android:layout_margin="10dp"
+            style="@style/SecondaryText"
+            android:layout_below="@+id/new_tag_description" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/spinner_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:spinnerMode="dropdown"
+            android:layout_below="@+id/text_view"/>
+
+    </RelativeLayout>
+
+</ScrollView>
