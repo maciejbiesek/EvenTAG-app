@@ -44,7 +44,7 @@ public class DownloadTagService extends Service {
             @Override
             public void run() {
                 networkTagsProvider = new NetworkTagsProvider();
-                Log.e(TAG, "Service is running!");
+                Log.i(TAG, "Service is running!");
                 try {
                     networkTagsProvider.getTagsFromServer();
                 } catch (IOException e) {
@@ -55,8 +55,8 @@ public class DownloadTagService extends Service {
                 tags.clear();
                 tags.addAll(networkTagsProvider.getAllTags());
 
-                Log.e("log", "Pobrano z serwera");
-                Log.e("ile", "" + tags.size());
+                Log.i("log", "Pobrano z serwera");
+                Log.i("ile", "" + tags.size());
             }
         };
 

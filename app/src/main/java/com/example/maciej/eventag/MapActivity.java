@@ -60,6 +60,8 @@ public class MapActivity extends ActionBarActivity implements
     GoogleMap map;
     Location location;
     LatLng user_location;
+    static final String STATE_LOCATION_LAT = "userLocationLat";
+    static final String STATE_LOCATION_LNG = "userLocationLng";
     public static final String TAG = MapActivity.class.getSimpleName();
     public static List<Tag> tagList = new ArrayList<Tag>();
     private boolean isOK = false;
@@ -72,6 +74,14 @@ public class MapActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         showActionBar();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        mGoogleApiClient.connect();
 
         if (isOnline()) {
             if (!isMyServiceRunning(DownloadTagService.class)) {
@@ -99,12 +109,6 @@ public class MapActivity extends ActionBarActivity implements
         // Initialize the HashMap for Markers and MyMarker object
         mMarkersHashMap = new HashMap<Marker, Tag>();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
@@ -112,9 +116,53 @@ public class MapActivity extends ActionBarActivity implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putDouble(STATE_LOCATION_LAT, user_location_latitude);
+        savedInstanceState.putDouble(STATE_LOCATION_LNG, user_location_longitude);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore state members from saved instance
+        user_location_latitude = savedInstanceState.getDouble(STATE_LOCATION_LAT);
+        user_location_longitude = savedInstanceState.getDouble(STATE_LOCATION_LNG);
+        user_location = new LatLng(user_location_latitude, user_location_longitude);
+    }
+
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    @Override
+    protected  void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        mGoogleApiClient.connect();
+        if ( mGoogleApiClient.isConnected() ) {
+            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            user_location_latitude = location.getLatitude();
+            user_location_longitude = location.getLongitude();
+            user_location = new LatLng(user_location_latitude, user_location_longitude);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected  void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     private void updateUI() {
@@ -188,23 +236,6 @@ public class MapActivity extends ActionBarActivity implements
 
     }
 
-
-    @Override
-    protected  void onPause() {
-        super.onPause();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-    @Override
-    protected  void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -225,19 +256,6 @@ public class MapActivity extends ActionBarActivity implements
     @Override
     public void onMapReady(GoogleMap map) {
         Log.i(TAG, "Initializing map success");
-        // Sample marker for test
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(52.4, 16.82))
-                .title("test")
-                .alpha(0.4f)
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(52.43, 16.85))
-                .title("test")
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
         setUpMap();
 
@@ -253,9 +271,9 @@ public class MapActivity extends ActionBarActivity implements
 
     private void plotMarkers(List<Tag> tags)
     {
-        /*if(tags.size() > 0)
+        if ( tags.size() > 0 )
         {
-            for (Tag tag : tags)
+            for ( Tag tag : tags )
             {
                 // Create user marker with custom icon and other options
                     MarkerOptions markerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(tag.getLat()), Double.parseDouble(tag.getLng()))).title(tag.getName()).snippet(tag.getDescription());
@@ -263,13 +281,13 @@ public class MapActivity extends ActionBarActivity implements
                 /*
                 TO DO
                 markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
-
+                */
 
                 Marker currentMarker = map.addMarker(markerOption);
                 mMarkersHashMap.put(currentMarker, tag);
 
             }
-        }*/
+        }
     }
 
     @Override
