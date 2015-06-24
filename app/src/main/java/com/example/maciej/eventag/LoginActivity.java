@@ -44,10 +44,7 @@ public class LoginActivity extends ActionBarActivity {
                         Log.i("(callback): ", loginResult.toString());
                         Log.i("(callback): ", "success");
                         Toast.makeText(LoginActivity.this, "Logowanie pomyslne!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, MapActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
+                        startMapActivity();
                     }
 
                     @Override
@@ -63,6 +60,13 @@ public class LoginActivity extends ActionBarActivity {
                     }
                 });
 
+    }
+
+    private void startMapActivity(){
+        Intent intent = new Intent(LoginActivity.this, MapActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
