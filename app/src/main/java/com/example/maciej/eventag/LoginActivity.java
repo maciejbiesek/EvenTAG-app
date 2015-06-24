@@ -2,8 +2,10 @@ package com.example.maciej.eventag;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -21,6 +23,7 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showActionBar();
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
@@ -89,6 +92,31 @@ public class LoginActivity extends ActionBarActivity {
             return true;
         } else {
             return false;
+        }
+    }
+
+
+
+    // MENU
+
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        View cView = getLayoutInflater().inflate(R.layout.custom_login_menu, null);
+        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+
+        actionBar.setCustomView(cView, layout);
+    }
+
+    public void clickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.logo: {
+                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                break;
+            }
         }
     }
 
