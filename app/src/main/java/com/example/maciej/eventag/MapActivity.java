@@ -212,19 +212,6 @@ public class MapActivity extends ActionBarActivity implements
     @Override
     public void onMapReady(GoogleMap map) {
         Log.i(TAG, "Initializing map success");
-        // Sample marker for test
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(52.4, 16.82))
-                .title("test")
-                .alpha(0.4f)
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(52.43, 16.85))
-                .title("test")
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
         setUpMap();
 
@@ -240,7 +227,7 @@ public class MapActivity extends ActionBarActivity implements
 
     private void plotMarkers(List<Tag> tags)
     {
-        /*if(tags.size() > 0)
+        if(tags.size() > 0)
         {
             for (Tag tag : tags)
             {
@@ -250,13 +237,13 @@ public class MapActivity extends ActionBarActivity implements
                 /*
                 TO DO
                 markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
-
+                */
 
                 Marker currentMarker = map.addMarker(markerOption);
                 mMarkersHashMap.put(currentMarker, tag);
 
             }
-        }*/
+        }
     }
 
     @Override
