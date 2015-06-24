@@ -21,7 +21,6 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
@@ -32,6 +31,10 @@ public class LoginActivity extends ActionBarActivity {
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_login);
+
+        if ( isLoggedIn() ){
+            startMapActivity();
+        }
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("user_friends");
@@ -78,6 +81,15 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onResume(){
         super.onResume();
+    }
+
+    private boolean isLoggedIn(){
+        if ( AccessToken.getCurrentAccessToken() != null ){
+            // for testing login page, change the part "!= null" to "== null"
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

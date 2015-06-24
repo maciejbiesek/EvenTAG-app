@@ -81,10 +81,6 @@ public class MapActivity extends ActionBarActivity implements
 
         mGoogleApiClient.connect();
 
-        if ( savedInstanceState == null ) {
-            Log.i("(savedInstance: ", "null");
-        } else Log.i("savedInstance: ", "got it");
-
         if (isOnline()) {
             if (!isMyServiceRunning(DownloadTagService.class)) {
                 startService(new Intent(this, DownloadTagService.class));
