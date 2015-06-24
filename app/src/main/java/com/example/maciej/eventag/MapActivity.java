@@ -266,6 +266,8 @@ public class MapActivity extends ActionBarActivity implements
         if (map == null)
         {
             map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            map.getUiSettings().setMapToolbarEnabled(false);
+
         }
     }
 
