@@ -22,6 +22,11 @@ public class LoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
+
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
@@ -40,19 +45,21 @@ public class LoginActivity extends ActionBarActivity {
                         Log.i("(callback): ", "success");
                         Toast.makeText(LoginActivity.this, "Logowanie pomyslne!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MapActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                     }
 
                     @Override
                     public void onCancel() {
                         // App code
-                        Log.i("(callback): ", "cancel");
+                        Log.w("(callback): ", "cancel");
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
-                        Log.i("(callback): ", "error");
+                        Log.e("(callback): ", "error");
                     }
                 });
 
