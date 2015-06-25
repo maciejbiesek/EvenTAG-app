@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="100dp"
+    android:background="@color/extinct">
+
+    <ImageView
+        android:id="@+id/tag_photo"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tag_label"
+        style="@style/PrimaryText"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/tag_photo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:layout_height="30dp"/>
+
+    <ImageView
+        android:id="@+id/place_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toRightOf="@+id/tag_photo"
+        android:layout_below="@+id/tag_label"
+        android:gravity="center_vertical"
+        android:src="@drawable/place"/>
+
+    <TextView
+        android:id="@+id/tag_place"
+        style="@style/SecondaryText"
+        android:layout_toRightOf="@+id/place_icon"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tag_label"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_height="35dp"/>
+
+    <ImageView
+        android:id="@+id/time_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toRightOf="@+id/tag_photo"
+        android:layout_below="@+id/tag_place"
+        android:gravity="center_vertical"
+        android:src="@drawable/time"/>
+
+    <TextView
+        android:id="@+id/tag_shutdown"
+        style="@style/SecondaryText"
+        android:layout_toRightOf="@+id/time_icon"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tag_place"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_height="30dp"/>
+
+</RelativeLayout>

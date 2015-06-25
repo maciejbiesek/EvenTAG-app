@@ -59,7 +59,7 @@ public class TagAdapter extends BaseAdapter {
         View tagView;
 
         if (convertView == null) {
-            tagView = LayoutInflater.from(context).inflate(R.layout.tag_row, parent, false);
+            tagView = LayoutInflater.from(context).inflate(getLayoutId(position), parent, false);
         } else {
             tagView = convertView;
         }
@@ -68,6 +68,36 @@ public class TagAdapter extends BaseAdapter {
         loadImage(getItem(position), tagView);
 
         return tagView;
+    }
+
+    private int getLayoutId(int position) {
+        if (getItemViewType(position) == ViewType.LIVE.ordinal()) {
+            return R.layout.tag_row;
+        } else {
+            return R.layout.tag_row_extinct;
+        }
+    }
+
+    enum ViewType {
+        LIVE, EXTINCT;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date shutdownDate = null;
+        try {
+            shutdownDate = df.parse(getItem(position).getShutdownTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date todayDate = new Date();
+        return todayDate.before(shutdownDate) ? ViewType.LIVE.ordinal() : ViewType.EXTINCT.ordinal();
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return ViewType.values().length;
     }
 
     private void loadImage(Tag tag, View tagView) {
