@@ -17,8 +17,12 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class LoginActivity extends ActionBarActivity {
     CallbackManager callbackManager;
+    private static final List<String> PERMISSIONS = Arrays.asList("user_friends", "email", "public_profile");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions(PERMISSIONS);
 
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
