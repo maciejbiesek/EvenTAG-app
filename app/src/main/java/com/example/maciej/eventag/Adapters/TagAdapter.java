@@ -1,28 +1,22 @@
-package com.example.maciej.eventag;
+package com.example.maciej.eventag.Adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
+import com.example.maciej.eventag.R;
+import com.example.maciej.eventag.Models.Tag;
 import com.squareup.picasso.Picasso;
 
 public class TagAdapter extends BaseAdapter {

@@ -1,4 +1,4 @@
-package com.example.maciej.eventag;
+package com.example.maciej.eventag.Models;
 
 import java.io.Serializable;
 import java.util.Random;

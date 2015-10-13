@@ -1,22 +1,11 @@
-package com.example.maciej.eventag;
+package com.example.maciej.eventag.Activities;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View.OnTouchListener;
 import android.view.View;
@@ -25,16 +14,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.maciej.eventag.R;
+import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.Adapters.TagAdapter;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +25,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
 public class TagListActivity extends ActionBarActivity {

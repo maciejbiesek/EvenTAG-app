@@ -1,5 +1,7 @@
 package com.example.maciej.eventag;
 
+import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.Models.User;
 import com.facebook.AccessToken;
 
 import org.json.JSONArray;

@@ -1,4 +1,4 @@
-package com.example.maciej.eventag;
+package com.example.maciej.eventag.Activities;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -9,24 +9,19 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 import android.support.v7.app.ActionBar.LayoutParams;
 
+import com.example.maciej.eventag.DownloadTagService;
+import com.example.maciej.eventag.R;
+import com.example.maciej.eventag.Models.Tag;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,8 +33,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;

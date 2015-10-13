@@ -1,4 +1,4 @@
-package com.example.maciej.eventag;
+package com.example.maciej.eventag.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,18 +6,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maciej.eventag.R;
+import com.example.maciej.eventag.Models.Tag;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
