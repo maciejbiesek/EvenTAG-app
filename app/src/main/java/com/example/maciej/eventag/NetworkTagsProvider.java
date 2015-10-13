@@ -1,5 +1,7 @@
 package com.example.maciej.eventag;
 
+import com.facebook.AccessToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +53,7 @@ public class NetworkTagsProvider {
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
+            conn.setRequestProperty ("Facebook",  AccessToken.getCurrentAccessToken().getToken());
             conn.setDoInput(true);
             conn.connect();
             is = conn.getInputStream();
