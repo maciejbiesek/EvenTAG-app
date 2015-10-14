@@ -35,10 +35,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import static com.example.maciej.eventag.Models.Constants.*;
+
 
 public class AddTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
-    private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
     private Spinner spinner;
     private static final String[] shutdown = {"15 minut", "30 minut", "1 godzina", "2 godziny"};
     private String latitude;
@@ -52,8 +53,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         showActionBar();
 
         Intent i = getIntent();
-        latitude = i.getStringExtra("lat");
-        longitude = i.getStringExtra("lng");
+        latitude = i.getStringExtra(LAT);
+        longitude = i.getStringExtra(LNG);
 
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,

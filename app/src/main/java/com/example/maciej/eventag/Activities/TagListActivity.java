@@ -26,9 +26,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.maciej.eventag.Models.Constants.*;
+
 
 public class TagListActivity extends ActionBarActivity {
-
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
     private List<Tag> tagList = new ArrayList<Tag>();
@@ -45,9 +46,9 @@ public class TagListActivity extends ActionBarActivity {
 
         Intent i = getIntent();
         tagList.clear();
-        tagList.addAll((ArrayList<Tag>) i.getSerializableExtra("list"));
-        latitude = i.getStringExtra("lat");
-        longitude = i.getStringExtra("lng");
+        tagList.addAll((ArrayList<Tag>) i.getSerializableExtra(LIST));
+        latitude = i.getStringExtra(LAT);
+        longitude = i.getStringExtra(LNG);
 
         sortTagList();
 
@@ -137,7 +138,7 @@ public class TagListActivity extends ActionBarActivity {
     private void showTag(Tag tag) {
         Intent i = new Intent(this, TagDetailsActivity.class);
 
-        i.putExtra(TagDetailsActivity.TAG_KEY, tag);
+        i.putExtra(TAG_KEY, tag);
         startActivity(i);
     }
 
@@ -192,8 +193,8 @@ public class TagListActivity extends ActionBarActivity {
             }
             case R.id.add_new: {
                 Intent intent = new Intent(TagListActivity.this, AddTagActivity.class);
-                intent.putExtra("lat", latitude);
-                intent.putExtra("lng", longitude);
+                intent.putExtra(LAT, latitude);
+                intent.putExtra(LNG, longitude);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
                 finish();

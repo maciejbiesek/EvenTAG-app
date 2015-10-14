@@ -16,13 +16,9 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Maciej on 2015-05-27.
- */
-public class NetworkTagsProvider {
+import static com.example.maciej.eventag.Models.Constants.*;
 
-    private final String TAGS_URL = "http://eventag.websource.com.pl/tags";
-    private final String USERS_URL = "http://eventag.websource.com.pl/users/";
+public class NetworkTagsProvider {
 
     public List<Tag> tags;
 

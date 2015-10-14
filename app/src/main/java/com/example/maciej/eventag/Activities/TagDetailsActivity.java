@@ -20,9 +20,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TagDetailsActivity extends ActionBarActivity {
+import static com.example.maciej.eventag.Models.Constants.*;
 
-    public static final String TAG_KEY = "tag";
+public class TagDetailsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

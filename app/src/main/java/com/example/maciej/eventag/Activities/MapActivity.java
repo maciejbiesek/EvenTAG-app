@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.maciej.eventag.Models.Constants.*;
 
 public class MapActivity extends ActionBarActivity implements
         OnMapReadyCallback,
@@ -60,7 +61,7 @@ public class MapActivity extends ActionBarActivity implements
     private boolean isOK = false;
     private HashMap<Marker, Tag> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +91,8 @@ public class MapActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
-                intent.putExtra("lat", String.valueOf(user_location_latitude));
-                intent.putExtra("lng", String.valueOf(user_location_longitude));
+                intent.putExtra(LAT, String.valueOf(user_location_latitude));
+                intent.putExtra(LNG, String.valueOf(user_location_longitude));
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
             }

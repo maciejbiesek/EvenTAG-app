@@ -1,11 +1,9 @@
 package com.example.maciej.eventag.Models;
 
 import java.io.Serializable;
-import java.util.Random;
+import static com.example.maciej.eventag.Models.Constants.*;
 
 public class User implements Serializable {
-
-    private final String IMAGES_URL = "http://eventag.websource.com.pl/";
 
     private int id;
     private String name;
