@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -54,7 +55,7 @@ public class LoginActivity extends ActionBarActivity {
                         // App code
                         Log.i("(callback): ", loginResult.toString());
                         Log.i("(callback): ", "success");
-                        Toast.makeText(LoginActivity.this, "Logowanie pomyslne!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, getString(R.string.login_ok), Toast.LENGTH_SHORT).show();
                         startMapActivity();
                     }
 
@@ -75,7 +76,7 @@ public class LoginActivity extends ActionBarActivity {
 
     private void startMapActivity(){
         Intent intent = new Intent(LoginActivity.this, MapActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
@@ -119,7 +120,7 @@ public class LoginActivity extends ActionBarActivity {
     public void clickEvent(View v) {
         switch (v.getId()) {
             case R.id.logo: {
-                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
                 break;
             }
         }

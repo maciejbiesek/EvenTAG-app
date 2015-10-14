@@ -10,4 +10,7 @@ public class Constants {
     public static final String TAG_KEY = "tag";
     public static final String LIST = "list";
     public static final String USERS_URL = "http://eventag.websource.com.pl/users/";
+    public static final String STATE_LOCATION_LAT = "userLocationLat";
+    public static final String STATE_LOCATION_LNG = "userLocationLng";
+    public static final String TAG_LOCATION = "tagLocation";
 }

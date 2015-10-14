@@ -20,6 +20,7 @@ import android.widget.ViewAnimator;
 import android.support.v7.app.ActionBar.LayoutParams;
 
 import com.example.maciej.eventag.DownloadTagService;
+import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Models.Tag;
 import com.google.android.gms.common.ConnectionResult;
@@ -54,13 +55,13 @@ public class MapActivity extends ActionBarActivity implements
     GoogleMap map;
     Location location;
     LatLng user_location;
-    static final String STATE_LOCATION_LAT = "userLocationLat";
-    static final String STATE_LOCATION_LNG = "userLocationLng";
+
     public static final String TAG = MapActivity.class.getSimpleName();
     public static List<Tag> tagList = new ArrayList<Tag>();
     private boolean isOK = false;
     private HashMap<Marker, Tag> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
+    private CommunicationHelper comHelper;
 
 
     @Override
@@ -68,6 +69,8 @@ public class MapActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         showActionBar();
+
+        comHelper = new CommunicationHelper(this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -83,7 +86,7 @@ public class MapActivity extends ActionBarActivity implements
             }
         }
         else {
-            Toast.makeText(this, "Brak połączenia z internetem", Toast.LENGTH_LONG).show();
+            comHelper.showUserDialog("", getString(R.string.internet_not_found));
         }
 
         ImageButton addButton = (ImageButton) findViewById(R.id.button_add);
@@ -214,12 +217,12 @@ public class MapActivity extends ActionBarActivity implements
                     String city = addresses.get(0).getLocality();
                     tagList.get(i).setAddress(address);
                 }
-                else tagList.get(i).setAddress("Nie znalazłem adresu o współrzędnych: " + latitude + ", " + longitude);
-            } else tagList.get(i).setAddress("Niewłaściwe współrzędne");
+                else tagList.get(i).setAddress(getString(R.string.coords_not_found) + " " + latitude + ", " + longitude);
+            } else tagList.get(i).setAddress(getString(R.string.coords_fail));
 
             Double latDouble = Double.parseDouble(tagList.get(i).getLat());
             Double lngDouble = Double.parseDouble(tagList.get(i).getLng());
-            Location tagLocation = new Location("tagLocation");
+            Location tagLocation = new Location(TAG_LOCATION);
             tagLocation.setLatitude(latDouble);
             tagLocation.setLongitude(lngDouble);
 
@@ -334,19 +337,19 @@ public class MapActivity extends ActionBarActivity implements
             case R.id.left: {
                 if (isOK) {
                     Intent intent = new Intent(MapActivity.this, TagListActivity.class);
-                    intent.putExtra("list", (java.io.Serializable) tagList);
-                    intent.putExtra("lat", String.valueOf(user_location_latitude));
-                    intent.putExtra("lng", String.valueOf(user_location_longitude));
+                    intent.putExtra(LIST, (java.io.Serializable) tagList);
+                    intent.putExtra(LAT, String.valueOf(user_location_latitude));
+                    intent.putExtra(LNG, String.valueOf(user_location_longitude));
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
                 }
                 else {
-                    Toast.makeText(this, "Dane nie zostały jezcze załadowane", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.data_not_yet), Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
                 break;
             }
         }

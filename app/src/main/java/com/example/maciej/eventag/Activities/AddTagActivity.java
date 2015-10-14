@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.Models.User;
@@ -41,10 +42,11 @@ import static com.example.maciej.eventag.Models.Constants.*;
 public class AddTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner spinner;
-    private static final String[] shutdown = {"15 minut", "30 minut", "1 godzina", "2 godziny"};
+    private static String[] shutdown;
     private String latitude;
     private String longitude;
     private int which;
+    private CommunicationHelper comHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,13 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         latitude = i.getStringExtra(LAT);
         longitude = i.getStringExtra(LNG);
 
+        shutdown = new String[] {
+                getString(R.string.shutdown_option_1),
+                getString(R.string.shutdown_option_2),
+                getString(R.string.shutdown_option_3),
+                getString(R.string.shutdown_option_4)
+        };
+
         spinner = (Spinner)findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
                 R.layout.spinner_item, shutdown);
@@ -63,6 +72,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         spinner.setAdapter(adapter);
         spinner.setSelection(0);
         spinner.setOnItemSelectedListener(this);
+
+        comHelper = new CommunicationHelper(this);
     }
 
     private void addTag() {
@@ -98,10 +109,10 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 finish();
             }
             else {
-                Toast.makeText(AddTagActivity.this, "Brak dostępu do sieci", Toast.LENGTH_SHORT).show();
+                comHelper.showUserDialog("", getString(R.string.internet_not_found));
             }
         }
-        else Toast.makeText(AddTagActivity.this, "Najpierw podaj tytuł!", Toast.LENGTH_SHORT).show();
+        else comHelper.showUserDialog("", getString(R.string.title_first));
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -137,7 +148,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
 
             runOnUiThread(new Runnable() {
                 public void run() {
-                    Toast.makeText(AddTagActivity.this, "Dodano nowe zdarzenie", Toast.LENGTH_SHORT).show();
+                    comHelper.showUserDialog("", getString(R.string.add_new_tag));
                 }
             });
             return readStream(is);
@@ -206,7 +217,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 tag.setAddress(address);
             }
             else tag.setAddress(latitude + ", " + longitude);
-        } else tag.setAddress("Niewłaściwe współrzędne");
+        } else tag.setAddress(getString(R.string.coords_fail));
     }
 
 
@@ -228,7 +239,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                     e.printStackTrace();
                 }
             }
-            else Toast.makeText(AddTagActivity.this, "Serwer zwrócił niepoprawne dane", Toast.LENGTH_SHORT).show();
+            else comHelper.showUserDialog("", getString(R.string.server_fail));
         }
 
         @Override
@@ -271,7 +282,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
                 break;
             }
             case R.id.yes: {

@@ -13,4 +13,23 @@
 
     <string name="facebook_app_id">927305240625281</string>
 
+    <string name="shutdown_option_1">15 minut</string>
+    <string name="shutdown_option_2">30 minut</string>
+    <string name="shutdown_option_3">1 godzina</string>
+    <string name="shutdown_option_4">2 godziny</string>
+
+    <string name="internet_not_found">Brak dostępu do sieci</string>
+    <string name="title_first">Najpierw podaj tytuł!</string>
+    <string name="add_new_tag">Dodano nowe zdarzenie</string>
+    <string name="coords_fail">Niewłaściwe współrzędne</string>
+    <string name="server_fail">Serwer zwrócił niepoprawne dane</string>
+    <string name="login_ok">Logowanie pomyslne!</string>
+    <string name="coords_not_found">Nie znalazłem adresu o współrzędnych:</string>
+    <string name="data_not_yet">Dane nie zostały jezcze załadowane</string>
+    <string name="members_past">Wzięli udział</string>
+    <string name="members_present">Biorą udział</string>
+    <string name="expired">Wygasło</string>
+    <string name="times_left">do końca</string>
+
+
 </resources>

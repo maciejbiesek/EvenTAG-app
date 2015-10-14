@@ -141,17 +141,17 @@ public class TagAdapter extends BaseAdapter {
                     timeDiff += hours + " h";
                 }
                 else {
-                    timeDiff += hours + " h " + minutes + " m";
+                    timeDiff += hours + " h " + minutes + " min";
                 }
 
             }
             else {
                 timeDiff += minutes + " min";
             }
-            timeDiff += " do końca";
+            timeDiff += " " + context.getString(R.string.times_left);
         }
         else {
-            timeDiff += "Wygasło " + df.format(shutdownDate);
+            timeDiff += context.getString(R.string.expired) + " " + df.format(shutdownDate);
         }
         return timeDiff;
 

@@ -188,7 +188,7 @@ public class TagListActivity extends ActionBarActivity {
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
                 break;
             }
             case R.id.add_new: {

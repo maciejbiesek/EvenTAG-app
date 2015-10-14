@@ -1,9 +1,5 @@
 package com.example.maciej.eventag;
 
-/**
- * Created by Kostek on 2015-06-05.
- */
-
 public class MyMarker
 {
     private Integer mId;

@@ -60,10 +60,10 @@ public class TagDetailsActivity extends ActionBarActivity {
         String dateInfo = getTimeDiff(shutdownDate);
         shutdown.setText(dateInfo);
 
-        if (dateInfo.toLowerCase().contains("wygasło")) {
-            members.setText("Wzięli udział");
+        if (dateInfo.toLowerCase().contains(getString(R.string.expired).toLowerCase())) {
+            members.setText(getString(R.string.members_past));
         }
-        else members.setText("Biorą udział");
+        else members.setText(getString(R.string.members_present));
 
         loadImageWithPicasso(tag, photo);
 
@@ -95,17 +95,17 @@ public class TagDetailsActivity extends ActionBarActivity {
                     timeDiff += hours + " h";
                 }
                 else {
-                    timeDiff += hours + " h " + minutes + " m";
+                    timeDiff += hours + " h " + minutes + " min";
                 }
 
             }
             else {
                 timeDiff += minutes + " min";
             }
-            timeDiff += " do końca";
+            timeDiff += " " + getString(R.string.times_left);
         }
         else {
-            timeDiff += "Wygasło " + df.format(shutdownDate);
+            timeDiff += getString(R.string.expired) + " " + df.format(shutdownDate);
         }
         return timeDiff;
 
@@ -134,7 +134,7 @@ public class TagDetailsActivity extends ActionBarActivity {
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, "EvenTAG", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
                 break;
             }
         }
