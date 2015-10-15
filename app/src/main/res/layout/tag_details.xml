@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/rel2"
-                    android:text="Uczestnicy:"
+                    android:text="@string/tag_participants"
                     style="@style/SecondaryText"/>
 
 

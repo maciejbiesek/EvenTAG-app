@@ -21,5 +21,11 @@
     <string name="expired">Wygasło</string>
     <string name="times_left">do końca</string>
 
+    <string name="tag_title">Tytuł</string>
+    <string name="tag_description">Opis (opcjonalnie)</string>
+    <string name="tag_duration">Czas trwania</string>
+    <string name="tag_participants">Uczestnicy</string>
+    <string name="tag_area">W Twojej okolicy</string>
+
 
 </resources>

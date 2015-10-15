@@ -21,5 +21,11 @@
     <string name="expired">Expired</string>
     <string name="times_left">left</string>
 
+    <string name="tag_title">Title</string>
+    <string name="tag_description">Description (optional)</string>
+    <string name="tag_duration">Duration</string>
+    <string name="tag_participants">Participants</string>
+    <string name="tag_area">In your neighbourhood</string>
+
 
 </resources>

@@ -13,7 +13,7 @@
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="Tytuł"
+            android:hint="@string/tag_title"
             android:textCursorDrawable="@null"
             style="@style/SecondaryText"
             android:textColorHint="#c4c6c4"
@@ -25,7 +25,7 @@
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="150dp"
-            android:hint="Opis (opcjonalnie)"
+            android:hint="@string/tag_description"
             android:textCursorDrawable="@null"
             style="@style/SecondaryText"
             android:textColorHint="#c4c6c4"
@@ -41,7 +41,7 @@
             android:id="@+id/text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Czas trwania"
+            android:text="@string/tag_duration"
             android:layout_margin="10dp"
             style="@style/SecondaryText"
             android:layout_below="@+id/new_tag_description" />
