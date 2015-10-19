@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -22,6 +21,8 @@ import com.facebook.login.widget.LoginButton;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.maciej.eventag.Models.Constants.*;
+
 public class LoginActivity extends ActionBarActivity {
     CallbackManager callbackManager;
     private static final List<String> PERMISSIONS = Arrays.asList("user_friends", "email", "public_profile");
@@ -29,19 +30,14 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showActionBar();
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish();
-            return;
-        }
+        getSupportActionBar().hide();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_login);
 
-        if ( isLoggedIn() ){
+        if (isLoggedIn()){
             startMapActivity();
         }
 
@@ -76,7 +72,7 @@ public class LoginActivity extends ActionBarActivity {
 
     private void startMapActivity(){
         Intent intent = new Intent(LoginActivity.this, MapActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(ACCESS_KEY, AccessToken.getCurrentAccessToken().getToken());
         startActivity(intent);
         finish();
     }

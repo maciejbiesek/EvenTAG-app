@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">EvenTAG</string>
-
+    <string name="app_name">evenTAG</string>
     <string name="facebook_app_id">927305240625281</string>
 
     <string name="shutdown_option_1">15 minutes</string>
@@ -12,7 +11,6 @@
     <string name="title_first">First set title!</string>
     <string name="add_new_tag">Tag has been successfully added</string>
     <string name="coords_fail">Wrong coordinates</string>
-    <string name="server_fail">Server returned an error</string>
     <string name="login_ok">You have successfully logged in</string>
     <string name="coords_not_found">Cannot get address from these coordinates</string>
     <string name="data_not_yet">Data has not been loaded yet, please wait</string>
@@ -26,6 +24,9 @@
     <string name="tag_duration">Duration</string>
     <string name="tag_participants">Participants</string>
     <string name="tag_area">In your neighbourhood</string>
+
+    <string name="server_connection">Connection to the server</string>
+    <string name="server_fail">Server returned an error</string>
 
 
 </resources>

@@ -32,7 +32,7 @@ import static com.example.maciej.eventag.Models.Constants.*;
 public class TagListActivity extends ActionBarActivity {
     GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
-    private List<Tag> tagList = new ArrayList<Tag>();
+    private List<Tag> tagList;
     private boolean isSorted = false;
     private ViewAnimator viewAnimator;
     private String latitude;
@@ -45,8 +45,7 @@ public class TagListActivity extends ActionBarActivity {
         showActionBar();
 
         Intent i = getIntent();
-        tagList.clear();
-        tagList.addAll((ArrayList<Tag>) i.getSerializableExtra(LIST));
+        tagList = (ArrayList<Tag>) i.getSerializableExtra(TAGS_LIST);
         latitude = i.getStringExtra(LAT);
         longitude = i.getStringExtra(LNG);
 

@@ -1,23 +1,37 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:orientation="vertical"
+<ViewAnimator
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_animator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:name="com.google.android.gms.maps.MapFragment"
-    android:animationCache="false"
-    tools:context=".MapActivity"
-    class="com.google.android.gms.maps.SupportMapFragment">
+    android:layout_height="match_parent" >
 
-    <ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/animator"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon"/>
 
         <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:animationCache="false"
+        tools:context=".MapActivity"
+        class="com.google.android.gms.maps.SupportMapFragment">
 
         <ImageButton
             android:id="@+id/button_add"
@@ -28,7 +42,6 @@
             android:src="@drawable/add"
             android:layout_gravity="bottom|right"/>
 
-    </ViewAnimator>
+    </fragment>
 
-
-</fragment>
+</ViewAnimator>

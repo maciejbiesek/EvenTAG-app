@@ -16,15 +16,15 @@ public class Tag implements Serializable {
     private double distance;
 
 
-    public Tag(int id, String name, String description, String shutdownTime, String lat, String lng, User owner) {
+    public Tag(int id, int userId, String name, String description, String shutdownTime, String lat, String lng, String address) {
         this.id = id;
-        this.userId = 0;
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.shutdownTime = shutdownTime;
         this.lat = lat;
         this.lng = lng;
-        this.owner = owner;
+        this.address = address;
     }
 
     public Tag(int userId, String name, String description, String shutdownTime, String lat, String lng) {

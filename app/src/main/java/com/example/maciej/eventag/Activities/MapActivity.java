@@ -16,11 +16,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.ViewAnimator;
 import android.support.v7.app.ActionBar.LayoutParams;
+import android.widget.ViewAnimator;
 
-import com.example.maciej.eventag.DownloadTagService;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
+import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Models.Tag;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,14 +35,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import static com.example.maciej.eventag.Models.Constants.*;
 
 public class MapActivity extends ActionBarActivity implements
@@ -57,20 +52,33 @@ public class MapActivity extends ActionBarActivity implements
     LatLng user_location;
 
     public static final String TAG = MapActivity.class.getSimpleName();
-    public static List<Tag> tagList = new ArrayList<Tag>();
-    private boolean isOK = false;
+    public static List<Tag> tagList;
+    private String accessKey;
+    private NetworkProvider networkProvider;
     private HashMap<Marker, Tag> mMarkersHashMap;
     private GoogleApiClient mGoogleApiClient;
     private CommunicationHelper comHelper;
+    private ViewAnimator mapAnimator;
+    private ActionBar actBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actBar = getSupportActionBar();
+        actBar.hide();
         setContentView(R.layout.activity_map);
-        showActionBar();
+
+        initialize();
+    }
+
+    private void initialize() {
+        Intent i = getIntent();
+        accessKey = i.getStringExtra(ACCESS_KEY);
+        tagList = new ArrayList<Tag>();
 
         comHelper = new CommunicationHelper(this);
+        mapAnimator = (ViewAnimator) findViewById(R.id.map_animator);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -79,15 +87,6 @@ public class MapActivity extends ActionBarActivity implements
                 .build();
 
         mGoogleApiClient.connect();
-
-        if (isOnline()) {
-            if (!isMyServiceRunning(DownloadTagService.class)) {
-                startService(new Intent(this, DownloadTagService.class));
-            }
-        }
-        else {
-            comHelper.showUserDialog("", getString(R.string.internet_not_found));
-        }
 
         ImageButton addButton = (ImageButton) findViewById(R.id.button_add);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +100,6 @@ public class MapActivity extends ActionBarActivity implements
             }
         });
 
-        updateUI();
 
         // Initialize the HashMap for Markers and MyMarker object
         mMarkersHashMap = new HashMap<Marker, Tag>();
@@ -109,7 +107,6 @@ public class MapActivity extends ActionBarActivity implements
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
-
     }
 
     @Override
@@ -147,6 +144,7 @@ public class MapActivity extends ActionBarActivity implements
             user_location = new LatLng(user_location_latitude, user_location_longitude);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
         }
+        setUpMap();
     }
 
     @Override
@@ -162,77 +160,6 @@ public class MapActivity extends ActionBarActivity implements
         }
     }
 
-    private void updateUI() {
-        final ViewAnimator viewAnimator = (ViewAnimator) findViewById(R.id.animator);
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-
-                while (DownloadTagService.tags.isEmpty()) {
-                    // wait for server (don't ask me wtf is that shit, kinda awful, but it works)
-                }
-
-                if (!DownloadTagService.tags.isEmpty() && tagList != DownloadTagService.tags) {
-                    isOK = false;
-                    tagList.clear();
-                    tagList.addAll(DownloadTagService.tags);
-                    getAdressesAndDistance();
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            viewAnimator.setDisplayedChild(1);
-                            plotMarkers(tagList);
-                        }
-                    });
-                }
-            }
-        };
-
-        Timer timer = new Timer();
-        long delay = 0;
-        long intevalPeriod = 60 * 1000;
-        timer.scheduleAtFixedRate(task, delay, intevalPeriod);
-    }
-
-    private void getAdressesAndDistance() {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-
-        for (int i = tagList.size() - 1; i >= 0; i--) {
-
-            double latitude = Double.parseDouble(tagList.get(i).getLat());
-            double longitude = Double.parseDouble(tagList.get(i).getLng());
-
-            if (latitude < 60 && longitude < 60) {
-                addresses = null;
-                try {
-                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (addresses != null && !addresses.isEmpty()) {
-                    String address = addresses.get(0).getAddressLine(0);
-                    String city = addresses.get(0).getLocality();
-                    tagList.get(i).setAddress(address);
-                }
-                else tagList.get(i).setAddress(getString(R.string.coords_not_found) + " " + latitude + ", " + longitude);
-            } else tagList.get(i).setAddress(getString(R.string.coords_fail));
-
-            Double latDouble = Double.parseDouble(tagList.get(i).getLat());
-            Double lngDouble = Double.parseDouble(tagList.get(i).getLng());
-            Location tagLocation = new Location(TAG_LOCATION);
-            tagLocation.setLatitude(latDouble);
-            tagLocation.setLongitude(lngDouble);
-
-            tagList.get(i).setDistance(location.distanceTo(tagLocation));
-            Log.i("distance", "" + tagList.get(i).getDistance());
-        }
-        isOK = true;
-
-    }
-
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -240,53 +167,25 @@ public class MapActivity extends ActionBarActivity implements
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void onMapReady(GoogleMap map) {
         Log.i(TAG, "Initializing map success");
-
         setUpMap();
-
     }
 
-    private void setUpMap()
-    {
-        if (map == null)
-        {
+    private void setUpMap() {
+        if (map == null) {
             map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             map.getUiSettings().setMapToolbarEnabled(false);
-
         }
+        getTags();
     }
 
-    private void plotMarkers(List<Tag> tags)
-    {
-        if ( tags.size() > 0 )
-        {
-            for ( Tag tag : tags )
-            {
-                // Create user marker with custom icon and other options
-                    MarkerOptions markerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(tag.getLat()), Double.parseDouble(tag.getLng()))).title(tag.getName()).snippet(tag.getDescription());
-                markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                /*
-                TO DO
-                markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
-                */
-
-                Marker currentMarker = map.addMarker(markerOption);
-                mMarkersHashMap.put(currentMarker, tag);
-
-            }
-        }
+    private void getTags() {
+        actBar.hide();
+        mapAnimator.setDisplayedChild(0);
+        networkProvider = new NetworkProvider(this, accessKey);
+        networkProvider.getTags(tagList, map, mMarkersHashMap, actBar, mapAnimator);
     }
 
     @Override
@@ -320,32 +219,15 @@ public class MapActivity extends ActionBarActivity implements
 
     // MENU
 
-    private void showActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        View cView = getLayoutInflater().inflate(R.layout.custom_map_menu, null);
-        LayoutParams layout = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-
-        actionBar.setCustomView(cView, layout);
-    }
-
     public void clickEvent(View v) {
         switch (v.getId()) {
             case R.id.left: {
-                if (isOK) {
-                    Intent intent = new Intent(MapActivity.this, TagListActivity.class);
-                    intent.putExtra(LIST, (java.io.Serializable) tagList);
-                    intent.putExtra(LAT, String.valueOf(user_location_latitude));
-                    intent.putExtra(LNG, String.valueOf(user_location_longitude));
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
-                }
-                else {
-                    Toast.makeText(this, getString(R.string.data_not_yet), Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(MapActivity.this, TagListActivity.class);
+                intent.putExtra(TAGS_LIST, (java.io.Serializable) tagList);
+                intent.putExtra(LAT, String.valueOf(user_location_latitude));
+                intent.putExtra(LNG, String.valueOf(user_location_longitude));
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
                 break;
             }
             case R.id.logo: {

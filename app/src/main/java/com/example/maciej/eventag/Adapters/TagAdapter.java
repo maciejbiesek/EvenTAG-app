@@ -112,7 +112,6 @@ public class TagAdapter extends BaseAdapter {
         TextView tagPlace = (TextView) tagView.findViewById(R.id.tag_place);
         tagPlace.setText(tag.getAddress());
 
-
         TextView tagShutdown = (TextView) tagView.findViewById(R.id.tag_shutdown);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date shutdownDate = null;

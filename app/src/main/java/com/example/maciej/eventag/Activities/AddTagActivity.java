@@ -220,7 +220,6 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         } else tag.setAddress(getString(R.string.coords_fail));
     }
 
-
     private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, String> {
 
         @Override
@@ -231,8 +230,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 try {
                     JSONObject jsonTag = new JSONObject(result);
                     Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
-                            jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"),
-                            new User(5, "Ernestina Gerhold", "Maciej", "Biesek", "", "images/maciej.jpg"));
+                            jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"));
                     getAdress(tag);
                     MapActivity.tagList.add(0, tag);
                 } catch (JSONException e) {
