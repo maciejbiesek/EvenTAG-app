@@ -1,6 +1,8 @@
 package com.example.maciej.eventag.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -24,8 +27,10 @@ import java.util.List;
 import static com.example.maciej.eventag.Models.Constants.*;
 
 public class LoginActivity extends ActionBarActivity {
-    CallbackManager callbackManager;
+
+    private CallbackManager callbackManager;
     private static final List<String> PERMISSIONS = Arrays.asList("user_friends", "email", "public_profile");
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,8 @@ public class LoginActivity extends ActionBarActivity {
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_login);
+
+        preferences = getSharedPreferences(KEYS, Context.MODE_PRIVATE);
 
         if (isLoggedIn()){
             startMapActivity();
@@ -70,9 +77,12 @@ public class LoginActivity extends ActionBarActivity {
 
     }
 
-    private void startMapActivity(){
+    private void startMapActivity() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(ACCESS, AccessToken.getCurrentAccessToken().getToken());
+        editor.commit();
+
         Intent intent = new Intent(LoginActivity.this, MapActivity.class);
-        intent.putExtra(ACCESS_KEY, AccessToken.getCurrentAccessToken().getToken());
         startActivity(intent);
         finish();
     }

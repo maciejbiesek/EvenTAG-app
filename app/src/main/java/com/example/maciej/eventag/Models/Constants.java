@@ -16,4 +16,9 @@ public class Constants {
     public static final String STATE_LOCATION_LAT = "userLocationLat";
     public static final String STATE_LOCATION_LNG = "userLocationLng";
     public static final String TAG_LOCATION = "tagLocation";
+
+    public static final String KEYS = "keys";
+    public static final String ACCESS = "access";
+    public static final String USER_ID = "user_id";
+    public static final int TAG_RESULT = 0;
 }

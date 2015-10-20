@@ -69,12 +69,11 @@ public class MapActivity extends ActionBarActivity implements
         actBar.hide();
         setContentView(R.layout.activity_map);
 
+        getUserId();
         initialize();
     }
 
     private void initialize() {
-        Intent i = getIntent();
-        accessKey = i.getStringExtra(ACCESS_KEY);
         tagList = new ArrayList<Tag>();
 
         comHelper = new CommunicationHelper(this);
@@ -184,7 +183,7 @@ public class MapActivity extends ActionBarActivity implements
     private void getTags() {
         actBar.hide();
         mapAnimator.setDisplayedChild(0);
-        networkProvider = new NetworkProvider(this, accessKey);
+        networkProvider = new NetworkProvider(this);
         networkProvider.getTags(tagList, map, mMarkersHashMap, actBar, mapAnimator);
     }
 
@@ -217,6 +216,24 @@ public class MapActivity extends ActionBarActivity implements
         }
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 0) {
+            if (mGoogleApiClient.isConnected()) {
+                location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                user_location_latitude = location.getLatitude();
+                user_location_longitude = location.getLongitude();
+                user_location = new LatLng(user_location_latitude, user_location_longitude);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
+            }
+            setUpMap();
+        }
+    }
+
+    private void getUserId() {
+        NetworkProvider networkProvider = new NetworkProvider(this);
+        networkProvider.getUserId();
+    }
+
     // MENU
 
     public void clickEvent(View v) {
@@ -226,7 +243,7 @@ public class MapActivity extends ActionBarActivity implements
                 intent.putExtra(TAGS_LIST, (java.io.Serializable) tagList);
                 intent.putExtra(LAT, String.valueOf(user_location_latitude));
                 intent.putExtra(LNG, String.valueOf(user_location_longitude));
-                startActivity(intent);
+                startActivityForResult(intent, TAG_RESULT);
                 overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
                 break;
             }

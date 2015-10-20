@@ -194,7 +194,7 @@ public class TagListActivity extends ActionBarActivity {
                 Intent intent = new Intent(TagListActivity.this, AddTagActivity.class);
                 intent.putExtra(LAT, latitude);
                 intent.putExtra(LNG, longitude);
-                startActivity(intent);
+                startActivityForResult(intent, TAG_RESULT);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
                 finish();
                 break;

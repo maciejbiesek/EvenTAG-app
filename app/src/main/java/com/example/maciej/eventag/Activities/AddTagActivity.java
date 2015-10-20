@@ -2,6 +2,7 @@ package com.example.maciej.eventag.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
@@ -18,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
+import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.Models.User;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -47,6 +50,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
     private String longitude;
     private int which;
     private CommunicationHelper comHelper;
+    private NetworkProvider networkProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         spinner.setOnItemSelectedListener(this);
 
         comHelper = new CommunicationHelper(this);
+        networkProvider = new NetworkProvider(this);
     }
 
     private void addTag() {
@@ -100,12 +105,20 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 break;
         }
 
-        int userId = 5;
+        SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
+        int userId = prefs.getInt(USER_ID, 0);
         Tag tag = new Tag(userId, name, description, shutdownTime, latitude, longitude);
 
         if (!name.isEmpty()) {
             if (isOnline()) {
-                (new AsyncNetworkTagsProvider()).execute(createJSON(tag));
+                try {
+                    networkProvider.sendTag(tag);
+                    setResult(0);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
             else {
@@ -132,131 +145,12 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         return df.format(finalDate.getTime());
     }
 
-    public String sendToServer(String jsonObject) throws IOException {
-        InputStream is = null;
-
-        try {
-            URL url = new URL(TAGS_URL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            OutputStreamWriter os = new OutputStreamWriter(conn.getOutputStream());
-            os.write(jsonObject);
-            os.flush();
-            is = conn.getInputStream();
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    comHelper.showUserDialog("", getString(R.string.add_new_tag));
-                }
-            });
-            return readStream(is);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return "ERROR";
-    }
-
-    public String createJSON(Tag tag) {
-        JSONObject jObject = new JSONObject();
-        try {
-            jObject.put("name", tag.getName());
-            jObject.put("user_id", tag.getUserId());
-            jObject.put("lat", tag.getLat());
-            jObject.put("lng", tag.getLng());
-            jObject.put("message", tag.getDescription());
-            jObject.put("shutdown_time", tag.getShutdownTime());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jObject.toString();
-    }
-
-    public String readStream(InputStream stream) throws IOException {
-        BufferedReader r = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder total = new StringBuilder();
-        String line;
-        while ((line = r.readLine()) != null) {
-            total.append(line);
-        }
-        return total.toString();
-    }
-
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
-
-    private void getAdress(Tag tag) {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        double latitude = Double.parseDouble(tag.getLat());
-        double longitude = Double.parseDouble(tag.getLng());
-
-        if (latitude < 60 && longitude < 60) {
-            addresses = null;
-            try {
-                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!addresses.isEmpty()) {
-                String address = addresses.get(0).getAddressLine(0);
-                String city = addresses.get(0).getLocality();
-                tag.setAddress(address);
-            }
-            else tag.setAddress(latitude + ", " + longitude);
-        } else tag.setAddress(getString(R.string.coords_fail));
-    }
-
-    private class AsyncNetworkTagsProvider extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            if (result != null && result != "ERROR") {
-                try {
-                    JSONObject jsonTag = new JSONObject(result);
-                    Tag tag = new Tag(jsonTag.getInt("id"), jsonTag.getString("name"), jsonTag.getString("message"),
-                            jsonTag.getString("shutdown_time"), jsonTag.getString("lat"), jsonTag.getString("lng"));
-                    getAdress(tag);
-                    MapActivity.tagList.add(0, tag);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            else comHelper.showUserDialog("", getString(R.string.server_fail));
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                return sendToServer(params[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
-
 
 
     // MENU

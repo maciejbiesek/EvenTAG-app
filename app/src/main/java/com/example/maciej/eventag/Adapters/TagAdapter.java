@@ -102,7 +102,7 @@ public class TagAdapter extends BaseAdapter {
     }
 
     private void loadImageWithPicasso(Tag tag, ImageView tagPhoto) {
-        Picasso.with(context).load(tag.getOwner().getAvatarUrl()).into(tagPhoto);
+//        Picasso.with(context).load(tag.getOwner().getAvatarUrl()).into(tagPhoto);
     }
 
     private void bindTagToView(Tag tag, View tagView) {

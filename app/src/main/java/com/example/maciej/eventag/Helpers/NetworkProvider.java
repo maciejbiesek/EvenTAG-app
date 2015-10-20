@@ -2,8 +2,10 @@ package com.example.maciej.eventag.Helpers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.Models.Tag;
@@ -19,11 +21,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.message.BasicHeader;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 import static com.example.maciej.eventag.Models.Constants.*;
 
@@ -33,12 +39,29 @@ public class NetworkProvider {
     private RestClient restClient;
     private CommunicationHelper comHelper;
     public boolean isFinished;
+    private SharedPreferences preferences;
 
-    public NetworkProvider(Context context, String accessKey) {
+    public NetworkProvider(Context context) {
         this.context = context;
-        this.restClient = new RestClient(accessKey);
+        this.preferences = context.getSharedPreferences(KEYS, Context.MODE_PRIVATE);
+        String accessKey = preferences.getString(ACCESS, "");
+        this.restClient = new RestClient(context, accessKey);
         this.comHelper = new CommunicationHelper(context);
         this.isFinished = false;
+    }
+
+    public void getUserId() {
+        String me = "/users?me";
+        this.restClient.get(me, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                int userId = response.optInt("userId");
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt(USER_ID, userId);
+                editor.commit();
+            }
+        });
     }
 
     public void getTags(final List<Tag> tagsList, final GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap, final ActionBar actBar, final ViewAnimator mapAnimator) {
@@ -62,6 +85,27 @@ public class NetworkProvider {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+            }
+        });
+    }
+
+    public void sendTag(final Tag tag) throws UnsupportedEncodingException, JSONException {
+        String post = "/tags";
+
+        JSONObject jsonTag = parseTagToJson(tag);
+        StringEntity entity = new StringEntity(jsonTag.toString());
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+
+        this.restClient.post(post, entity, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.add_new_tag), Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
             }
         });
@@ -110,6 +154,18 @@ public class NetworkProvider {
         mMarkersHashMap.put(currentMarker, tag);
 
         return tag;
+    }
+
+    private JSONObject parseTagToJson(Tag tag) throws JSONException {
+        JSONObject tagJson = new JSONObject();
+        tagJson.put("name", tag.getName());
+        tagJson.put("user_id", tag.getUserId());
+        tagJson.put("lat", tag.getLat());
+        tagJson.put("lng", tag.getLng());
+        tagJson.put("message", tag.getDescription());
+        tagJson.put("shutdown_time", tag.getShutdownTime());
+
+        return tagJson;
     }
 
     private void showActionBar(ActionBar actBar) {
