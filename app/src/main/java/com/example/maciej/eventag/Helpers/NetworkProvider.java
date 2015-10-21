@@ -9,6 +9,7 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -56,7 +57,7 @@ public class NetworkProvider {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                int userId = response.optInt("userId");
+                int userId = response.optInt("id");
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt(USER_ID, userId);
                 editor.commit();
@@ -65,7 +66,7 @@ public class NetworkProvider {
     }
 
     public void getTags(final List<Tag> tagsList, final GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap, final ActionBar actBar, final ViewAnimator mapAnimator) {
-        String get = "/tags";
+        String get = "/tags?number=20&fields=user";
         this.restClient.get(get, null, new JsonHttpResponseHandler() {
 
             @Override
@@ -106,7 +107,7 @@ public class NetworkProvider {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
             }
         });
     }
@@ -134,6 +135,9 @@ public class NetworkProvider {
 
         String address = helper.getAddress(lat, lng);
 
+        JSONObject userJson = jObject.optJSONObject("user");
+        User user = new User(userJson.optInt("id"), userJson.optString("name"), userJson.optString("avatar"));
+
         Tag tag = new Tag(jObject.optInt("id"),
                 jObject.optInt("user_id"),
                 jObject.optString("name"),
@@ -141,7 +145,8 @@ public class NetworkProvider {
                 jObject.optString("shutdown_time"),
                 latStr,
                 lngStr,
-                address);
+                address,
+                user);
 
         MarkerOptions markerOption = new MarkerOptions().position(new LatLng(lat, lng)).title(tag.getName()).snippet(tag.getDescription());
         markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));

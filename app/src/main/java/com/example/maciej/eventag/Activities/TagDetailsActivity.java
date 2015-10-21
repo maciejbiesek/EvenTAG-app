@@ -65,7 +65,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         }
         else members.setText(getString(R.string.members_present));
 
-        //loadImageWithPicasso(tag, photo);
+        loadImageWithPicasso(tag, photo);
 
         toMap.setOnClickListener(new OnClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class TagDetailsActivity extends ActionBarActivity {
 
     private void loadImageWithPicasso(Tag tag, ImageView tagPhoto) {
         Picasso.with(this).
-                load(tag.getOwner().getAvatarUrl())
+                load(tag.getUser().getAvatarUrl())
                 .into(tagPhoto);
     }
 

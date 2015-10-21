@@ -14,9 +14,10 @@ public class Tag implements Serializable {
     private User owner;
     private String address;
     private double distance;
+    private User user;
 
 
-    public Tag(int id, int userId, String name, String description, String shutdownTime, String lat, String lng, String address) {
+    public Tag(int id, int userId, String name, String description, String shutdownTime, String lat, String lng, String address, User user) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -25,6 +26,7 @@ public class Tag implements Serializable {
         this.lat = lat;
         this.lng = lng;
         this.address = address;
+        this.user = user;
     }
 
     public Tag(int userId, String name, String description, String shutdownTime, String lat, String lng) {
@@ -48,7 +50,9 @@ public class Tag implements Serializable {
     public User getOwner() { return owner; }
     public String getAddress() { return address; }
     public Double getDistance() { return distance; }
+    public User getUser() {return user; }
 
     public void setAddress(String _address) { address = _address; }
     public void setDistance(double _distance) { distance = _distance; }
+    public void setUser(User user) { this.user = user; }
 }
