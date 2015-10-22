@@ -10,6 +10,8 @@
     <string name="internet_not_found">No network access</string>
     <string name="title_first">First set title!</string>
     <string name="add_new_tag">Tag has been successfully added</string>
+    <string name="edit_tag">Tag has been successfully edited</string>
+    <string name="delete_tag">Tag has been successfully deleted</string>
     <string name="coords_fail">Wrong coordinates</string>
     <string name="login_ok">You have successfully logged in</string>
     <string name="coords_not_found">Cannot get address from these coordinates</string>

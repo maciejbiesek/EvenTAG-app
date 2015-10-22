@@ -30,6 +30,14 @@ public class RestClient {
         this.client.post(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
+    public void put(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
+        this.client.put(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
+    }
+
+    public void delete(String url, AsyncHttpResponseHandler responseHandler) {
+        this.client.delete(url, responseHandler);
+    }
+
     private String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
     }

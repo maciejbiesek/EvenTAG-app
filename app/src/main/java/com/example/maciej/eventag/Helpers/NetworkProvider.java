@@ -112,6 +112,42 @@ public class NetworkProvider {
         });
     }
 
+    public void editTag(final Tag tag) throws JSONException, UnsupportedEncodingException {
+        String edit = "/tags" + tag.getId();
+
+        JSONObject jsonTag = parseTagToJson(tag);
+        StringEntity entity = new StringEntity(jsonTag.toString());
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        this.restClient.put(edit, entity, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.edit_tag), Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    public void deleteTag(final Tag tag) throws JSONException, UnsupportedEncodingException {
+        String delete = "/tags" + tag.getId();
+
+        this.restClient.delete(delete, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.delete_tag), Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
     private List<Tag> getTagsFromJson(JSONArray jArray, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap) throws JSONException {
         List<Tag> tags = new ArrayList<Tag>();
         tags.clear();

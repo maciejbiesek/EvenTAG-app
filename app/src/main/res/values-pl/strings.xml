@@ -10,6 +10,8 @@
     <string name="internet_not_found">Brak dostępu do sieci</string>
     <string name="title_first">Najpierw podaj tytuł!</string>
     <string name="add_new_tag">Dodano nowe zdarzenie</string>
+    <string name="edit_tag">Zedytowano zdarzenie</string>
+    <string name="delete_tag">Usunięto zdarzenie</string>
     <string name="coords_fail">Niewłaściwe współrzędne</string>
     <string name="login_ok">Logowanie pomyslne!</string>
     <string name="coords_not_found">Nie znalazłem adresu o współrzędnych:</string>
