@@ -30,5 +30,10 @@
     <string name="server_connection">Połączenie z serwerem</string>
     <string name="server_fail">Serwer zwrócił niepoprawne dane</string>
 
+    <string name="popup_edit_tag">Edytuj zdarzenie</string>
+    <string name="popup_delete_tag">Usuń zdarzenie</string>
+    <string name="delete_tag_dialog_message">Jesteś pewien?</string>
+    <string name="delete_tag_dialog_title">Usuwanie</string>
+
 
 </resources>

@@ -30,5 +30,10 @@
     <string name="server_connection">Connection to the server</string>
     <string name="server_fail">Server returned an error</string>
 
+    <string name="popup_edit_tag">Edit tag</string>
+    <string name="popup_delete_tag">Delete tag</string>
+    <string name="delete_tag_dialog_message">Are you sure?</string>
+    <string name="delete_tag_dialog_title">Delete</string>
+
 
 </resources>

@@ -1,9 +1,16 @@
 package com.example.maciej.eventag.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -24,6 +31,8 @@ import static com.example.maciej.eventag.Models.Constants.*;
 
 public class TagDetailsActivity extends ActionBarActivity {
 
+    private Tag tag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,12 +40,12 @@ public class TagDetailsActivity extends ActionBarActivity {
         showActionBar();
 
         Intent i = getIntent();
-        Tag tag = (Tag) i.getExtras().getSerializable(TAG_KEY);
+        tag = (Tag) i.getExtras().getSerializable(TAG_KEY);
 
-        showTag(tag);
+        showTag();
     }
 
-    private void showTag(Tag tag) {
+    private void showTag() {
         CircularImageView photo = (CircularImageView)findViewById(R.id.photo);
         TextView name = (TextView) findViewById(R.id.name);
         TextView description = (TextView) findViewById(R.id.description);
@@ -44,6 +53,11 @@ public class TagDetailsActivity extends ActionBarActivity {
         TextView localisation = (TextView) findViewById(R.id.localisation);
         TextView members = (TextView) findViewById(R.id.members);
         ImageButton toMap = (ImageButton) findViewById(R.id.to_map);
+        ImageButton more = (ImageButton) findViewById(R.id.more);
+
+        Drawable myIcon = getResources().getDrawable(android.R.drawable.ic_menu_more);
+        myIcon.setColorFilter(getResources().getColor(R.color.primary_icons), PorterDuff.Mode.SRC_ATOP);
+        more.setImageDrawable(myIcon);
 
         name.setText(tag.getName());
         description.setText(tag.getDescription());
@@ -65,20 +79,40 @@ public class TagDetailsActivity extends ActionBarActivity {
         }
         else members.setText(getString(R.string.members_present));
 
-        loadImageWithPicasso(tag, photo);
+        loadImageWithPicasso(photo);
 
-        toMap.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toMap.setOnClickListener(onClickListener);
+        more.setOnClickListener(onClickListener);
     }
 
-    private void loadImageWithPicasso(Tag tag, ImageView tagPhoto) {
+    private void loadImageWithPicasso(ImageView tagPhoto) {
         Picasso.with(this).
                 load(tag.getUser().getAvatarUrl())
                 .into(tagPhoto);
+    }
+
+    private OnClickListener onClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.to_map: {
+                    finish();
+                    break;
+                }
+                case R.id.more: {
+                    showPopUp(view);
+                    break;
+                }
+            }
+        }
+    };
+
+    private void deleteTag() {
+        Toast.makeText(this, "DELETE", Toast.LENGTH_LONG).show();
+    }
+
+    private void editTag() {
+        Toast.makeText(this, "EDIT", Toast.LENGTH_LONG).show();
     }
 
     private String getTimeDiff(Date shutdownDate) {
@@ -109,6 +143,51 @@ public class TagDetailsActivity extends ActionBarActivity {
         }
         return timeDiff;
 
+    }
+
+    private void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.delete_tag_dialog_message)
+                .setTitle(R.string.delete_tag_dialog_title)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteTag();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    private void showPopUp(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.edit_tag_item: {
+                        editTag();
+                        break;
+                    }
+                    case R.id.delete_tag_item: {
+                        showDeleteDialog();
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
+        popup.show();
     }
 
 
