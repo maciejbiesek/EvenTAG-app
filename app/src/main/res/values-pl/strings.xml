@@ -34,6 +34,7 @@
     <string name="popup_delete_tag">Usuń zdarzenie</string>
     <string name="delete_tag_dialog_message">Jesteś pewien?</string>
     <string name="delete_tag_dialog_title">Usuwanie</string>
+    <string name="edit_inactive_tag">Ten tag jest nieaktywny, jego czas minął. Nie możesz go edytować</string>
 
 
 </resources>

@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,23 +35,28 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import static com.example.maciej.eventag.Models.Constants.*;
 
 
-public class AddTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
+public class EditTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner spinner;
     private static String[] shutdown;
-    private String latitude;
-    private String longitude;
+    private Tag tag;
     private int which;
     private CommunicationHelper comHelper;
     private NetworkProvider networkProvider;
+
+    private EditText nameEditText;
+    private EditText descriptionEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +65,10 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         showActionBar();
 
         Intent i = getIntent();
-        latitude = i.getStringExtra(LAT);
-        longitude = i.getStringExtra(LNG);
+        tag = (Tag) i.getExtras().getSerializable(TAG_KEY);
+
+        nameEditText = (EditText) findViewById(R.id.new_tag_name);
+        descriptionEditText = (EditText) findViewById(R.id.new_tag_description);
 
         shutdown = new String[] {
                 getString(R.string.shutdown_option_1),
@@ -70,21 +78,23 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
         };
 
         spinner = (Spinner)findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddTagActivity.this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditTagActivity.this,
                 R.layout.spinner_item, shutdown);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setSelection(0);
+        spinner.setSelection(getShutdownOption());
         spinner.setOnItemSelectedListener(this);
+
+        nameEditText.setText(tag.getName());
+        nameEditText.setSelection(tag.getName().length());
+        descriptionEditText.setText(tag.getDescription());
+        descriptionEditText.setSelection(tag.getDescription().length());
 
         comHelper = new CommunicationHelper(this);
         networkProvider = new NetworkProvider(this);
     }
 
     private void addTag() {
-        EditText nameEditText = (EditText) findViewById(R.id.new_tag_name);
-        EditText descriptionEditText = (EditText) findViewById(R.id.new_tag_description);
-
         String name = nameEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
 
@@ -107,19 +117,19 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
 
         SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
         int userId = prefs.getInt(USER_ID, 0);
-        Tag tag = new Tag(0, userId, name, description, shutdownTime, latitude, longitude);
+        Tag tagEdited = new Tag(tag.getId(), userId, name, description, shutdownTime, tag.getLat(), tag.getLng());
 
         if (!name.isEmpty()) {
             if (isOnline()) {
                 try {
-                    networkProvider.sendTag(tag);
+                    networkProvider.editTag(tagEdited);
                     setResult(1);
+                    finish();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                finish();
             }
             else {
                 comHelper.showUserDialog("", getString(R.string.internet_not_found));
@@ -150,6 +160,27 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    public int getShutdownOption() {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            Date now = new Date();
+            Date tagShutdown = df.parse(tag.getShutdownTime());
+            long diff = tagShutdown.getTime() - now.getTime();
+            long minutes = diff / (1000 * 60);
+            if (minutes <= 15) {
+                return 0;
+            } else if (minutes > 15 && minutes <= 30) {
+                return 1;
+            } else if (minutes > 30 && minutes <= 60) {
+                return 2;
+            } else return 3;
+        }
+        catch (ParseException e) {
+            return 0;
+        }
     }
 
 

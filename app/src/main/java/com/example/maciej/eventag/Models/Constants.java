@@ -18,4 +18,6 @@ public class Constants {
     public static final String ACCESS = "access";
     public static final String USER_ID = "user_id";
     public static final int TAG_RESULT = 0;
+    public static final int TAG_DETAILS_RESULT = 0;
+    public static final int TAG_EDIT_RESULT = 0;
 }

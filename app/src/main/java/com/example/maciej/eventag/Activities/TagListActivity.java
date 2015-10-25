@@ -138,7 +138,7 @@ public class TagListActivity extends ActionBarActivity {
         Intent i = new Intent(this, TagDetailsActivity.class);
 
         i.putExtra(TAG_KEY, tag);
-        startActivity(i);
+        startActivityForResult(i, TAG_DETAILS_RESULT);
     }
 
     @Override
@@ -162,6 +162,13 @@ public class TagListActivity extends ActionBarActivity {
             }
 
             return true;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 1) {
+            finish();
         }
     }
 

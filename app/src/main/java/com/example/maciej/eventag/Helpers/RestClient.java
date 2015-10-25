@@ -35,7 +35,7 @@ public class RestClient {
     }
 
     public void delete(String url, AsyncHttpResponseHandler responseHandler) {
-        this.client.delete(url, responseHandler);
+        this.client.delete(getAbsoluteUrl(url), responseHandler);
     }
 
     private String getAbsoluteUrl(String relativeUrl) {

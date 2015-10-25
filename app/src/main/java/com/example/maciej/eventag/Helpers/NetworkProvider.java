@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
@@ -113,7 +114,7 @@ public class NetworkProvider {
     }
 
     public void editTag(final Tag tag) throws JSONException, UnsupportedEncodingException {
-        String edit = "/tags" + tag.getId();
+        String edit = "/tags/" + tag.getId();
 
         JSONObject jsonTag = parseTagToJson(tag);
         StringEntity entity = new StringEntity(jsonTag.toString());
@@ -129,11 +130,18 @@ public class NetworkProvider {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
             }
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.e("ERR", errorResponse.toString());
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
         });
     }
 
     public void deleteTag(final Tag tag) throws JSONException, UnsupportedEncodingException {
-        String delete = "/tags" + tag.getId();
+        String delete = "/tags/" + tag.getId();
 
         this.restClient.delete(delete, new JsonHttpResponseHandler() {
             @Override

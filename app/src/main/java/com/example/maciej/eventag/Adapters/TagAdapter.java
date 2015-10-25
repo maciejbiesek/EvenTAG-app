@@ -121,12 +121,12 @@ public class TagAdapter extends BaseAdapter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String dateInfo = getTimeDiff(shutdownDate);
+        String dateInfo = getTimeDiff(shutdownDate, tag);
 
         tagShutdown.setText(dateInfo);
     }
 
-    private String getTimeDiff(Date shutdownDate) {
+    private String getTimeDiff(Date shutdownDate, Tag tag) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timeDiff = "";
         Date todayDate = new Date();
@@ -148,9 +148,11 @@ public class TagAdapter extends BaseAdapter {
                 timeDiff += minutes + " min";
             }
             timeDiff += " " + context.getString(R.string.times_left);
+            tag.setIsActive(true);
         }
         else {
             timeDiff += context.getString(R.string.expired) + " " + df.format(shutdownDate);
+            tag.setIsActive(false);
         }
         return timeDiff;
 

@@ -3,6 +3,7 @@ package com.example.maciej.eventag.Activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -18,11 +19,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.maciej.eventag.Helpers.CommunicationHelper;
+import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Models.Tag;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +38,9 @@ import static com.example.maciej.eventag.Models.Constants.*;
 public class TagDetailsActivity extends ActionBarActivity {
 
     private Tag tag;
+    private int myId;
+    private NetworkProvider networkProvider;
+    private CommunicationHelper comHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,12 @@ public class TagDetailsActivity extends ActionBarActivity {
 
         Intent i = getIntent();
         tag = (Tag) i.getExtras().getSerializable(TAG_KEY);
+
+        SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
+        myId = prefs.getInt(USER_ID, 0);
+
+        networkProvider = new NetworkProvider(this);
+        comHelper = new CommunicationHelper(this);
 
         showTag();
     }
@@ -55,9 +70,10 @@ public class TagDetailsActivity extends ActionBarActivity {
         ImageButton toMap = (ImageButton) findViewById(R.id.to_map);
         ImageButton more = (ImageButton) findViewById(R.id.more);
 
-        Drawable myIcon = getResources().getDrawable(android.R.drawable.ic_menu_more);
-        myIcon.setColorFilter(getResources().getColor(R.color.primary_icons), PorterDuff.Mode.SRC_ATOP);
-        more.setImageDrawable(myIcon);
+        if (tag.getUserId() == myId) {
+            more.setVisibility(View.VISIBLE);
+        }
+        else more.setVisibility(View.INVISIBLE);
 
         name.setText(tag.getName());
         description.setText(tag.getDescription());
@@ -108,11 +124,24 @@ public class TagDetailsActivity extends ActionBarActivity {
     };
 
     private void deleteTag() {
-        Toast.makeText(this, "DELETE", Toast.LENGTH_LONG).show();
+        try {
+            networkProvider.deleteTag(tag);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        setResult(1);
+        finish();
     }
 
     private void editTag() {
-        Toast.makeText(this, "EDIT", Toast.LENGTH_LONG).show();
+        if (tag.getIsActive()) {
+            Intent i = new Intent(this, EditTagActivity.class);
+            i.putExtra(TAG_KEY, tag);
+            startActivityForResult(i, TAG_EDIT_RESULT);
+        }
+        else comHelper.showUserDialog(getString(R.string.edit_tag), getString(R.string.edit_inactive_tag));
     }
 
     private String getTimeDiff(Date shutdownDate) {
@@ -188,6 +217,14 @@ public class TagDetailsActivity extends ActionBarActivity {
             }
         });
         popup.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 1) {
+            setResult(1);
+            finish();
+        }
     }
 
 

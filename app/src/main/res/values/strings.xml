@@ -34,6 +34,7 @@
     <string name="popup_delete_tag">Delete tag</string>
     <string name="delete_tag_dialog_message">Are you sure?</string>
     <string name="delete_tag_dialog_title">Delete</string>
+    <string name="edit_inactive_tag">Sorry, that tag is inactive, you can not edit it</string>
 
 
 </resources>
