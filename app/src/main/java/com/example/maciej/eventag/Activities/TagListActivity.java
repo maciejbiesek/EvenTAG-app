@@ -30,7 +30,6 @@ import static com.example.maciej.eventag.Models.Constants.*;
 
 
 public class TagListActivity extends ActionBarActivity {
-    GestureDetectorCompat gestureDetectorCompat;
     private TagAdapter adapter;
     private List<Tag> tagList;
     private boolean isSorted = false;
@@ -50,8 +49,6 @@ public class TagListActivity extends ActionBarActivity {
         longitude = i.getStringExtra(LNG);
 
         sortTagList();
-
-        gestureDetectorCompat = new GestureDetectorCompat(this, new My2ndGestureListener());
 
         viewAnimator = (ViewAnimator) findViewById(R.id.animator2);
         
@@ -117,13 +114,6 @@ public class TagListActivity extends ActionBarActivity {
 
         list.setAdapter(adapter);
 
-        list.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetectorCompat.onTouchEvent(event);
-            }
-        });
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -139,30 +129,6 @@ public class TagListActivity extends ActionBarActivity {
 
         i.putExtra(TAG_KEY, tag);
         startActivityForResult(i, TAG_DETAILS_RESULT);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (gestureDetectorCompat.onTouchEvent(event)) {
-            return true;
-        }
-        return false;
-    }
-
-    //handle 'swipe right' action only
-    class My2ndGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
-
-            if(event2.getX() < event1.getX() && Math.abs(event2.getY() - event1.getY()) < 50){
-                finish();
-                overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
-            }
-
-            return true;
-        }
     }
 
     @Override

@@ -14,11 +14,14 @@ import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
@@ -61,7 +64,6 @@ public class TagDetailsActivity extends ActionBarActivity {
     }
 
     private void showTag() {
-        CircularImageView photo = (CircularImageView)findViewById(R.id.photo);
         TextView name = (TextView) findViewById(R.id.name);
         TextView description = (TextView) findViewById(R.id.description);
         TextView shutdown = (TextView) findViewById(R.id.shutdown);
@@ -69,6 +71,22 @@ public class TagDetailsActivity extends ActionBarActivity {
         TextView members = (TextView) findViewById(R.id.members);
         ImageButton toMap = (ImageButton) findViewById(R.id.to_map);
         ImageButton more = (ImageButton) findViewById(R.id.more);
+        GridView attendersGrid = (GridView) findViewById(R.id.attenders);
+
+        final ImageAdapter attendersAdapter = new ImageAdapter(this, myId);
+        attendersGrid.setAdapter(attendersAdapter);
+        attendersGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position == 0) {
+                    networkProvider.resign(tag, attendersAdapter);
+                }
+                else if (position == attendersAdapter.getLast()) {
+                    networkProvider.attend(tag, attendersAdapter);
+                }
+                else Toast.makeText(TagDetailsActivity.this, "NIC MEH", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         if (tag.getUserId() == myId) {
             more.setVisibility(View.VISIBLE);
@@ -95,16 +113,10 @@ public class TagDetailsActivity extends ActionBarActivity {
         }
         else members.setText(getString(R.string.members_present));
 
-        loadImageWithPicasso(photo);
+        networkProvider.getAttenders(tag, attendersAdapter);
 
         toMap.setOnClickListener(onClickListener);
         more.setOnClickListener(onClickListener);
-    }
-
-    private void loadImageWithPicasso(ImageView tagPhoto) {
-        Picasso.with(this).
-                load(tag.getUser().getAvatarUrl())
-                .into(tagPhoto);
     }
 
     private OnClickListener onClickListener = new OnClickListener() {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
+import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
@@ -67,7 +68,7 @@ public class NetworkProvider {
     }
 
     public void getTags(final List<Tag> tagsList, final GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap, final ActionBar actBar, final ViewAnimator mapAnimator) {
-        String get = "/tags?number=20&fields=user";
+        String get = "/tags?number=10&fields=user";
         this.restClient.get(get, null, new JsonHttpResponseHandler() {
 
             @Override
@@ -154,6 +155,81 @@ public class NetworkProvider {
                 Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
             }
         });
+    }
+
+    public void attend(final Tag tag, final ImageAdapter adapter) {
+        String attend = "/" + tag.getId() + "/attenders";
+        Toast.makeText(context, "ASSEMBLEEEE " + attend , Toast.LENGTH_SHORT).show();
+
+        this.restClient.post(attend, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                getAttenders(tag, adapter);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+            }
+        });
+    }
+
+    public void resign(final Tag tag, final ImageAdapter adapter) {
+        String resign = "/" + tag.getId() + "/attenders";
+
+        Toast.makeText(context, "REZYGNUJĘ " + resign, Toast.LENGTH_SHORT).show();
+
+        this.restClient.delete(resign, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                getAttenders(tag, adapter);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+            }
+        });
+    }
+
+    public void getAttenders(final Tag tag, final ImageAdapter adapter) {
+        String attenders = "/" + tag.getId() + "/attenders";
+
+        this.restClient.get(attenders, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    List<User> users = getUsersFromJson(response);
+                    adapter.addUsers(users);
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+            }
+        });
+    }
+
+    private List<User> getUsersFromJson(JSONArray jArray) throws JSONException {
+        List<User> users = new ArrayList<User>();
+        users.clear();
+
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject jsonData = jArray.getJSONObject(i);
+            User user = getUser(jsonData);
+            users.add(user);
+        }
+        return users;
+    }
+
+    private User getUser(JSONObject jObject) {
+        return new User(jObject.optInt("id"),
+                    jObject.optString("name"),
+                    jObject.optString("avatar"));
     }
 
     private List<Tag> getTagsFromJson(JSONArray jArray, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap) throws JSONException {
