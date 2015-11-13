@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maciej.eventag.Adapters.ImageAdapter;
+import com.example.maciej.eventag.ExpandableHeightGridView;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
@@ -71,7 +72,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         TextView members = (TextView) findViewById(R.id.members);
         ImageButton toMap = (ImageButton) findViewById(R.id.to_map);
         ImageButton more = (ImageButton) findViewById(R.id.more);
-        GridView attendersGrid = (GridView) findViewById(R.id.attenders);
+        ExpandableHeightGridView attendersGrid = (ExpandableHeightGridView) findViewById(R.id.attenders);
 
         final ImageAdapter attendersAdapter = new ImageAdapter(this, myId);
         attendersGrid.setAdapter(attendersAdapter);
