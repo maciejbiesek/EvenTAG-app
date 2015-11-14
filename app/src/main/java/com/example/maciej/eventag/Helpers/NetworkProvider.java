@@ -10,6 +10,7 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.Adapters.ImageAdapter;
+import com.example.maciej.eventag.Models.CircleGroup;
 import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
@@ -51,6 +52,24 @@ public class NetworkProvider {
         this.restClient = new RestClient(context, accessKey);
         this.comHelper = new CommunicationHelper(context);
         this.isFinished = false;
+    }
+
+    public void getUser(int userId) {
+        String me = "/users/" + userId;
+        this.restClient.get(me, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                int userId = response.optInt("id");
+                String name = response.optString("name");
+                String avatar = response.optString("avatar");
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt(USER_ID, userId);
+                editor.putString(USER_NAME, name);
+                editor.putString(USER_AVATAR, avatar);
+                editor.commit();
+            }
+        });
     }
 
     public void getUserId() {
@@ -192,6 +211,33 @@ public class NetworkProvider {
         });
     }
 
+    public void getCircles(int userId, final ArrayList<CircleGroup> circleGroup) {
+        String url = "/user/" + userId + "/circles";
+        Log.i("TEST", "TEST getCircles " + url);
+        this.restClient.get(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.i("TEST", "TEST getCircles " + response);
+                circleGroup.clear();
+                try {
+                    circleGroup.addAll(getCirclesFromJson(response));
+                    Log.i("TEST", "TEST getCircles " + getCirclesFromJson(response));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+                Log.i("TEST", "TEST getCircles FAIL");
+            }
+        });
+        Log.i("TEST", "TEST getCircles after");
+
+    }
+
     public void getAttenders(final Tag tag, final ImageAdapter adapter) {
         String attenders = "/tags/" + tag.getId() + "/attenders";
 
@@ -242,6 +288,23 @@ public class NetworkProvider {
             tags.add(tag);
         }
         return tags;
+    }
+
+    private ArrayList<CircleGroup> getCirclesFromJson(JSONArray jArray) throws JSONException {
+        ArrayList<CircleGroup> circlesGroup = new ArrayList<>();
+        circlesGroup.clear();
+
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject jsonData = jArray.getJSONObject(i);
+            CircleGroup circleGroup = getCircle(jsonData);
+            circlesGroup.add(circleGroup);
+        }
+        return circlesGroup;
+    }
+
+    private CircleGroup getCircle(JSONObject jObject) {
+        return new CircleGroup(jObject.optInt("id"),
+                jObject.optString("name"));
     }
 
     private Tag getTag(JSONObject jObject, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap) {
