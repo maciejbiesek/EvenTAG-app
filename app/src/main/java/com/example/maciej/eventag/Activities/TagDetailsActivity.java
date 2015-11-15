@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,24 +76,38 @@ public class TagDetailsActivity extends ActionBarActivity {
         ExpandableHeightGridView attendersGrid = (ExpandableHeightGridView) findViewById(R.id.attenders);
 
         final ImageAdapter attendersAdapter = new ImageAdapter(this, myId);
+        networkProvider.getAttenders(tag, attendersAdapter);
         attendersGrid.setAdapter(attendersAdapter);
         attendersGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position == 0) {
-                    networkProvider.resign(tag, attendersAdapter);
+                TextView attenderLabel = (TextView) view.findViewById(R.id.attender_label);
+                if (!attenderLabel.getText().toString().isEmpty()) {
+                    if (attenderLabel.getVisibility() == View.VISIBLE) {
+                        attenderLabel.setVisibility(View.INVISIBLE);
+                    } else attenderLabel.setVisibility(View.VISIBLE);
                 }
-                else if (position == attendersAdapter.getLast()) {
-                    networkProvider.attend(tag, attendersAdapter);
+
+                if (tag.getUserId() != myId) {
+                    if (position == attendersAdapter.getLast()) {
+                        networkProvider.attend(tag, attendersAdapter);
+                    }
+
+                    else {
+                        if (attendersAdapter.getItem(position).getId() == myId) {
+                            showResignDialog(attendersAdapter);
+                        }
+                    }
                 }
-                else Toast.makeText(TagDetailsActivity.this, "NIC MEH", Toast.LENGTH_SHORT).show();
             }
         });
 
         if (tag.getUserId() == myId) {
             more.setVisibility(View.VISIBLE);
         }
-        else more.setVisibility(View.INVISIBLE);
+        else {
+            more.setVisibility(View.INVISIBLE);
+        }
 
         name.setText(tag.getName());
         description.setText(tag.getDescription());
@@ -113,8 +128,6 @@ public class TagDetailsActivity extends ActionBarActivity {
             members.setText(getString(R.string.members_past));
         }
         else members.setText(getString(R.string.members_present));
-
-        networkProvider.getAttenders(tag, attendersAdapter);
 
         toMap.setOnClickListener(onClickListener);
         more.setOnClickListener(onClickListener);
@@ -196,6 +209,28 @@ public class TagDetailsActivity extends ActionBarActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteTag();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    private void showResignDialog(final ImageAdapter imgAdapter) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.resign_tag_dialog_message)
+                .setTitle(R.string.resign_tag_dialog_title)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        networkProvider.resign(tag, imgAdapter);
                         dialog.cancel();
                     }
                 })

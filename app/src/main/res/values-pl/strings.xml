@@ -35,6 +35,11 @@
     <string name="delete_tag_dialog_message">Jesteś pewien?</string>
     <string name="delete_tag_dialog_title">Usuwanie</string>
     <string name="edit_inactive_tag">Ten tag jest nieaktywny, jego czas minął. Nie możesz go edytować</string>
+    <string name="resign_tag_dialog_message">Jesteś pewien?</string>
+    <string name="resign_tag_dialog_title">Rezygnacja</string>
+
+    <string name="attend_success">Teraz jesteś uczestnikiem tego zdarzenia</string>
+    <string name="resign_success">Właśnie zrezygnowałeś z udziału w zdarzeniu</string>
 
 
 </resources>

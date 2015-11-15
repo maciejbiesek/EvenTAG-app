@@ -178,11 +178,11 @@ public class NetworkProvider {
 
     public void attend(final Tag tag, final ImageAdapter adapter) {
         String attend = "/tags/" + tag.getId() + "/attenders";
-        Toast.makeText(context, "ASSEMBLEEEE " + attend , Toast.LENGTH_SHORT).show();
 
         this.restClient.post(attend, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.attend_success), Toast.LENGTH_SHORT);
                 getAttenders(tag, adapter);
             }
 
@@ -194,13 +194,12 @@ public class NetworkProvider {
     }
 
     public void resign(final Tag tag, final ImageAdapter adapter) {
-        String resign = "/tags/" + tag.getId() + "/attenders";
-
-        Toast.makeText(context, "REZYGNUJĘ " + resign, Toast.LENGTH_SHORT).show();
+        String resign = "/tags/" + tag.getId() + "/attenders/what";
 
         this.restClient.delete(resign, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.resign_success), Toast.LENGTH_SHORT);
                 getAttenders(tag, adapter);
             }
 

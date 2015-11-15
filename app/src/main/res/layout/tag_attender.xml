@@ -9,4 +9,12 @@
         android:layout_height="80dp"
         android:scaleType="centerCrop" />
 
+    <TextView
+        android:id="@+id/attender_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/SecondaryText"
+        android:background="@color/white"
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>

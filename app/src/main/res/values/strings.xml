@@ -35,6 +35,11 @@
     <string name="delete_tag_dialog_message">Are you sure?</string>
     <string name="delete_tag_dialog_title">Delete</string>
     <string name="edit_inactive_tag">Sorry, that tag is inactive, you can not edit it</string>
+    <string name="resign_tag_dialog_message">Are you sure?</string>
+    <string name="resign_tag_dialog_title">Resign</string>
+
+    <string name="attend_success">Now you\'re taking part in this event</string>
+    <string name="resign_success">Now you are not taking part in this event</string>
 
 
 </resources>
