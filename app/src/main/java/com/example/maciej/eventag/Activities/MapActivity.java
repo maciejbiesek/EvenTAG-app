@@ -248,7 +248,8 @@ public class MapActivity extends ActionBarActivity implements
                 break;
             }
             case R.id.logo: {
-                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MapActivity.this, UserProfileActivity.class);
+                startActivity(intent);
                 break;
             }
         }
