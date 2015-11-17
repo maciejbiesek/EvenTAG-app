@@ -2,6 +2,7 @@ package com.example.maciej.eventag.Activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,8 +39,8 @@ public class UserProfileActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        TextView circles = (TextView) findViewById(R.id.circles);
-        TextView events = (TextView) findViewById(R.id.events);
+        final TextView circles = (TextView) findViewById(R.id.circles);
+        final TextView events = (TextView) findViewById(R.id.events);
         final Fragment firstFragment = new Fragment();
         final Fragment secondFragment = new Fragment();
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -47,8 +49,12 @@ public class UserProfileActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 transaction.replace(R.id.fragment, firstFragment);
+                CircleGroupAdapter adapter = new CircleGroupAdapter(UserProfileActivity.this, arrayOfCircles);
+                GridView circlesView = (GridView) findViewById(R.id.gridView);
+                circlesView.setAdapter(adapter);
+                circles.setTextColor(Color.parseColor("#df6231"));
+                events.setTextColor(Color.parseColor("#D8000000"));
                 Log.i("FRAGMENT", "FRAGMENT first");
-                Log.i("TEST", "TEST: " + arrayOfCircles);
             }
         });
 
@@ -56,10 +62,9 @@ public class UserProfileActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 transaction.replace(R.id.fragment, secondFragment);
+                events.setTextColor(Color.parseColor("#df6231"));
+                circles.setTextColor(Color.parseColor("#D8000000"));
                 Log.i("FRAGMENT", "FRAGMENT second");
-                CircleGroupAdapter adapter = new CircleGroupAdapter(UserProfileActivity.this, arrayOfCircles);
-                GridView circlesView = (GridView) findViewById(R.id.gridView);
-                circlesView.setAdapter(adapter);
             }
         });
 
@@ -92,23 +97,19 @@ public class UserProfileActivity extends FragmentActivity {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.circle_button, parent, false);
             }
 
-            TextView cirName = (TextView) convertView.findViewById(R.id.buttonNowy);
+            Button cirName = (Button) convertView.findViewById(R.id.buttonNowy);
             cirName.setText(circleGroup.getName());
 
             return convertView;
         }
 
         public CircleGroup getItem(int position) {
-            return null;
+            return arrayOfCircles.get(position);
         }
 
         public final int getCount() {
-            return 9;
+            return arrayOfCircles.size();
         }
-
-//        public final Family getItem(int position) {
-//            return mFams.get(position);
-//        }
 
         public final long getItemId(int position) {
             return position;
@@ -138,8 +139,8 @@ public class UserProfileActivity extends FragmentActivity {
         networkProvider.getUserId();
         SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
         int myId = prefs.getInt(USER_ID, 0);
-        networkProvider.getCircles(5, arrayOfCircles);
-        Log.i("TEST", "TEST #1 " + arrayOfCircles);
+        networkProvider.getCircles(15, arrayOfCircles);
+        Log.i("TEST", "TEST #1 " + arrayOfCircles + " " + myId);
     }
 
 }
