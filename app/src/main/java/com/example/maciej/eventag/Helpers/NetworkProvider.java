@@ -214,17 +214,15 @@ public class NetworkProvider {
     }
 
     public void getCircles(int userId, final ArrayList<CircleGroup> circleGroup) {
-        String url = "/user/" + userId + "/circles";
-        Log.i("TEST", "TEST getCircles " + url);
+        String url = "/users/" + userId + "/circles";
         this.restClient.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
-                Log.i("TEST", "TEST getCircles " + response);
+                Log.d("NetworkProvider", "getCircles SUCCEEDED");
                 circleGroup.clear();
                 try {
                     circleGroup.addAll(getCirclesFromJson(response));
-                    Log.i("TEST", "TEST getCircles " + getCirclesFromJson(response));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -233,11 +231,35 @@ public class NetworkProvider {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
                 comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
-                Log.i("TEST", "TEST getCircles FAIL");
+                Log.d("NetworkProvider", "getCircles FAILED");
             }
-        });
-        Log.i("TEST", "TEST getCircles after");
 
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.d("Failed: ", "" + statusCode);
+                Log.d("Error : ", "" + throwable);
+            }
+
+        });
+    }
+
+    private ArrayList<CircleGroup> getCirclesFromJson(JSONArray jArray) throws JSONException {
+        ArrayList<CircleGroup> circlesGroup = new ArrayList<>();
+        circlesGroup.clear();
+
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject jsonData = jArray.getJSONObject(i);
+            CircleGroup circleGroup = getCircle(jsonData);
+            circlesGroup.add(circleGroup);
+        }
+        return circlesGroup;
+    }
+
+    private CircleGroup getCircle(JSONObject jObject) {
+        return new CircleGroup(jObject.optInt("id"),
+                jObject.optString("name"));
     }
 
     public void getAttenders(final Tag tag, final ImageAdapter adapter) {
@@ -292,6 +314,7 @@ public class NetworkProvider {
         return tags;
     }
 
+<<<<<<< HEAD
     private ArrayList<CircleGroup> getCirclesFromJson(JSONArray jArray) throws JSONException {
         ArrayList<CircleGroup> circlesGroup = new ArrayList<>();
         circlesGroup.clear();
@@ -310,6 +333,9 @@ public class NetworkProvider {
     }
 
     private Tag getTag(JSONObject jObject, GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap) {
+=======
+    private Tag getTag(JSONObject jObject, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap) {
+>>>>>>> dd2e83a4b25f6cb2bae1250e91cf478eec7291c8
         AddressHelper helper = new AddressHelper(context);
 
         String latStr = jObject.optString("lat");

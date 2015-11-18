@@ -77,7 +77,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Wydarzenia"
             android:gravity="center_horizontal"
-            android:textColor="#df6231"/>
+            android:textColor="#D8000000"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -90,7 +90,7 @@
             android:id="@+id/gridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:columnCount="5">
+            android:columnCount="3">
 
         </GridView>
     </RelativeLayout>
