@@ -245,23 +245,6 @@ public class NetworkProvider {
         });
     }
 
-    private ArrayList<CircleGroup> getCirclesFromJson(JSONArray jArray) throws JSONException {
-        ArrayList<CircleGroup> circlesGroup = new ArrayList<>();
-        circlesGroup.clear();
-
-        for (int i = 0; i < jArray.length(); i++) {
-            JSONObject jsonData = jArray.getJSONObject(i);
-            CircleGroup circleGroup = getCircle(jsonData);
-            circlesGroup.add(circleGroup);
-        }
-        return circlesGroup;
-    }
-
-    private CircleGroup getCircle(JSONObject jObject) {
-        return new CircleGroup(jObject.optInt("id"),
-                jObject.optString("name"));
-    }
-
     public void getAttenders(final Tag tag, final ImageAdapter adapter) {
         String attenders = "/tags/" + tag.getId() + "/attenders";
 
@@ -314,7 +297,7 @@ public class NetworkProvider {
         return tags;
     }
 
-<<<<<<< HEAD
+
     private ArrayList<CircleGroup> getCirclesFromJson(JSONArray jArray) throws JSONException {
         ArrayList<CircleGroup> circlesGroup = new ArrayList<>();
         circlesGroup.clear();
@@ -333,9 +316,6 @@ public class NetworkProvider {
     }
 
     private Tag getTag(JSONObject jObject, GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap) {
-=======
-    private Tag getTag(JSONObject jObject, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap) {
->>>>>>> dd2e83a4b25f6cb2bae1250e91cf478eec7291c8
         AddressHelper helper = new AddressHelper(context);
 
         String latStr = jObject.optString("lat");
