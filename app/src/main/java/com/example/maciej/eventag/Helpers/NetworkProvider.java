@@ -2,6 +2,7 @@ package com.example.maciej.eventag.Helpers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
+import com.example.maciej.eventag.Activities.MapActivity;
+import com.example.maciej.eventag.Activities.TagDetailsActivity;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.Models.CircleGroup;
 import com.example.maciej.eventag.Models.Tag;
@@ -306,7 +309,7 @@ public class NetworkProvider {
                 jObject.optString("name"));
     }
 
-    private Tag getTag(JSONObject jObject, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap) {
+    private Tag getTag(JSONObject jObject, GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap) {
         AddressHelper helper = new AddressHelper(context);
 
         String latStr = jObject.optString("lat");
@@ -320,7 +323,7 @@ public class NetworkProvider {
         JSONObject userJson = jObject.optJSONObject("user");
         User user = new User(userJson.optInt("id"), userJson.optString("name"), userJson.optString("avatar"));
 
-        Tag tag = new Tag(jObject.optInt("id"),
+        final Tag tag = new Tag(jObject.optInt("id"),
                 jObject.optInt("user_id"),
                 jObject.optString("name"),
                 jObject.optString("message"),

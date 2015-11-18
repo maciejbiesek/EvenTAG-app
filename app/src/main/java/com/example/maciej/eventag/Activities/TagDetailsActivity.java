@@ -75,7 +75,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         ImageButton more = (ImageButton) findViewById(R.id.more);
         ExpandableHeightGridView attendersGrid = (ExpandableHeightGridView) findViewById(R.id.attenders);
 
-        final ImageAdapter attendersAdapter = new ImageAdapter(this, myId);
+        final ImageAdapter attendersAdapter = new ImageAdapter(this, myId, tag);
         networkProvider.getAttenders(tag, attendersAdapter);
         attendersGrid.setAdapter(attendersAdapter);
         attendersGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -138,7 +138,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.to_map: {
-                    finish();
+                    showMap();
                     break;
                 }
                 case R.id.more: {
@@ -148,6 +148,13 @@ public class TagDetailsActivity extends ActionBarActivity {
             }
         }
     };
+
+    private void showMap() {
+        Intent i = new Intent(this, MapActivity.class);
+        i.putExtra(LAT, tag.getLat());
+        i.putExtra(LNG, tag.getLng());
+        startActivity(i);
+    }
 
     private void deleteTag() {
         try {

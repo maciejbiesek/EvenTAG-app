@@ -5,6 +5,8 @@ public class Constants {
     public static final String BASE_URL = "http://eventag.websource.com.pl";
     public static final String TAGS_LIST = "tags_list";
     public static final String ACCESS_KEY = "access_key";
+    public static final String PREFS = "prefs";
+    public static final String TAGS_GSON= "tags_json";
 
     public static final String LAT = "lat";
     public static final String LNG = "lng";

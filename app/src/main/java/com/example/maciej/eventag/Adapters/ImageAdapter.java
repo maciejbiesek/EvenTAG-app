@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.maciej.eventag.Helpers.NetworkProvider;
+import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
@@ -33,10 +34,12 @@ public class ImageAdapter extends BaseAdapter {
     private List<User> users = new ArrayList<User>();
     private int myId;
     private int count;
+    private Tag tag;
 
-    public ImageAdapter(Context context, int myId) {
+    public ImageAdapter(Context context, int myId, Tag tag) {
         this.context = context;
         this.myId = myId;
+        this.tag = tag;
         this.count = 0;
     }
 
@@ -87,12 +90,17 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     private boolean checkIfOnList(List<User> users) {
-        for (User user : users) {
-            if (user.getId() == myId) {
-                return true;
-            }
+        if (!tag.getIsActive()) {
+            return true;
         }
-        return false;
+        else {
+            for (User user : users) {
+                if (user.getId() == myId) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     private String getAvatarUrl() {
