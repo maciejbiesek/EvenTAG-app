@@ -28,6 +28,7 @@ public class Constants {
     public static final String CIRCLE_UPDATE_DATE = "circle_update_date";
 
     public static final int TAG_RESULT = 0;
-    public static final int TAG_DETAILS_RESULT = 0;
-    public static final int TAG_EDIT_RESULT = 0;
+    public static final int TAG_DETAILS_RESULT = 1;
+    public static final int TAG_EDIT_RESULT = 2;
+    public static final int TAG_ADD_RESULT = 3;
 }

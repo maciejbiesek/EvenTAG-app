@@ -4,9 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
@@ -28,7 +34,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,6 +130,8 @@ public class NetworkProvider {
         JSONObject jsonTag = parseTagToJson(tag);
         StringEntity entity = new StringEntity(jsonTag.toString());
         entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        System.out.println(jsonTag);
 
 
         this.restClient.post(post, entity, new JsonHttpResponseHandler() {
@@ -340,16 +351,51 @@ public class NetworkProvider {
                 user);
 
         MarkerOptions markerOption = new MarkerOptions().position(new LatLng(lat, lng)).title(tag.getName()).snippet(tag.getDescription());
-        markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            /*
-               TO DO
-               markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_customIcon));
-               */
+        // markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
 
-        Marker currentMarker = map.addMarker(markerOption);
-        mMarkersHashMap.put(currentMarker, tag);
+        (new AsyncImage(markerOption, map, mMarkersHashMap, bmp, user.getAvatarUrl(), tag)).execute();
+
 
         return tag;
+    }
+
+    private Bitmap getImageFromUrl(String urlPath) {
+        try {
+            java.net.URL url = new java.net.URL(urlPath);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            Bitmap bitmap = null;
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream input = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(input);
+            }
+            return bitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Bitmap processingBitmaps(Bitmap b1, Bitmap b2) {
+        Bitmap newBitmap = null;
+        Bitmap.Config config = b1.getConfig();
+        if (config == null){
+            config = Bitmap.Config.ARGB_8888;
+        }
+
+        Bitmap b2Scaled = Bitmap.createScaledBitmap(b2, b1.getWidth(), b1.getHeight(), false);
+
+        newBitmap = Bitmap.createBitmap(b1.getWidth(), b1.getHeight(), config);
+        Canvas newCanvas = new Canvas(newBitmap);
+
+        newCanvas.drawBitmap(b1, 0, 0, null);
+
+        Paint paint = new Paint();
+        newCanvas.drawBitmap(b2Scaled, 0, 0, paint);
+
+        return newBitmap;
     }
 
     private JSONObject parseTagToJson(Tag tag) throws JSONException {
@@ -374,5 +420,48 @@ public class NetworkProvider {
         ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
 
         actBar.setCustomView(cView, layout);
+    }
+
+
+
+    private class AsyncImage extends AsyncTask<String, Void, Bitmap> {
+
+        private MarkerOptions markerOptions;
+        private GoogleMap map;
+        private HashMap<Marker, Tag> mMarkersHashMap;
+        private Tag tag;
+        private String avatarUrl;
+        private Bitmap bmp1;
+
+        public AsyncImage(MarkerOptions markerOptions, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap, Bitmap bmp, String avatarUrl, Tag tag) {
+            this.markerOptions = markerOptions;
+            this.map = map;
+            this.mMarkersHashMap = mMarkersHashMap;
+            this.avatarUrl = avatarUrl;
+            this.tag = tag;
+            this.bmp1 = bmp;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+
+            Bitmap finalImage = processingBitmaps(bmp1, result);
+
+            this.markerOptions.icon(BitmapDescriptorFactory.fromBitmap(finalImage));
+            Marker currentMarker = map.addMarker(this.markerOptions);
+            mMarkersHashMap.put(currentMarker, tag);
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return getImageFromUrl(this.avatarUrl);
+        }
     }
 }

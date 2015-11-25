@@ -18,8 +18,8 @@ import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
-import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -111,9 +111,17 @@ public class MapActivity extends ActionBarActivity implements
                 Intent intent = new Intent(MapActivity.this, AddTagActivity.class);
                 intent.putExtra(LAT, String.valueOf(user_location_latitude));
                 intent.putExtra(LNG, String.valueOf(user_location_longitude));
-                isFirst = true;
-                startActivity(intent);
+                startActivityForResult(intent, TAG_ADD_RESULT);
                 overridePendingTransition(R.anim.slide_bottom_out, R.anim.slide_bottom_in);
+            }
+        });
+
+        ImageButton refreshButton = (ImageButton) findViewById(R.id.button_refresh);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isFirst = true;
+                setUpMap();
             }
         });
 
@@ -161,6 +169,7 @@ public class MapActivity extends ActionBarActivity implements
             user_location = new LatLng(user_location_latitude, user_location_longitude);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
         }
+        isFirst = false;
         setUpMap();
     }
 
@@ -284,6 +293,7 @@ public class MapActivity extends ActionBarActivity implements
                 user_location = new LatLng(user_location_latitude, user_location_longitude);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
             }
+            isFirst = true;
             setUpMap();
         }
     }

@@ -27,5 +27,6 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile files('src/main/res/libs/gson-2.4.jar')
+    compile files('libs/gson-2.4.jar')
 }
 
