@@ -8,6 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -20,6 +23,7 @@ import com.example.maciej.eventag.Activities.MapActivity;
 import com.example.maciej.eventag.Activities.TagDetailsActivity;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.Models.CircleGroup;
+import com.example.maciej.eventag.Models.CustomMarker;
 import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
@@ -354,48 +358,10 @@ public class NetworkProvider {
         // markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
 
-        (new AsyncImage(markerOption, map, mMarkersHashMap, bmp, user.getAvatarUrl(), tag)).execute();
+        (new CustomMarker.AsyncImage(markerOption, map, mMarkersHashMap, bmp, user.getAvatarUrl(), tag)).execute();
 
 
         return tag;
-    }
-
-    private Bitmap getImageFromUrl(String urlPath) {
-        try {
-            java.net.URL url = new java.net.URL(urlPath);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            Bitmap bitmap = null;
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                InputStream input = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(input);
-            }
-            return bitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private Bitmap processingBitmaps(Bitmap b1, Bitmap b2) {
-        Bitmap newBitmap = null;
-        Bitmap.Config config = b1.getConfig();
-        if (config == null){
-            config = Bitmap.Config.ARGB_8888;
-        }
-
-        Bitmap b2Scaled = Bitmap.createScaledBitmap(b2, b1.getWidth(), b1.getHeight(), false);
-
-        newBitmap = Bitmap.createBitmap(b1.getWidth(), b1.getHeight(), config);
-        Canvas newCanvas = new Canvas(newBitmap);
-
-        newCanvas.drawBitmap(b1, 0, 0, null);
-
-        Paint paint = new Paint();
-        newCanvas.drawBitmap(b2Scaled, 0, 0, paint);
-
-        return newBitmap;
     }
 
     private JSONObject parseTagToJson(Tag tag) throws JSONException {
@@ -423,45 +389,4 @@ public class NetworkProvider {
     }
 
 
-
-    private class AsyncImage extends AsyncTask<String, Void, Bitmap> {
-
-        private MarkerOptions markerOptions;
-        private GoogleMap map;
-        private HashMap<Marker, Tag> mMarkersHashMap;
-        private Tag tag;
-        private String avatarUrl;
-        private Bitmap bmp1;
-
-        public AsyncImage(MarkerOptions markerOptions, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap, Bitmap bmp, String avatarUrl, Tag tag) {
-            this.markerOptions = markerOptions;
-            this.map = map;
-            this.mMarkersHashMap = mMarkersHashMap;
-            this.avatarUrl = avatarUrl;
-            this.tag = tag;
-            this.bmp1 = bmp;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-
-            Bitmap finalImage = processingBitmaps(bmp1, result);
-
-            this.markerOptions.icon(BitmapDescriptorFactory.fromBitmap(finalImage));
-            Marker currentMarker = map.addMarker(this.markerOptions);
-            mMarkersHashMap.put(currentMarker, tag);
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            return getImageFromUrl(this.avatarUrl);
-        }
-    }
 }

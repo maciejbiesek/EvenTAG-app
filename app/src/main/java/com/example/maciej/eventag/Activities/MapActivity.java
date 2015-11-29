@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,6 +20,7 @@ import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
+import com.example.maciej.eventag.Models.CustomMarker;
 import com.example.maciej.eventag.Models.Tag;
 import com.example.maciej.eventag.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -75,19 +78,19 @@ public class MapActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_map);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
-
-        getUserId();
-        initialize();
+        isFirst = false;
 
         Intent i = getIntent();
         if (i != null && i.getExtras() != null) {
             latIntent = Double.parseDouble(i.getStringExtra(LAT));
             lngIntent = Double.parseDouble(i.getStringExtra(LNG));
-            isFirst = false;
         }
         else {
             isFirst = true;
         }
+
+        getUserId();
+        initialize();
     }
 
     private void initialize() {
@@ -228,9 +231,9 @@ public class MapActivity extends ActionBarActivity implements
 
         for (Tag tag : tagList) {
             MarkerOptions markerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(tag.getLat()), Double.parseDouble(tag.getLng()))).title(tag.getName()).snippet(tag.getDescription());
-            markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            Marker currentMarker = map.addMarker(markerOption);
-            mMarkersHashMap.put(currentMarker, tag);
+
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.marker);
+            (new CustomMarker.AsyncImage(markerOption, map, mMarkersHashMap, bmp, tag.getUser().getAvatarUrl(), tag)).execute();
         }
         mapAnimator.setDisplayedChild(1);
         showActionBar(actBar);
