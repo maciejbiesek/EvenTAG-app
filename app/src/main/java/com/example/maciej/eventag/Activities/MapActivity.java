@@ -78,10 +78,10 @@ public class MapActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_map);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
-        isFirst = false;
 
         Intent i = getIntent();
         if (i != null && i.getExtras() != null) {
+            isFirst = false;
             latIntent = Double.parseDouble(i.getStringExtra(LAT));
             lngIntent = Double.parseDouble(i.getStringExtra(LNG));
         }
@@ -170,9 +170,8 @@ public class MapActivity extends ActionBarActivity implements
             user_location_latitude = location.getLatitude();
             user_location_longitude = location.getLongitude();
             user_location = new LatLng(user_location_latitude, user_location_longitude);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
         }
-        isFirst = false;
+
         setUpMap();
     }
 
@@ -203,15 +202,25 @@ public class MapActivity extends ActionBarActivity implements
     }
 
     private void setUpMap() {
+
         if (map == null) {
             map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             map.getUiSettings().setMapToolbarEnabled(false);
         }
-        if (isFirst) {
+
+        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        String value = prefs.getString(TAGS_GSON, null);
+        if (isFirst || value == null) {
             getTags();
+            user_location = new LatLng(user_location_latitude, user_location_longitude);
+            map.moveCamera(CameraUpdateFactory.newLatLng(user_location));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
         }
         else {
-            getTagsFromGson();
+            getTagsFromGson(value);
+            LatLng location = new LatLng(latIntent, lngIntent);
+            map.moveCamera(CameraUpdateFactory.newLatLng(location));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
         }
 
     }
@@ -223,9 +232,9 @@ public class MapActivity extends ActionBarActivity implements
         networkProvider.getTags(tagList, map, mMarkersHashMap, actBar, mapAnimator);
     }
 
-    private void getTagsFromGson() {
-        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        String value = prefs.getString(TAGS_GSON, null);
+    private void getTagsFromGson(String value) {
+        mapAnimator.setDisplayedChild(0);
+
         Tag[] tags = gson.fromJson(value, Tag[].class);
         tagList = new ArrayList<Tag>(Arrays.asList(tags));
 
@@ -315,6 +324,7 @@ public class MapActivity extends ActionBarActivity implements
         String value = gson.toJson(tagList);
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor tagEditor = prefs.edit();
+
         tagEditor.putString(TAGS_GSON, value);
         tagEditor.commit();
 
@@ -339,11 +349,12 @@ public class MapActivity extends ActionBarActivity implements
     public void clickEvent(View v) {
         switch (v.getId()) {
             case R.id.left: {
+                isFirst = false;
                 showTagList();
                 break;
             }
             case R.id.logo: {
-                isFirst = true;
+                isFirst = false;
                 Intent intent = new Intent(MapActivity.this, UserProfileActivity.class);
                 startActivity(intent);
                 break;

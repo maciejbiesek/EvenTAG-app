@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/refresh_ico"
-            android:layout_gravity="top|right"/>
+            android:layout_gravity="bottom|left"/>
 
     </fragment>
 

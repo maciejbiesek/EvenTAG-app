@@ -9,6 +9,7 @@ public class User implements Serializable {
     private String name;
     private String avatarUrl;
 
+    public User() {}
 
     public User(int id, String name, String avatarUrl) {
         this.id = id;
@@ -19,6 +20,12 @@ public class User implements Serializable {
     public int getId() { return id; }
     public String getName() { return name; }
     public String getAvatarUrl() { return avatarUrl; }
+
+    public void setUser(int id, String name, String avatarUrl) {
+        this.id = id;
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+    }
 
 }
 

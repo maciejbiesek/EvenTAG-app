@@ -111,14 +111,8 @@ public class NetworkProvider {
                 super.onSuccess(statusCode, headers, response);
                 isFinished = false;
                 tagsList.clear();
-                try {
-                    tagsList.addAll(getTagsFromJson(response, map, mMarkersHashMap));
-                    isFinished = true;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                showActionBar(actBar);
-                mapAnimator.setDisplayedChild(1);
+
+                (new AsyncGetTags(tagsList, response, map, mMarkersHashMap, isFinished, actBar, mapAnimator)).execute();
             }
 
             @Override
@@ -386,6 +380,54 @@ public class NetworkProvider {
         ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
 
         actBar.setCustomView(cView, layout);
+    }
+
+    public class AsyncGetTags extends AsyncTask<String, Void, Boolean> {
+
+        private List<Tag> tagsList;
+        private JSONArray response;
+        private GoogleMap map;
+        private HashMap<Marker, Tag> mMarkersHashMap;
+        private boolean isFinished;
+        private ActionBar actBar;
+        private ViewAnimator mapAnimator;
+
+        public AsyncGetTags(List<Tag> tagsList, JSONArray response, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap, boolean isFinished, ActionBar actBar, ViewAnimator mapAnimator) {
+            this.tagsList = tagsList;
+            this.response = response;
+            this.map = map;
+            this.mMarkersHashMap = mMarkersHashMap;
+            this.isFinished = isFinished;
+            this.actBar = actBar;
+            this.mapAnimator = mapAnimator;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            showActionBar(actBar);
+            mapAnimator.setDisplayedChild(1);
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            tagsList.clear();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                tagsList.addAll(getTagsFromJson(response, map, mMarkersHashMap));
+                isFinished = true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return isFinished;
+        }
+
     }
 
 
