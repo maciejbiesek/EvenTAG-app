@@ -222,6 +222,37 @@ public class NetworkProvider {
         });
     }
 
+    public void postCircle(int userId, String circleName) throws UnsupportedEncodingException, JSONException {
+        String post = "/users/" + userId + "/circles";
+
+        JSONObject circleNameJson = parseCircleNameToJson(circleName);
+        StringEntity entity = new StringEntity(circleNameJson.toString());
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        Log.i("TEST", "Poszlo!");
+
+        this.restClient.post(post, entity, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, "Dodawanie zakończone!", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Toast.makeText(context, "Coś poszło nie tak", Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    private JSONObject parseCircleNameToJson(String circleName) throws JSONException {
+        JSONObject circleNameJson = new JSONObject();
+        circleNameJson.put("name", circleName);
+        circleNameJson.put("users", "1,2,3");
+
+        return circleNameJson;
+    }
+
+
     public void getCircles(int userId, final ArrayList<CircleGroup> circleGroup) {
         String url = "/users/" + userId + "/circles";
         this.restClient.get(url, null, new JsonHttpResponseHandler() {
@@ -251,6 +282,72 @@ public class NetworkProvider {
                 Log.d("Error : ", "" + throwable);
             }
 
+        });
+    }
+
+    public void getCircleDetails(int userId, int circleId, final ArrayList<User> usersInCircle) {
+        String url = "/users/" + userId + "/circles/" +circleId;
+        this.restClient.get(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.d("NetworkProvider", "getCircleDetails SUCCEEDED");
+                usersInCircle.clear();
+                try {
+                    usersInCircle.addAll(getCircleDetailsFromJson(response));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+                Log.d("NetworkProvider", "getCircleDetails FAILED");
+            }
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.d("Failed: ", "" + statusCode);
+                Log.d("Error : ", "" + throwable);
+            }
+
+        });
+    }
+
+    private ArrayList<User> getCircleDetailsFromJson(JSONArray jArray) throws JSONException {
+        ArrayList<User> userInCircles = new ArrayList<>();
+        userInCircles.clear();
+
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject jsonData = jArray.getJSONObject(i);
+            User user = getCircleDetails(jsonData);
+            userInCircles.add(user);
+        }
+        return userInCircles;
+    }
+
+    private User getCircleDetails(JSONObject jObject) {
+        return new User(jObject.optInt("id"),
+                jObject.optString("name"),
+                jObject.optString("avatar"));
+    }
+
+    public void deleteCircle(Integer myId, Integer circleId) {
+        String delete = "/users/" + myId + "/circles/" + circleId;
+
+        this.restClient.delete(delete, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.delete_tag), Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
         });
     }
 
@@ -305,7 +402,6 @@ public class NetworkProvider {
         }
         return tags;
     }
-
 
     private ArrayList<CircleGroup> getCirclesFromJson(JSONArray jArray) throws JSONException {
         ArrayList<CircleGroup> circlesGroup = new ArrayList<>();

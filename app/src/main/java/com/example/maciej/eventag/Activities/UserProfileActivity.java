@@ -1,27 +1,40 @@
 package com.example.maciej.eventag.Activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Network;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.Models.CircleGroup;
+import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.w3c.dom.Text;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import static com.example.maciej.eventag.Models.Constants.*;
@@ -33,6 +46,7 @@ public class UserProfileActivity extends FragmentActivity {
     private static final String IS_PUBLIC_POLICY = "policy_setting";
     private Boolean publicPolicy;
     private ArrayList<CircleGroup> arrayOfCircles = new ArrayList<>();
+    private String m_Text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -49,9 +63,41 @@ public class UserProfileActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 transaction.replace(R.id.fragment, firstFragment);
-                CircleGroupAdapter adapter = new CircleGroupAdapter(UserProfileActivity.this, arrayOfCircles);
-                GridView circlesView = (GridView) findViewById(R.id.gridView);
-                circlesView.setAdapter(adapter);
+                showCircles();
+                final TextView addCircle = (TextView) findViewById(R.id.addCircleTextView);
+                addCircle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
+                        builder.setTitle("Podaj nazwę kręgu:");
+
+                        // Set up the input
+                        final EditText input = new EditText(UserProfileActivity.this);
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+                        builder.setView(input);
+
+                        // Set up the buttons
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                m_Text = input.getText().toString();
+                                postCircle(m_Text);
+                                SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
+                                finish();
+                                startActivity(getIntent());
+                                Toast.makeText(UserProfileActivity.this, "Dodano nowy krąg", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        builder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
+                    }
+                });
                 circles.setTextColor(Color.parseColor("#df6231"));
                 events.setTextColor(Color.parseColor("#D8000000"));
                 Log.i("FRAGMENT", "FRAGMENT first");
@@ -65,18 +111,22 @@ public class UserProfileActivity extends FragmentActivity {
                 events.setTextColor(Color.parseColor("#df6231"));
                 circles.setTextColor(Color.parseColor("#D8000000"));
                 Log.i("FRAGMENT", "FRAGMENT second");
+                delCircles();
             }
         });
 
 
-        Log.i("TEST", "TEST #0 " + arrayOfCircles);
         getCircles();
-        Log.i("TEST", "TEST #2 " + arrayOfCircles);
+        getUser();
+    }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        getCircles();
         getUser();
 
     }
-
     @Override
     protected void onStop(){
         super.onStop();
@@ -91,14 +141,25 @@ public class UserProfileActivity extends FragmentActivity {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            CircleGroup circleGroup = getItem(position);
+            final CircleGroup circleGroup = getItem(position);
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.circle_button, parent, false);
             }
 
-            Button cirName = (Button) convertView.findViewById(R.id.buttonNowy);
+            final Button cirName = (Button) convertView.findViewById(R.id.buttonNowy);
             cirName.setText(circleGroup.getName());
+            cirName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(UserProfileActivity.this, CircleDetailsActivity.class);
+                    intent.putExtra(CIRCLE_NAME, cirName.getText());
+                    intent.putExtra(CIRCLE_ID, circleGroup.getId());
+                    startActivity(intent);
+                }
+            });
+
+
 
             return convertView;
         }
@@ -113,6 +174,19 @@ public class UserProfileActivity extends FragmentActivity {
 
         public final long getItemId(int position) {
             return position;
+        }
+    }
+
+    private void postCircle(String circleName){
+        SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
+        int myId = prefs.getInt(USER_ID, 0);
+        NetworkProvider networkProvider = new NetworkProvider(this);
+        try {
+            networkProvider.postCircle(myId, circleName);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -139,8 +213,19 @@ public class UserProfileActivity extends FragmentActivity {
         networkProvider.getUserId();
         SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
         int myId = prefs.getInt(USER_ID, 0);
-        networkProvider.getCircles(15, arrayOfCircles);
+        networkProvider.getCircles(myId, arrayOfCircles);
         Log.i("TEST", "TEST #1 " + arrayOfCircles + " " + myId);
+    }
+
+    private void showCircles(){
+        CircleGroupAdapter adapter = new CircleGroupAdapter(UserProfileActivity.this, arrayOfCircles);
+        GridView circlesView = (GridView) findViewById(R.id.gridView);
+        circlesView.setAdapter(adapter);
+    }
+
+    private void delCircles(){
+        GridView circlesView = (GridView) findViewById(R.id.gridView);
+        circlesView.setAdapter(null);
     }
 
 }
