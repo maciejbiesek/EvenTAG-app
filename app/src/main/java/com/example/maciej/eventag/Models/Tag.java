@@ -2,7 +2,7 @@ package com.example.maciej.eventag.Models;
 
 import java.io.Serializable;
 
-public class Tag implements Serializable {
+public class Tag implements Serializable  {
 
     private int id;
     private int userId;

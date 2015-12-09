@@ -1,6 +1,5 @@
 package com.example.maciej.eventag.Activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -30,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -56,7 +54,8 @@ public class MapActivity extends ActionBarActivity implements
     GoogleMap map;
     Location location;
     LatLng user_location;
-    private boolean isFirst;
+    private boolean noIntent;
+    private boolean fromMemory;
     private Gson gson;
 
     public static final String TAG = MapActivity.class.getSimpleName();
@@ -79,15 +78,18 @@ public class MapActivity extends ActionBarActivity implements
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
 
+        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+
         Intent i = getIntent();
         if (i != null && i.getExtras() != null) {
-            isFirst = false;
+            noIntent = false;
             latIntent = Double.parseDouble(i.getStringExtra(LAT));
             lngIntent = Double.parseDouble(i.getStringExtra(LNG));
         }
         else {
-            isFirst = true;
+            noIntent = true;
         }
+        fromMemory = prefs.getBoolean(FROM_MEMORY, false);
 
         getUserId();
         initialize();
@@ -123,7 +125,6 @@ public class MapActivity extends ActionBarActivity implements
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isFirst = true;
                 setUpMap();
             }
         });
@@ -210,14 +211,20 @@ public class MapActivity extends ActionBarActivity implements
 
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         String value = prefs.getString(TAGS_GSON, null);
-        if (isFirst || value == null) {
+
+        if (fromMemory) {
+            getTagsFromGson(value);
+        }
+        else {
             getTags();
+        }
+
+        if (noIntent) {
             user_location = new LatLng(user_location_latitude, user_location_longitude);
             map.moveCamera(CameraUpdateFactory.newLatLng(user_location));
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
         }
         else {
-            getTagsFromGson(value);
             LatLng location = new LatLng(latIntent, lngIntent);
             map.moveCamera(CameraUpdateFactory.newLatLng(location));
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
@@ -256,7 +263,7 @@ public class MapActivity extends ActionBarActivity implements
         user_location_longitude = location.getLongitude();
         user_location = new LatLng(user_location_latitude, user_location_longitude);
         map.setMyLocationEnabled(true);
-        if (isFirst) {
+        if (noIntent) {
             map.moveCamera(CameraUpdateFactory.newLatLng(user_location));
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
         }
@@ -305,7 +312,7 @@ public class MapActivity extends ActionBarActivity implements
                 user_location = new LatLng(user_location_latitude, user_location_longitude);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
             }
-            isFirst = true;
+            fromMemory = false;
             setUpMap();
         }
     }
@@ -325,7 +332,9 @@ public class MapActivity extends ActionBarActivity implements
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor tagEditor = prefs.edit();
 
+        fromMemory = true;
         tagEditor.putString(TAGS_GSON, value);
+        tagEditor.putBoolean(FROM_MEMORY, fromMemory);
         tagEditor.commit();
 
         startActivityForResult(intent, TAG_RESULT);
@@ -349,12 +358,12 @@ public class MapActivity extends ActionBarActivity implements
     public void clickEvent(View v) {
         switch (v.getId()) {
             case R.id.left: {
-                isFirst = false;
+                fromMemory = false;
                 showTagList();
                 break;
             }
             case R.id.logo: {
-                isFirst = false;
+                fromMemory = false;
                 Intent intent = new Intent(MapActivity.this, UserProfileActivity.class);
                 startActivity(intent);
                 break;
