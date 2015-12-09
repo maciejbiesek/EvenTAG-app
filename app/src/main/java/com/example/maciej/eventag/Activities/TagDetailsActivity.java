@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -73,6 +74,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         TextView members = (TextView) findViewById(R.id.members);
         ImageButton toMap = (ImageButton) findViewById(R.id.to_map);
         ImageButton more = (ImageButton) findViewById(R.id.more);
+        ImageButton navigateTo = (ImageButton) findViewById(R.id.navigate_to);
         ExpandableHeightGridView attendersGrid = (ExpandableHeightGridView) findViewById(R.id.attenders);
 
         final ImageAdapter attendersAdapter = new ImageAdapter(this, myId, tag);
@@ -131,6 +133,7 @@ public class TagDetailsActivity extends ActionBarActivity {
 
         toMap.setOnClickListener(onClickListener);
         more.setOnClickListener(onClickListener);
+        navigateTo.setOnClickListener(onClickListener);
     }
 
     private OnClickListener onClickListener = new OnClickListener() {
@@ -145,9 +148,20 @@ public class TagDetailsActivity extends ActionBarActivity {
                     showPopUp(view);
                     break;
                 }
+                case R.id.navigate_to: {
+                    navigateTo();
+                    break;
+                }
             }
         }
     };
+
+    private void navigateTo() {
+        String uri = "google.navigation:q=" + String.valueOf(tag.getLat() + "," + String.valueOf(tag.getLng()));
+        Intent mapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        mapsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mapsIntent);
+    }
 
     private void showMap() {
         Intent i = new Intent(this, MapActivity.class);
