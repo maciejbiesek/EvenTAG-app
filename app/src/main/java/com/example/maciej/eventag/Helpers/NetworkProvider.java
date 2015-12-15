@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
+import com.example.maciej.eventag.Activities.FriendsActivity;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.Models.CircleGroup;
 import com.example.maciej.eventag.Models.CustomMarker;
@@ -335,6 +336,40 @@ public class NetworkProvider {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
             }
+        });
+    }
+
+    public void getFriends(final ArrayList<User> userList){
+        String friends = "/friends";
+
+        Log.i("test", "lista3: " + userList);
+
+        this.restClient.get(friends, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                userList.clear();
+                try {
+                    Log.i("test", "lista4: " + userList);
+                    userList.addAll(getUsersFromJson(response));
+                    Log.i("test", "lista5: " + userList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.i("test", "lista: " + userList);
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.d("Failed: ", "" + statusCode);
+                Log.d("Error : ", "" + throwable);
+            }
+
         });
     }
 

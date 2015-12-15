@@ -46,6 +46,7 @@ public class UserProfileActivity extends FragmentActivity {
     private static final String IS_PUBLIC_POLICY = "policy_setting";
     private Boolean publicPolicy;
     private ArrayList<CircleGroup> arrayOfCircles = new ArrayList<>();
+    private ArrayList<User> userList = new ArrayList<>();
     private String m_Text = "";
 
     @Override
@@ -55,6 +56,7 @@ public class UserProfileActivity extends FragmentActivity {
 
         final TextView circles = (TextView) findViewById(R.id.circles);
         final TextView events = (TextView) findViewById(R.id.events);
+        final TextView friends = (TextView) findViewById(R.id.friends);
         final Fragment firstFragment = new Fragment();
         final Fragment secondFragment = new Fragment();
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -104,6 +106,17 @@ public class UserProfileActivity extends FragmentActivity {
             }
         });
 
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UserProfileActivity.this, FriendsActivity.class);
+                Log.i("test", "lista: " + userList);
+
+                i.putExtra("friends", userList);
+                startActivity(i);
+            }
+        });
+
         events.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +131,7 @@ public class UserProfileActivity extends FragmentActivity {
 
         getCircles();
         getUser();
+        getFriends();
     }
 
     @Override
@@ -206,6 +220,14 @@ public class UserProfileActivity extends FragmentActivity {
         userAvatarView.setImageBitmap(null);
         Picasso.with(this).load(userAvatar).into(userAvatarView);
 
+    }
+
+    private void getFriends(){
+        NetworkProvider networkProvider = new NetworkProvider(this);
+        networkProvider.getFriends(userList);
+        // for testing purposes
+        User user = new User(100, "test test", "https://www.royalpanda.com/images/royal-panda-with-shadow.jpg");
+        userList.add(user);
     }
 
     private void getCircles(){

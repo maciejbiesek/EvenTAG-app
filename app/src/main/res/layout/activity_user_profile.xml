@@ -46,6 +46,15 @@
         android:layout_below="@id/user_city"
         android:layout_centerHorizontal="true">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/friends"
+            android:text="Znajomi"
+            android:textColor="#D8000000"
+            android:paddingTop="35dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
 
     <LinearLayout
