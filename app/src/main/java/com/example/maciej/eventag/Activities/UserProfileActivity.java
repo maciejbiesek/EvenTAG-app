@@ -224,10 +224,7 @@ public class UserProfileActivity extends FragmentActivity {
 
     private void getFriends(){
         NetworkProvider networkProvider = new NetworkProvider(this);
-        networkProvider.getFriends(userList);
-        // for testing purposes
-        User user = new User(100, "test test", "https://www.royalpanda.com/images/royal-panda-with-shadow.jpg");
-        userList.add(user);
+        userList = networkProvider.getFriends(userList);
     }
 
     private void getCircles(){
@@ -236,7 +233,6 @@ public class UserProfileActivity extends FragmentActivity {
         SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
         int myId = prefs.getInt(USER_ID, 0);
         networkProvider.getCircles(myId, arrayOfCircles);
-        Log.i("TEST", "TEST #1 " + arrayOfCircles + " " + myId);
     }
 
     private void showCircles(){

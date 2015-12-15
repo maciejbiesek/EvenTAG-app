@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -339,19 +340,16 @@ public class NetworkProvider {
         });
     }
 
-    public void getFriends(final ArrayList<User> userList){
+    public ArrayList<User> getFriends(final ArrayList<User> userList){
         String friends = "/friends";
-
-        Log.i("test", "lista3: " + userList);
+        final ArrayList<User> returnUser = new ArrayList<>();
 
         this.restClient.get(friends, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 userList.clear();
                 try {
-                    Log.i("test", "lista4: " + userList);
-                    userList.addAll(getUsersFromJson(response));
-                    Log.i("test", "lista5: " + userList);
+                    returnUser.addAll(getUsersFromJson(response));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -359,7 +357,6 @@ public class NetworkProvider {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.i("test", "lista: " + userList);
                 comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
             }
 
@@ -371,6 +368,8 @@ public class NetworkProvider {
             }
 
         });
+
+        return returnUser;
     }
 
     public void getAttenders(final Tag tag, final ImageAdapter adapter) {

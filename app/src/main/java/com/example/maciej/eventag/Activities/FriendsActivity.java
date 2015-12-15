@@ -32,7 +32,6 @@ public class FriendsActivity extends ActionBarActivity{
 
         Intent i = getIntent();
         userList = (ArrayList<User>) i.getSerializableExtra("friends");
-        Log.i("test", "lista: " + userList);
         publish();
     }
 
