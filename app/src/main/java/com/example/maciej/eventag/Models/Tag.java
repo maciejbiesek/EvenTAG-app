@@ -1,7 +1,10 @@
 package com.example.maciej.eventag.Models;
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import java.io.Serializable;
 
+@JsonObject
 public class Tag implements Serializable  {
 
     private int id;

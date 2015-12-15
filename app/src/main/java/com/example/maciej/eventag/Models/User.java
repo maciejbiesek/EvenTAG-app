@@ -1,8 +1,11 @@
 package com.example.maciej.eventag.Models;
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import java.io.Serializable;
 import static com.example.maciej.eventag.Models.Constants.*;
 
+@JsonObject
 public class User implements Serializable {
 
     private int id;
