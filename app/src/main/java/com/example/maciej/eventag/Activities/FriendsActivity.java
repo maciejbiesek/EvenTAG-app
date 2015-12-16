@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.InputType;
@@ -22,14 +20,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import static com.example.maciej.eventag.Models.Constants.KEYS;

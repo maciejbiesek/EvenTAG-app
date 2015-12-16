@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
-import com.google.android.gms.maps.model.Circle;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -46,7 +43,6 @@ public class CircleDetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_details);
-        Log.i("TEST", "TEST usersInCircle" + usersInCircle);
         getDetails();
 
         final TextView btn = (TextView) findViewById(R.id.buttonRaz);
@@ -70,9 +66,6 @@ public class CircleDetailsActivity extends ActionBarActivity {
                 finish();
             }
         });
-
-
-        Log.i("TEST", "TEST usersInCircle" + usersInCircle);
     }
 
     public class CircleDetailsAdapter extends ArrayAdapter<User> {
@@ -173,7 +166,6 @@ public class CircleDetailsActivity extends ActionBarActivity {
         int myId = prefs.getInt(USER_ID, 0);
 
         networkProvider.getCircleDetails(myId, circleId, usersInCircle);
-        Log.i("TEST", "TEST usersInCircle" + usersInCircle);
 
         //showDetails();
     }

@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
-import com.example.maciej.eventag.Activities.FriendsActivity;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.Models.CircleGroup;
 import com.example.maciej.eventag.Models.CustomMarker;
@@ -30,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -230,13 +228,19 @@ public class NetworkProvider {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Toast.makeText(context, "Coś poszło nie tak", Toast.LENGTH_SHORT);
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+                Log.d("Failed: ", "" + statusCode);
+                Log.d("Error : ", "" + throwable);
+            }
         });
     }
 
     private JSONObject parseCircleNameToJson(String circleName) throws JSONException {
         JSONObject circleNameJson = new JSONObject();
         circleNameJson.put("name", circleName);
-        circleNameJson.put("users", "");
 
         return circleNameJson;
     }
@@ -259,6 +263,13 @@ public class NetworkProvider {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Toast.makeText(context, "Coś poszło nie tak", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+                Log.d("Failed: ", "" + statusCode);
+                Log.d("Error : ", "" + throwable);
             }
         });
     }
