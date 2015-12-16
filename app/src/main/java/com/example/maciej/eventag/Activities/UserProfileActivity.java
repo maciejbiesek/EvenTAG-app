@@ -67,6 +67,7 @@ public class UserProfileActivity extends FragmentActivity {
                 transaction.replace(R.id.fragment, firstFragment);
                 showCircles();
                 final TextView addCircle = (TextView) findViewById(R.id.addCircleTextView);
+                addCircle.setText("Dodaj Krąg");
                 addCircle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

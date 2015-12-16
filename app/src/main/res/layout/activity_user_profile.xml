@@ -104,7 +104,7 @@
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Dodaj krąg"
+            android:text=""
             android:gravity="center_horizontal"
             android:textColor="#D8000000"/>
 

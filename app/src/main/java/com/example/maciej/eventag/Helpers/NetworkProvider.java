@@ -236,7 +236,37 @@ public class NetworkProvider {
     private JSONObject parseCircleNameToJson(String circleName) throws JSONException {
         JSONObject circleNameJson = new JSONObject();
         circleNameJson.put("name", circleName);
-        circleNameJson.put("users", "1,2,3");
+        circleNameJson.put("users", "");
+
+        return circleNameJson;
+    }
+
+    public void updateCircle(int userId, int circleId, String circleName, String usersParam) throws UnsupportedEncodingException, JSONException {
+        String put = "/users/" + userId + "/circles/" + circleId;
+
+        JSONObject circleNameJson = parseUpdateCircleToJson(circleName, usersParam);
+        StringEntity entity = new StringEntity(circleNameJson.toString());
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        Log.i("TEST", "Poszlo!");
+
+        this.restClient.put(put, entity, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, "Aktualizowanie zakończone!", Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Toast.makeText(context, "Coś poszło nie tak", Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    private JSONObject parseUpdateCircleToJson(String circleName, String usersParam) throws JSONException {
+        JSONObject circleNameJson = new JSONObject();
+        circleNameJson.put("name", circleName);
+        circleNameJson.put("users", usersParam);
 
         return circleNameJson;
     }
@@ -336,6 +366,29 @@ public class NetworkProvider {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    public void postFriend(int senderId, String recipientEmail){
+        // to do when Szymon will update server
+        String postFriend = "";
+        this.restClient.post(postFriend, null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+
+//                try {
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+                Log.d("NetworkProvider", "getCircleDetails FAILED");
             }
         });
     }

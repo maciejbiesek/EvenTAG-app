@@ -1,16 +1,20 @@
 package com.example.maciej.eventag.Activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,8 +23,12 @@ import android.widget.Toast;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.Models.User;
 import com.example.maciej.eventag.R;
+import com.google.android.gms.maps.model.Circle;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import static com.example.maciej.eventag.Models.Constants.CIRCLE_ID;
@@ -29,7 +37,8 @@ import static com.example.maciej.eventag.Models.Constants.KEYS;
 import static com.example.maciej.eventag.Models.Constants.USER_ID;
 
 public class CircleDetailsActivity extends ActionBarActivity {
-    private ArrayList<User> usersInCircle = new ArrayList<>();
+    public ArrayList<User> usersInCircle = new ArrayList<>();
+    String users = "";
     String circleName;
     Integer circleId;
 
@@ -88,6 +97,28 @@ public class CircleDetailsActivity extends ActionBarActivity {
                 public void onClick(View v) {
                     Log.i("TEST", "PROBOWALES USUNAC GOSCIA");
                     Toast.makeText(getApplicationContext(), "PROBOWALES USUNAC GOSCIA!", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CircleDetailsActivity.this);
+                    builder.setTitle("Czy na pewno usunąć " + user.getName() + "?");
+
+
+                    // Set up the buttons
+                    builder.setPositiveButton("TAK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            usersInCircle.remove(user);
+                            deleteUser();
+                            finish();
+                            startActivity(getIntent());
+                            Toast.makeText(CircleDetailsActivity.this, "Usunięto", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    builder.setNegativeButton("NIE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
                 }
             });
 
@@ -110,6 +141,25 @@ public class CircleDetailsActivity extends ActionBarActivity {
 
         public final long getItemId(int position) {
             return position;
+        }
+    }
+
+    private void deleteUser(){
+        NetworkProvider networkProvider = new NetworkProvider(CircleDetailsActivity.this);
+        SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
+        int myId = prefs.getInt(USER_ID, 0);
+        Intent i = getIntent();
+        circleName = i.getStringExtra(CIRCLE_NAME);
+        circleId = i.getIntExtra(CIRCLE_ID, 0);
+        for (User user : usersInCircle) {
+            users = users + "," + user.getId();
+        }
+        try {
+            networkProvider.updateCircle(myId, circleId, circleName, users);
+        } catch (JSONException e){
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 
