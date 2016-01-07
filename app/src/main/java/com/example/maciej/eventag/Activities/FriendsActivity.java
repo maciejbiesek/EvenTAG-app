@@ -47,40 +47,6 @@ public class FriendsActivity extends ActionBarActivity{
         FriendsAdapter adapter = new FriendsAdapter(FriendsActivity.this, userList);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
-        final Button button = (Button) findViewById(R.id.addFriend);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(FriendsActivity.this);
-                builder.setTitle("Podaj e-mail znajomego:");
-
-                // Set up the input
-                final EditText input = new EditText(FriendsActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        m_Text = input.getText().toString();
-                        postFriend(m_Text);
-                        SharedPreferences prefs = getSharedPreferences(KEYS, MODE_PRIVATE);
-                        finish();
-                        startActivity(getIntent());
-                        Toast.makeText(FriendsActivity.this, "Dodano znajomego", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-            }
-        });
     }
 
     private void postFriend(String friendEmail){
@@ -107,20 +73,11 @@ public class FriendsActivity extends ActionBarActivity{
             final User user = getItem(position);
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.circle_details, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.friends_details, parent, false);
             }
 
             final ImageView memberImage = (ImageView) convertView.findViewById(R.id.memberAvatar);
             final TextView memberName = (TextView) convertView.findViewById(R.id.memberName);
-
-            Button cirName = (Button) convertView.findViewById(R.id.deleteButton);
-            cirName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("TEST", "PROBOWALES USUNAC GOSCIA");
-                    Toast.makeText(getApplicationContext(), "PROBOWALES USUNAC GOSCIA!", Toast.LENGTH_SHORT).show();
-                }
-            });
 
             memberImage.setImageBitmap(null);
             Picasso.with(FriendsActivity.this).load(user.getAvatarUrl()).into(memberImage);
