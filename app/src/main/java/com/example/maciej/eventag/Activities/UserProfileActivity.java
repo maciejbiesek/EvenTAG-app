@@ -52,7 +52,6 @@ public class UserProfileActivity extends FragmentActivity {
         setContentView(R.layout.activity_user_profile);
 
         final TextView circles = (TextView) findViewById(R.id.circles);
-        final TextView events = (TextView) findViewById(R.id.events);
         final TextView friends = (TextView) findViewById(R.id.friends);
         final Fragment firstFragment = new Fragment();
         final Fragment secondFragment = new Fragment();
@@ -98,8 +97,6 @@ public class UserProfileActivity extends FragmentActivity {
                         builder.show();
                     }
                 });
-                circles.setTextColor(Color.parseColor("#df6231"));
-                events.setTextColor(Color.parseColor("#D8000000"));
                 Log.i("FRAGMENT", "FRAGMENT first");
             }
         });
@@ -114,18 +111,6 @@ public class UserProfileActivity extends FragmentActivity {
                 startActivity(i);
             }
         });
-
-        events.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                transaction.replace(R.id.fragment, secondFragment);
-                events.setTextColor(Color.parseColor("#df6231"));
-                circles.setTextColor(Color.parseColor("#D8000000"));
-                Log.i("FRAGMENT", "FRAGMENT second");
-                delCircles();
-            }
-        });
-
 
         getCircles();
         getUser();
@@ -167,6 +152,7 @@ public class UserProfileActivity extends FragmentActivity {
                     Intent intent = new Intent(UserProfileActivity.this, CircleDetailsActivity.class);
                     intent.putExtra(CIRCLE_NAME, cirName.getText());
                     intent.putExtra(CIRCLE_ID, circleGroup.getId());
+                    intent.putExtra("friends", userList);
                     startActivity(intent);
                 }
             });
