@@ -1,4 +1,4 @@
-package com.example.maciej.eventag.Models;
+package com.example.maciej.eventag.models;
 
 import java.io.Serializable;
 

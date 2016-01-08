@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -24,7 +23,7 @@ import com.facebook.login.widget.LoginButton;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 public class LoginActivity extends ActionBarActivity {
 

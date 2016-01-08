@@ -3,15 +3,11 @@ package com.example.maciej.eventag.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,28 +18,18 @@ import android.widget.Toast;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
-import com.example.maciej.eventag.Models.Tag;
-import com.example.maciej.eventag.Models.User;
+import com.example.maciej.eventag.models.Tag;
 
 import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 
 public class EditTagActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
@@ -128,6 +114,8 @@ public class EditTagActivity extends ActionBarActivity implements AdapterView.On
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

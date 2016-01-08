@@ -5,10 +5,12 @@
 
     <ScrollView
         android:id="@+id/scroll"
+        android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/min_details_rel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
@@ -134,6 +136,30 @@
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/members"
                     android:layout_margin="10dp" />
+
+                <TextView
+                    android:id="@+id/comments"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/attenders"
+                    android:text="@string/tag_comments"
+                    style="@style/SecondaryText"/>
+
+                <com.example.maciej.eventag.ExpandableHeightGridView
+                    android:id="@+id/comments_listview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/comments"
+                    android:numColumns="1"
+                    android:scrollbars="none"
+                    android:layout_margin="10dp" />
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="200dp" />
 
             </RelativeLayout>
     </ScrollView>

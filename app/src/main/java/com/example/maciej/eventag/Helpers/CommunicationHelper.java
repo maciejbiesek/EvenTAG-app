@@ -4,9 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.example.maciej.eventag.Models.Tag;
-import com.example.maciej.eventag.R;
-
 public class CommunicationHelper {
 
     private Context context;

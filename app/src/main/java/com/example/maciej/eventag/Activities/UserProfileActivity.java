@@ -24,8 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maciej.eventag.Helpers.NetworkProvider;
-import com.example.maciej.eventag.Models.CircleGroup;
-import com.example.maciej.eventag.Models.User;
+import com.example.maciej.eventag.models.CircleGroup;
+import com.example.maciej.eventag.models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
 
@@ -34,7 +34,7 @@ import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 
 public class UserProfileActivity extends FragmentActivity {

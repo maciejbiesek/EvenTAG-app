@@ -9,6 +9,7 @@
 
     <string name="internet_not_found">No network access</string>
     <string name="title_first">First set title!</string>
+    <string name="add_new_comment">Comment has been successfully added</string>
     <string name="add_new_tag">Tag has been successfully added</string>
     <string name="edit_tag">Tag has been successfully edited</string>
     <string name="delete_tag">Tag has been successfully deleted</string>
@@ -25,11 +26,15 @@
     <string name="tag_description">Description (optional)</string>
     <string name="tag_duration">Duration</string>
     <string name="tag_participants">Participants</string>
+    <string name="tag_comments">Comments (click to add new one)</string>
     <string name="tag_area">In your neighbourhood</string>
 
     <string name="server_connection">Connection to the server</string>
     <string name="server_fail">Server returned an error</string>
 
+
+    <string name="add_comment_title">Adding new comment</string>
+    <string name="add_comment_msg">Please fill this form</string>
     <string name="popup_edit_tag">Edit tag</string>
     <string name="popup_delete_tag">Delete tag</string>
     <string name="delete_tag_dialog_message">Are you sure?</string>

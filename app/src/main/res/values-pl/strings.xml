@@ -10,6 +10,7 @@
     <string name="internet_not_found">Brak dostępu do sieci</string>
     <string name="title_first">Najpierw podaj tytuł!</string>
     <string name="add_new_tag">Dodano nowe zdarzenie</string>
+    <string name="add_new_comment">Dodano nowy komentarz</string>
     <string name="edit_tag">Zedytowano zdarzenie</string>
     <string name="delete_tag">Usunięto zdarzenie</string>
     <string name="coords_fail">Niewłaściwe współrzędne</string>
@@ -25,11 +26,14 @@
     <string name="tag_description">Opis (opcjonalnie)</string>
     <string name="tag_duration">Czas trwania</string>
     <string name="tag_participants">Uczestnicy</string>
+    <string name="tag_comments">Komentarze (dodaj nowy)</string>
     <string name="tag_area">W twojej okolicy</string>
 
     <string name="server_connection">Połączenie z serwerem</string>
     <string name="server_fail">Serwer zwrócił niepoprawne dane</string>
 
+    <string name="add_comment_title">Dodawanie nowego komentarza</string>
+    <string name="add_comment_msg">Wpisz treść</string>
     <string name="popup_edit_tag">Edytuj zdarzenie</string>
     <string name="popup_delete_tag">Usuń zdarzenie</string>
     <string name="delete_tag_dialog_message">Jesteś pewien?</string>

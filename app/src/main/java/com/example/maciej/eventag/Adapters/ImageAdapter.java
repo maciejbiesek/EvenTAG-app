@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.maciej.eventag.Helpers.NetworkProvider;
-import com.example.maciej.eventag.Models.Tag;
-import com.example.maciej.eventag.Models.User;
+import com.example.maciej.eventag.models.Tag;
+import com.example.maciej.eventag.models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +26,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 public class ImageAdapter extends BaseAdapter {
 

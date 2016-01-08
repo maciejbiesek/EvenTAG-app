@@ -8,7 +8,7 @@ import com.loopj.android.http.RequestParams;
 
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 public class RestClient {
 

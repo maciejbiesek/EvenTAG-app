@@ -1,4 +1,4 @@
-package com.example.maciej.eventag.Models;
+package com.example.maciej.eventag.models;
 
 
 import android.graphics.Bitmap;
@@ -14,7 +14,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.io.InputStream;

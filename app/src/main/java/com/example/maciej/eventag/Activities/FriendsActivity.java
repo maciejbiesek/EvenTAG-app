@@ -20,14 +20,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.maciej.eventag.Models.User;
+import com.example.maciej.eventag.models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import static com.example.maciej.eventag.Models.Constants.KEYS;
-import static com.example.maciej.eventag.Models.Constants.USER_ID;
+import static com.example.maciej.eventag.models.Constants.KEYS;
+import static com.example.maciej.eventag.models.Constants.USER_ID;
 
 public class FriendsActivity extends ActionBarActivity{
     ArrayList<User> userList;

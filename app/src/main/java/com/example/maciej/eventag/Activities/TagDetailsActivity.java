@@ -4,42 +4,40 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
-import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.maciej.eventag.Adapters.CommentAdapter;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.ExpandableHeightGridView;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 import com.example.maciej.eventag.R;
-import com.example.maciej.eventag.Models.Tag;
-import com.pkmmte.view.CircularImageView;
-import com.squareup.picasso.Picasso;
+import com.example.maciej.eventag.ExpandableHeightListview;
+import com.example.maciej.eventag.models.Tag;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 public class TagDetailsActivity extends ActionBarActivity {
 
@@ -47,6 +45,7 @@ public class TagDetailsActivity extends ActionBarActivity {
     private int myId;
     private NetworkProvider networkProvider;
     private CommunicationHelper comHelper;
+    private CommentAdapter commentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +75,10 @@ public class TagDetailsActivity extends ActionBarActivity {
         ImageButton more = (ImageButton) findViewById(R.id.more);
         ImageButton navigateTo = (ImageButton) findViewById(R.id.navigate_to);
         ExpandableHeightGridView attendersGrid = (ExpandableHeightGridView) findViewById(R.id.attenders);
+        ExpandableHeightGridView commentsListView = (ExpandableHeightGridView) findViewById(R.id.comments_listview);
+
+        commentAdapter = new CommentAdapter(this);
+        commentsListView.setAdapter(commentAdapter);
 
         final ImageAdapter attendersAdapter = new ImageAdapter(this, myId, tag);
         networkProvider.getAttenders(tag, attendersAdapter);
@@ -93,9 +96,7 @@ public class TagDetailsActivity extends ActionBarActivity {
                 if (tag.getUserId() != myId) {
                     if (position == attendersAdapter.getLast()) {
                         networkProvider.attend(tag, attendersAdapter);
-                    }
-
-                    else {
+                    } else {
                         if (attendersAdapter.getItem(position).getId() == myId) {
                             showResignDialog(attendersAdapter);
                         }
@@ -103,6 +104,11 @@ public class TagDetailsActivity extends ActionBarActivity {
                 }
             }
         });
+
+        TextView commentsLabel = (TextView) findViewById(R.id.comments);
+        commentsLabel.setOnClickListener(onClickListener);
+
+        networkProvider.getComments(tag, commentAdapter);
 
         if (tag.getUserId() == myId) {
             more.setVisibility(View.VISIBLE);
@@ -152,9 +158,18 @@ public class TagDetailsActivity extends ActionBarActivity {
                     navigateTo();
                     break;
                 }
+                case R.id.comments: {
+                    addNewComment();
+                    break;
+                }
             }
         }
     };
+
+    private void addNewComment() {
+        RelativeLayout relative = (RelativeLayout) findViewById(R.id.min_details_rel);
+        showAddCommentsDialog(relative);
+    }
 
     private void navigateTo() {
         String uri = "google.navigation:q=" + String.valueOf(tag.getLat() + "," + String.valueOf(tag.getLng()));
@@ -219,6 +234,38 @@ public class TagDetailsActivity extends ActionBarActivity {
         }
         return timeDiff;
 
+    }
+
+    private void showAddCommentsDialog(final RelativeLayout view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final EditText code = new EditText(this);
+
+        builder.setMessage(R.string.add_comment_msg)
+                .setTitle(R.string.add_comment_title)
+                .setView(code)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String commentContent = code.getText().toString();
+                        try {
+                            networkProvider.sendComment(tag, commentContent, commentAdapter);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
     }
 
     private void showDeleteDialog() {

@@ -1,13 +1,9 @@
 package com.example.maciej.eventag.Activities;
 
 import android.content.Intent;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,7 +11,7 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.R;
-import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.models.Tag;
 import com.example.maciej.eventag.Adapters.TagAdapter;
 
 import java.text.ParseException;
@@ -26,7 +22,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 
 public class TagListActivity extends ActionBarActivity {

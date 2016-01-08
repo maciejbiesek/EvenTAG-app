@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.example.maciej.eventag.R;
-import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.models.Tag;
 import com.squareup.picasso.Picasso;
 
 public class TagAdapter extends BaseAdapter {

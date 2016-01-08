@@ -1,20 +1,41 @@
-package com.example.maciej.eventag.Models;
+package com.example.maciej.eventag.models;
+
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.io.Serializable;
 
+@JsonObject
 public class Tag implements Serializable  {
 
+    @JsonField
     private int id;
+
+    @JsonField(name = "user_id")
     private int userId;
+
+    @JsonField
     private String name;
+
+    @JsonField(name = "message")
     private String description;
+
+    @JsonField(name = "shutdown_time")
     private String shutdownTime;
+
+    @JsonField
     private String lat;
+
+    @JsonField
     private String lng;
+
     private User owner;
     private String address;
     private double distance;
+
+    @JsonField
     private User user;
+
     private boolean isActive;
 
     public Tag() {}
@@ -57,6 +78,13 @@ public class Tag implements Serializable  {
     public User getUser() {return user; }
     public boolean getIsActive() { return isActive; }
 
+    public void setId(int id) { this.id = id; }
+    public void setUserId(int userId) { this.userId = userId; }
+    public void setName(String name) { this.name = name; }
+    public void setDescription(String description) { this.description = description; }
+    public void setShutdownTime(String shutdownTime) { this.shutdownTime = shutdownTime; }
+    public void setLat(String lat) { this.lat = lat; }
+    public void setLng(String lng) { this.lng = lng; }
     public void setAddress(String _address) { address = _address; }
     public void setDistance(double _distance) { distance = _distance; }
     public void setUser(User user) { this.user = user; }

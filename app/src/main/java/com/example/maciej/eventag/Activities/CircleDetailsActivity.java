@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maciej.eventag.Helpers.NetworkProvider;
-import com.example.maciej.eventag.Models.User;
+import com.example.maciej.eventag.models.User;
 import com.example.maciej.eventag.R;
 import com.squareup.picasso.Picasso;
 
@@ -28,10 +28,10 @@ import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import static com.example.maciej.eventag.Models.Constants.CIRCLE_ID;
-import static com.example.maciej.eventag.Models.Constants.CIRCLE_NAME;
-import static com.example.maciej.eventag.Models.Constants.KEYS;
-import static com.example.maciej.eventag.Models.Constants.USER_ID;
+import static com.example.maciej.eventag.models.Constants.CIRCLE_ID;
+import static com.example.maciej.eventag.models.Constants.CIRCLE_NAME;
+import static com.example.maciej.eventag.models.Constants.KEYS;
+import static com.example.maciej.eventag.models.Constants.USER_ID;
 
 public class CircleDetailsActivity extends ActionBarActivity {
     public ArrayList<User> usersInCircle = new ArrayList<>();

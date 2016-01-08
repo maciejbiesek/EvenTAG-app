@@ -19,8 +19,8 @@ import android.widget.ViewAnimator;
 
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
-import com.example.maciej.eventag.Models.CustomMarker;
-import com.example.maciej.eventag.Models.Tag;
+import com.example.maciej.eventag.models.CustomMarker;
+import com.example.maciej.eventag.models.Tag;
 import com.example.maciej.eventag.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.example.maciej.eventag.Models.Constants.*;
+import static com.example.maciej.eventag.models.Constants.*;
 
 public class MapActivity extends ActionBarActivity implements
         OnMapReadyCallback,
@@ -236,7 +236,7 @@ public class MapActivity extends ActionBarActivity implements
         actBar.hide();
         mapAnimator.setDisplayedChild(0);
         networkProvider = new NetworkProvider(this);
-        networkProvider.getTags(tagList, map, mMarkersHashMap, actBar, mapAnimator);
+        networkProvider.getTags(tagList, 10, map, mMarkersHashMap, actBar, mapAnimator);
     }
 
     private void getTagsFromGson(String value) {
