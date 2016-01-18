@@ -43,6 +43,10 @@ public class TagListActivity extends BaseActivity {
         actBar = getSupportActionBar();
         showActionBar(actBar);
 
+        prepareView();
+    }
+
+    private void prepareView() {
         getLatLngFromPref();
 
         viewAnimator = (ViewAnimator) findViewById(R.id.animator2);
@@ -99,7 +103,7 @@ public class TagListActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 1) {
-            finish();
+            prepareView();
         }
     }
 }

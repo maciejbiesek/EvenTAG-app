@@ -36,7 +36,7 @@ public class BaseActivity extends ActionBarActivity {
         getFromPrefs();
         Intent intent = new Intent(this, TagListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivityForResult(intent, TAG_RESULT);
+        startActivity(intent);
         finish();
     }
 
