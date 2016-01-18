@@ -47,8 +47,7 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <activity android:name=".Activities.FriendsActivity">
-
+        <activity android:name=".Activities.FriendsActivity" >
         </activity>
 
         <meta-data
@@ -65,6 +64,10 @@
         </meta-data>
 
         <activity android:name=".Activities.EditTagActivity" >
+        </activity>
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

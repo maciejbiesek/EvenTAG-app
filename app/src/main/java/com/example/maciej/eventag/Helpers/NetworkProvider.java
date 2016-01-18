@@ -13,9 +13,9 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.example.maciej.eventag.Adapters.CommentAdapter;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
+import com.example.maciej.eventag.Adapters.TagAdapter;
 import com.example.maciej.eventag.models.CircleGroup;
 import com.example.maciej.eventag.models.Comment;
 import com.example.maciej.eventag.models.CustomMarker;
@@ -34,7 +34,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -94,8 +99,26 @@ public class NetworkProvider {
         });
     }
 
-    public void getTags(final List<Tag> tagsList, final int number, final GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap, final ActionBar actBar, final ViewAnimator mapAnimator) {
-        String get = "/tags?number=" + number + "&fields=user";
+    public void getTagsForList(final TagAdapter adapter, final ViewAnimator viewAnimator) {
+        String get = "/tags?number=" + 50 + "&fields=user&active=0";
+
+        this.restClient.get(get, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+
+                (new AsyncGetTagsForList(response, adapter, viewAnimator)).execute();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                comHelper.showUserDialog(context.getString(R.string.server_connection), context.getString(R.string.server_fail));
+            }
+        });
+    }
+
+    public void getTagsForMap(final List<Tag> tagsList, final int number, final GoogleMap map, final HashMap<Marker, Tag> mMarkersHashMap, final ActionBar actBar, final ViewAnimator mapAnimator) {
+        String get = "/tags?number=" + 50 + "&fields=user";
         this.restClient.get(get, null, new JsonHttpResponseHandler() {
 
             @Override
@@ -104,7 +127,7 @@ public class NetworkProvider {
                 isFinished = false;
                 tagsList.clear();
 
-                (new AsyncGetTags(tagsList, response, map, mMarkersHashMap, isFinished, actBar, mapAnimator)).execute();
+                (new AsyncGetTagsForMap(tagsList, response, map, mMarkersHashMap, isFinished, actBar, mapAnimator)).execute();
             }
 
             @Override
@@ -501,13 +524,7 @@ public class NetworkProvider {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Toast.makeText(context, context.getString(R.string.add_new_comment), Toast.LENGTH_SHORT);
-                try {
-                    Comment comment = LoganSquare.parse(response.toString(), Comment.class);
-                    commentAdapter.addComment(comment);
-                    commentAdapter.notifyDataSetChanged();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                getComments(tag, commentAdapter);
 
             }
 
@@ -563,8 +580,6 @@ public class NetworkProvider {
             JSONObject jsonData = jArray.getJSONObject(i);
             try {
                 Tag tag = getTag(jsonData, map, mMarkersHashMap);
-
-                tags.add(tag);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -650,13 +665,13 @@ public class NetworkProvider {
         actBar.setDisplayShowHomeEnabled(false);
         actBar.setDisplayShowCustomEnabled(true);
         actBar.setDisplayShowTitleEnabled(false);
-        View cView = ((Activity) context).getLayoutInflater().inflate(R.layout.custom_map_menu, null);
+        View cView = ((Activity) context).getLayoutInflater().inflate(R.layout.custom_menu, null);
         ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
 
         actBar.setCustomView(cView, layout);
     }
 
-    public class AsyncGetTags extends AsyncTask<String, Void, Boolean> {
+    public class AsyncGetTagsForMap extends AsyncTask<String, Void, Boolean> {
 
         private List<Tag> tagsList;
         private JSONArray response;
@@ -666,7 +681,7 @@ public class NetworkProvider {
         private ActionBar actBar;
         private ViewAnimator mapAnimator;
 
-        public AsyncGetTags(List<Tag> tagsList, JSONArray response, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap, boolean isFinished, ActionBar actBar, ViewAnimator mapAnimator) {
+        public AsyncGetTagsForMap(List<Tag> tagsList, JSONArray response, GoogleMap map, HashMap<Marker, Tag> mMarkersHashMap, boolean isFinished, ActionBar actBar, ViewAnimator mapAnimator) {
             this.tagsList = tagsList;
             this.response = response;
             this.map = map;
@@ -702,6 +717,128 @@ public class NetworkProvider {
             return isFinished;
         }
 
+    }
+
+    public class AsyncGetTagsForList extends AsyncTask<String, Void, Boolean> {
+
+        private List<Tag> tagsList;
+        private JSONArray response;
+        private TagAdapter adapter;
+        private ViewAnimator viewAnimator;
+
+        public AsyncGetTagsForList(JSONArray response, TagAdapter adapter, ViewAnimator viewAnimator) {
+            this.tagsList = new ArrayList<Tag>();
+            this.response = response;
+            this.adapter = adapter;
+            this.viewAnimator = viewAnimator;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            adapter.setTags(tagsList);
+            adapter.notifyDataSetChanged();
+
+            viewAnimator.setDisplayedChild(1);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            tagsList.clear();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            try {
+                tagsList.addAll(getTagsForListFromJson(response));
+                sortTagList(tagsList);
+                isFinished = true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+    }
+
+    private List<Tag> sortTagList(List<Tag> tags) {
+        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date todayDate = new Date();
+        Collections.sort(tags, new Comparator<Tag>() {
+            public int compare(Tag t1, Tag t2) {
+                Date date1 = null;
+                Date date2 = null;
+                try {
+                    date1 = df.parse(t1.getShutdownTime());
+                    date2 = df.parse(t2.getShutdownTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return date2.compareTo(date1);
+            }
+        });
+        ArrayList tmpList1 = new ArrayList<Tag>();
+        ArrayList tmpList2 = new ArrayList<Tag>();
+        for (Tag tag : tags) {
+            Date tagDate = null;
+            try {
+                tagDate = df.parse(tag.getShutdownTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (todayDate.before(tagDate)) {
+                tmpList1.add(tag);
+            }
+            else {
+                tmpList2.add(tag);
+            }
+        }
+        Collections.sort(tmpList1, new Comparator<Tag>() {
+            public int compare(Tag t1, Tag t2) {
+                return t1.getDistance().compareTo(t2.getDistance());
+            }
+        });
+        ArrayList tmpList3 = new ArrayList<Tag>();
+        tmpList3.addAll(tmpList1);
+        tmpList3.addAll(tmpList2);
+        tags.clear();
+        tags.addAll(tmpList3);
+
+        return tags;
+    }
+
+    private List<Tag> getTagsForListFromJson(JSONArray jArray) throws JSONException {
+        List<Tag> tags = new ArrayList<Tag>();
+        tags.clear();
+
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject jsonData = jArray.getJSONObject(i);
+            try {
+                Tag tag = getTagForList(jsonData);
+                tags.add(tag);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Tag tag = getTag(jsonData, map, mMarkersHashMap);
+        }
+        return tags;
+    }
+
+    private Tag getTagForList(JSONObject jsonObject) throws IOException {
+        AddressHelper helper = new AddressHelper(context);
+
+        Tag tag = LoganSquare.parse(jsonObject.toString(), Tag.class);
+
+        double lat = Double.parseDouble(tag.getLat());
+        double lng = Double.parseDouble(tag.getLng());
+
+        String address = helper.getAddress(lat, lng);
+        tag.setAddress(address);
+
+        return tag;
     }
 
 

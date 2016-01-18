@@ -106,29 +106,4 @@ public class LoginActivity extends ActionBarActivity {
         }
     }
 
-
-
-    // MENU
-
-    private void showActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        View cView = getLayoutInflater().inflate(R.layout.custom_login_menu, null);
-        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-
-        actionBar.setCustomView(cView, layout);
-    }
-
-    public void clickEvent(View v) {
-        switch (v.getId()) {
-            case R.id.logo: {
-                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
-                break;
-            }
-        }
-    }
-
 }

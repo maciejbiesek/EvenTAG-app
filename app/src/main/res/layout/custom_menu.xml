@@ -1,34 +1,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginRight="40dp"
-    android:weightSum="3" >
+    android:weightSum="4" >
 
     <ImageButton
-        android:id="@+id/left"
+        android:id="@+id/list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:layout_weight="1"
-        android:src="@drawable/ico_zda"
+        android:src="@drawable/list_ico"
         android:onClick="clickEvent" />
 
     <ImageButton
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:layout_weight="1"
-        android:src="@drawable/logo"
-        android:onClick="clickEvent" />
-
-    <ImageButton
-        android:id="@+id/right"
+        android:id="@+id/map"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:layout_weight="1"
-        android:src="@drawable/ico_wyda"
+        android:src="@drawable/map_ico"
+        android:onClick="clickEvent" />
+
+    <ImageButton
+        android:id="@+id/user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_weight="1"
+        android:src="@drawable/user_ico"
+        android:onClick="clickEvent" />
+
+    <ImageButton
+        android:id="@+id/cog"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_weight="1"
+        android:src="@drawable/cog_ico"
         android:onClick="clickEvent" />
 
 </LinearLayout>

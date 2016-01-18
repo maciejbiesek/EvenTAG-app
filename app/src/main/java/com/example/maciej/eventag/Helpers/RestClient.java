@@ -38,7 +38,7 @@ public class RestClient {
         this.client.delete(getAbsoluteUrl(url), responseHandler);
     }
 
-    private String getAbsoluteUrl(String relativeUrl) {
+    public String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
     }
 }

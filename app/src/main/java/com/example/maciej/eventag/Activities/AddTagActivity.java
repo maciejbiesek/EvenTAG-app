@@ -54,7 +54,8 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 getString(R.string.shutdown_option_1),
                 getString(R.string.shutdown_option_2),
                 getString(R.string.shutdown_option_3),
-                getString(R.string.shutdown_option_4)
+                getString(R.string.shutdown_option_4),
+                getString(R.string.shutdown_option_5)
         };
 
         spinner = (Spinner)findViewById(R.id.spinner);
@@ -90,6 +91,9 @@ public class AddTagActivity extends ActionBarActivity implements AdapterView.OnI
                 break;
             case 3:
                 shutdownTime = addTime(120);
+                break;
+            case 4:
+                shutdownTime = addTime(300);
                 break;
         }
 

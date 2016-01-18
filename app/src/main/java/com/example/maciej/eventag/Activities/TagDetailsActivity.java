@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,18 +13,16 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Adapters.CommentAdapter;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
 import com.example.maciej.eventag.ExpandableHeightGridView;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
-import com.example.maciej.eventag.R;
-import com.example.maciej.eventag.ExpandableHeightListview;
+
+import com.example.maciej.eventag.ExpandableHeightListView;
 import com.example.maciej.eventag.models.Tag;
 
 import org.json.JSONException;
@@ -39,7 +35,7 @@ import java.util.Date;
 
 import static com.example.maciej.eventag.models.Constants.*;
 
-public class TagDetailsActivity extends ActionBarActivity {
+public class TagDetailsActivity extends BaseActivity {
 
     private Tag tag;
     private int myId;
@@ -51,7 +47,8 @@ public class TagDetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tag_details);
-        showActionBar();
+        actBar = getSupportActionBar();
+        showActionBar(actBar);
 
         Intent i = getIntent();
         tag = (Tag) i.getExtras().getSerializable(TAG_KEY);
@@ -75,14 +72,16 @@ public class TagDetailsActivity extends ActionBarActivity {
         ImageButton more = (ImageButton) findViewById(R.id.more);
         ImageButton navigateTo = (ImageButton) findViewById(R.id.navigate_to);
         ExpandableHeightGridView attendersGrid = (ExpandableHeightGridView) findViewById(R.id.attenders);
-        ExpandableHeightGridView commentsListView = (ExpandableHeightGridView) findViewById(R.id.comments_listview);
+        ExpandableHeightListView commentsListView = (ExpandableHeightListView) findViewById(R.id.comments_listview);
 
         commentAdapter = new CommentAdapter(this);
         commentsListView.setAdapter(commentAdapter);
+        commentsListView.setExpanded(true);
 
         final ImageAdapter attendersAdapter = new ImageAdapter(this, myId, tag);
         networkProvider.getAttenders(tag, attendersAdapter);
         attendersGrid.setAdapter(attendersAdapter);
+        attendersGrid.setExpanded(true);
         attendersGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -182,6 +181,7 @@ public class TagDetailsActivity extends ActionBarActivity {
         Intent i = new Intent(this, MapActivity.class);
         i.putExtra(LAT, tag.getLat());
         i.putExtra(LNG, tag.getLng());
+        i.putExtra(TAG_KEY, tag);
         startActivity(i);
     }
 
@@ -340,35 +340,6 @@ public class TagDetailsActivity extends ActionBarActivity {
         if (resultCode == 1) {
             setResult(1);
             finish();
-        }
-    }
-
-
-
-    // MENU
-
-    private void showActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        View cView = getLayoutInflater().inflate(R.layout.custom_details_menu, null);
-        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-
-        actionBar.setCustomView(cView, layout);
-    }
-
-    public void clickEvent(View v) {
-        switch (v.getId()) {
-            case R.id.back: {
-                finish();
-                break;
-            }
-            case R.id.logo: {
-                Toast.makeText(this, getString(R.string.app_name), Toast.LENGTH_SHORT).show();
-                break;
-            }
         }
     }
 

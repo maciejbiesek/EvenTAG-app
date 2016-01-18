@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import static com.example.maciej.eventag.models.Constants.*;
 
 
-public class UserProfileActivity extends FragmentActivity {
+public class UserProfileActivity extends BaseActivity {
 
     private static final String USER_PREFERENCES = "RememberUserPreferences";
     private static final String IS_PUBLIC_POLICY = "policy_setting";
@@ -50,6 +50,8 @@ public class UserProfileActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+        actBar = getSupportActionBar();
+        showActionBar(actBar);
 
         final TextView circles = (TextView) findViewById(R.id.circles);
         final TextView friends = (TextView) findViewById(R.id.friends);

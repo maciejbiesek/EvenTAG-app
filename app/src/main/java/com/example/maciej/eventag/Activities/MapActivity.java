@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ViewAnimator;
 
@@ -42,7 +43,7 @@ import java.util.List;
 
 import static com.example.maciej.eventag.models.Constants.*;
 
-public class MapActivity extends ActionBarActivity implements
+public class MapActivity extends BaseActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -51,12 +52,11 @@ public class MapActivity extends ActionBarActivity implements
     double user_location_latitude;
     double latIntent;
     double lngIntent;
+    Tag tag;
     GoogleMap map;
     Location location;
     LatLng user_location;
     private boolean noIntent;
-    private boolean fromMemory;
-    private Gson gson;
 
     public static final String TAG = MapActivity.class.getSimpleName();
     public static List<Tag> tagList;
@@ -66,17 +66,14 @@ public class MapActivity extends ActionBarActivity implements
     private GoogleApiClient mGoogleApiClient;
     private CommunicationHelper comHelper;
     private ViewAnimator mapAnimator;
-    private ActionBar actBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
         actBar = getSupportActionBar();
         actBar.hide();
-        setContentView(R.layout.activity_map);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
 
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 
@@ -85,11 +82,11 @@ public class MapActivity extends ActionBarActivity implements
             noIntent = false;
             latIntent = Double.parseDouble(i.getStringExtra(LAT));
             lngIntent = Double.parseDouble(i.getStringExtra(LNG));
+            tag = (Tag) i.getExtras().getSerializable(TAG_KEY);
         }
         else {
             noIntent = true;
         }
-        fromMemory = prefs.getBoolean(FROM_MEMORY, false);
 
         getUserId();
         initialize();
@@ -209,15 +206,7 @@ public class MapActivity extends ActionBarActivity implements
             map.getUiSettings().setMapToolbarEnabled(false);
         }
 
-        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        String value = prefs.getString(TAGS_GSON, null);
-
-        if (fromMemory) {
-            getTagsFromGson(value);
-        }
-        else {
-            getTags();
-        }
+        getTags();
 
         if (noIntent) {
             user_location = new LatLng(user_location_latitude, user_location_longitude);
@@ -228,6 +217,12 @@ public class MapActivity extends ActionBarActivity implements
             LatLng location = new LatLng(latIntent, lngIntent);
             map.moveCamera(CameraUpdateFactory.newLatLng(location));
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+
+            MarkerOptions markerOption = new MarkerOptions().position(new LatLng(latIntent, lngIntent)).title(tag.getName()).snippet(tag.getDescription());
+            // markerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.marker);
+
+            (new CustomMarker.AsyncImage(markerOption, map, mMarkersHashMap, bmp, tag.getUser().getAvatarUrl(), tag)).execute();
         }
 
     }
@@ -236,23 +231,7 @@ public class MapActivity extends ActionBarActivity implements
         actBar.hide();
         mapAnimator.setDisplayedChild(0);
         networkProvider = new NetworkProvider(this);
-        networkProvider.getTags(tagList, 10, map, mMarkersHashMap, actBar, mapAnimator);
-    }
-
-    private void getTagsFromGson(String value) {
-        mapAnimator.setDisplayedChild(0);
-
-        Tag[] tags = gson.fromJson(value, Tag[].class);
-        tagList = new ArrayList<Tag>(Arrays.asList(tags));
-
-        for (Tag tag : tagList) {
-            MarkerOptions markerOption = new MarkerOptions().position(new LatLng(Double.parseDouble(tag.getLat()), Double.parseDouble(tag.getLng()))).title(tag.getName()).snippet(tag.getDescription());
-
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.marker);
-            (new CustomMarker.AsyncImage(markerOption, map, mMarkersHashMap, bmp, tag.getUser().getAvatarUrl(), tag)).execute();
-        }
-        mapAnimator.setDisplayedChild(1);
-        showActionBar(actBar);
+        networkProvider.getTagsForMap(tagList, 10, map, mMarkersHashMap, actBar, mapAnimator);
     }
 
     @Override
@@ -261,6 +240,9 @@ public class MapActivity extends ActionBarActivity implements
         location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         user_location_latitude = location.getLatitude();
         user_location_longitude = location.getLongitude();
+
+        saveOnPrefs(user_location_latitude, user_location_longitude);
+
         user_location = new LatLng(user_location_latitude, user_location_longitude);
         map.setMyLocationEnabled(true);
         if (noIntent) {
@@ -282,6 +264,15 @@ public class MapActivity extends ActionBarActivity implements
                 startActivity(intent);
             }
         });
+    }
+
+    private void saveOnPrefs(double lat, double lng) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS, MODE_PRIVATE).edit();
+
+        editor.putFloat(LAT, (float) lat);
+        editor.putFloat(LNG, (float) lng);
+
+        editor.commit();
     }
 
     @Override
@@ -312,7 +303,6 @@ public class MapActivity extends ActionBarActivity implements
                 user_location = new LatLng(user_location_latitude, user_location_longitude);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
             }
-            fromMemory = false;
             setUpMap();
         }
     }
@@ -320,55 +310,6 @@ public class MapActivity extends ActionBarActivity implements
     private void getUserId() {
         NetworkProvider networkProvider = new NetworkProvider(this);
         networkProvider.getUserId();
-    }
-
-    private void showTagList() {
-        Intent intent = new Intent(MapActivity.this, TagListActivity.class);
-        intent.putExtra(TAGS_LIST, (java.io.Serializable) tagList);
-        intent.putExtra(LAT, String.valueOf(user_location_latitude));
-        intent.putExtra(LNG, String.valueOf(user_location_longitude));
-
-        String value = gson.toJson(tagList);
-        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor tagEditor = prefs.edit();
-
-        fromMemory = true;
-        tagEditor.putString(TAGS_GSON, value);
-        tagEditor.putBoolean(FROM_MEMORY, fromMemory);
-        tagEditor.commit();
-
-        startActivityForResult(intent, TAG_RESULT);
-        overridePendingTransition(R.anim.slide_right_out, R.anim.slide_right_in);
-    }
-
-    // MENU
-
-    private void showActionBar(ActionBar actBar) {
-        actBar.show();
-        actBar.setDisplayHomeAsUpEnabled(false);
-        actBar.setDisplayShowHomeEnabled(false);
-        actBar.setDisplayShowCustomEnabled(true);
-        actBar.setDisplayShowTitleEnabled(false);
-        View cView = getLayoutInflater().inflate(R.layout.custom_map_menu, null);
-        ActionBar.LayoutParams layout = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-
-        actBar.setCustomView(cView, layout);
-    }
-
-    public void clickEvent(View v) {
-        switch (v.getId()) {
-            case R.id.left: {
-                fromMemory = false;
-                showTagList();
-                break;
-            }
-            case R.id.logo: {
-                fromMemory = false;
-                Intent intent = new Intent(MapActivity.this, UserProfileActivity.class);
-                startActivity(intent);
-                break;
-            }
-        }
     }
 
 

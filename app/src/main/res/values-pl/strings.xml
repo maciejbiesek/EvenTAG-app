@@ -6,6 +6,7 @@
     <string name="shutdown_option_2">30 minut</string>
     <string name="shutdown_option_3">1 godzina</string>
     <string name="shutdown_option_4">2 godziny</string>
+    <string name="shutdown_option_5">5 godzin</string>
 
     <string name="internet_not_found">Brak dostępu do sieci</string>
     <string name="title_first">Najpierw podaj tytuł!</string>
@@ -44,6 +45,12 @@
 
     <string name="attend_success">Teraz jesteś uczestnikiem tego zdarzenia</string>
     <string name="resign_success">Właśnie zrezygnowałeś z udziału w zdarzeniu</string>
+
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="settings_distance_text">Odległość:</string>
+    <string name="settings_public_text">Pokazać publiczne?</string>
+    <string name="settings_about">O aplikacji</string>
+    <string name="settings_logout">Wyloguj</string>
 
 
 </resources>
