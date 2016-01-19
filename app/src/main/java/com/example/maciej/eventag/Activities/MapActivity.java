@@ -93,6 +93,9 @@ public class MapActivity extends BaseActivity implements
     }
 
     private void initialize() {
+        // Initialize the HashMap for Markers and MyMarker object
+        mMarkersHashMap = new HashMap<Marker, Tag>();
+
         tagList = new ArrayList<Tag>();
 
         comHelper = new CommunicationHelper(this);
@@ -126,9 +129,6 @@ public class MapActivity extends BaseActivity implements
             }
         });
 
-
-        // Initialize the HashMap for Markers and MyMarker object
-        mMarkersHashMap = new HashMap<Marker, Tag>();
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -259,6 +259,7 @@ public class MapActivity extends BaseActivity implements
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Tag tagFromHashMap = mMarkersHashMap.get(marker);
+                tagFromHashMap.setIsActive(true);
                 Intent intent = new Intent(MapActivity.this, TagDetailsActivity.class);
                 intent.putExtra(TAG_KEY, tagFromHashMap);
                 startActivity(intent);

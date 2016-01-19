@@ -95,6 +95,7 @@ public class NetworkProvider {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt(USER_ID, userId);
                 editor.commit();
+                getUser(userId);
             }
         });
     }

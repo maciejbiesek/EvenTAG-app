@@ -50,10 +50,19 @@
         <activity android:name=".Activities.FriendsActivity" >
         </activity>
 
+        <!-- debug -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAa60Hk3c9G8ZJyEjb9lMW1PlDLI4T63hw" >
+            android:value="AIzaSyATYGZ57v0l4Bjui5XGTJGJQsNd2UCpW70" >
         </meta-data>
+
+        <!-- release -->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyCAKrcmIe0mT0A3HKvhfkea8xwwTZxQDj8" >-->
+        <!--</meta-data>-->
+
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" >
