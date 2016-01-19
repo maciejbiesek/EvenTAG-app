@@ -60,7 +60,8 @@ public class EditTagActivity extends ActionBarActivity implements AdapterView.On
                 getString(R.string.shutdown_option_1),
                 getString(R.string.shutdown_option_2),
                 getString(R.string.shutdown_option_3),
-                getString(R.string.shutdown_option_4)
+                getString(R.string.shutdown_option_4),
+                getString(R.string.shutdown_option_5)
         };
 
         spinner = (Spinner)findViewById(R.id.spinner);
@@ -98,6 +99,9 @@ public class EditTagActivity extends ActionBarActivity implements AdapterView.On
                 break;
             case 3:
                 shutdownTime = addTime(120);
+                break;
+            case 4:
+                shutdownTime = addTime(300);
                 break;
         }
 
@@ -164,7 +168,10 @@ public class EditTagActivity extends ActionBarActivity implements AdapterView.On
                 return 1;
             } else if (minutes > 30 && minutes <= 60) {
                 return 2;
-            } else return 3;
+            } else if (minutes > 60 && minutes <= 120) {
+                return 3;
+            }
+            else return 4;
         }
         catch (ParseException e) {
             return 0;
