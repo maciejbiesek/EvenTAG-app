@@ -1,6 +1,7 @@
 package com.example.maciej.eventag.Adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +82,9 @@ public class CommentAdapter extends BaseAdapter {
     }
 
     private void bindCommentToView(Comment comment, View commentView) {
-       // TextView ownerName = (TextView) commentView.findViewById(R.id.comment_owner_name);
-       // ownerName.setText(comment.getUser().getName());
+        TextView ownerName = (TextView) commentView.findViewById(R.id.comment_owner_name);
+        ownerName.setTypeface(null, Typeface.BOLD);
+        ownerName.setText(comment.getUser().getName());
 
         TextView commentContent = (TextView) commentView.findViewById(R.id.comment_content);
         commentContent.setText(comment.getComment());
