@@ -754,6 +754,7 @@ public class NetworkProvider {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            //mMarkersHashMap.clear();
             tagsList.clear();
         }
 
