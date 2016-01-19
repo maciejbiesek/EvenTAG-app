@@ -535,6 +535,49 @@ public class NetworkProvider {
         });
     }
 
+    public void editComment(final Tag tag, final Comment comment, final CommentAdapter commentAdapter) throws JSONException, IOException {
+        String editComment = "/tags/" + tag.getId() + "/comments/" + comment.getId();
+        JSONObject jsonComment = parseCommentToJson(comment);
+        StringEntity entity = new StringEntity(jsonComment.toString());
+        entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+
+        this.restClient.put(editComment, entity, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.edit_tag), Toast.LENGTH_SHORT);
+                getComments(tag, commentAdapter);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+    public void deleteComment(final Tag tag, final Comment comment, final CommentAdapter commentAdapter) throws JSONException, UnsupportedEncodingException {
+        String deleteComment = "/tags/" + tag.getId() + "/comments/" + comment.getId();
+
+        this.restClient.delete(deleteComment, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(context, context.getString(R.string.delete_tag), Toast.LENGTH_SHORT);
+                getComments(tag, commentAdapter);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Toast.makeText(context, context.getString(R.string.server_fail), Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
     private List<Comment> getCommentsFromJson(JSONArray jArray) throws JSONException {
         List<Comment> comments = new ArrayList<>();
         comments.clear();
@@ -657,6 +700,14 @@ public class NetworkProvider {
 //        tagJson.put("shutdown_time", tag.getShutdownTime());
 
         return tagJson;
+    }
+
+    private JSONObject parseCommentToJson(Comment comment) throws JSONException, IOException {
+
+        String jsonString = LoganSquare.serialize(comment);
+        JSONObject commentJson = new JSONObject(jsonString);
+
+        return commentJson;
     }
 
     private void showActionBar(ActionBar actBar) {

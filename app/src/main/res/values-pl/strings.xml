@@ -35,8 +35,12 @@
 
     <string name="add_comment_title">Dodawanie nowego komentarza</string>
     <string name="add_comment_msg">Wpisz treść</string>
+    <string name="edit_comment_title">Edytowanie komentarza</string>
+    <string name="edit_comment_msg">Wpisz treść</string>
     <string name="popup_edit_tag">Edytuj zdarzenie</string>
     <string name="popup_delete_tag">Usuń zdarzenie</string>
+    <string name="popup_edit_comment">Edytuj komentarz</string>
+    <string name="popup_delete_comment">Usuń komentarz</string>
     <string name="delete_tag_dialog_message">Jesteś pewien?</string>
     <string name="delete_tag_dialog_title">Usuwanie</string>
     <string name="edit_inactive_tag">Ten tag jest nieaktywny, jego czas minął. Nie możesz go edytować</string>
@@ -48,7 +52,8 @@
 
     <string name="title_activity_settings">Ustawienia</string>
     <string name="settings_distance_text">Odległość:</string>
-    <string name="settings_public_text">Pokazać publiczne?</string>
+    <string name="settings_public_see">Czy chcesz widzieć zdarzenia publiczne?</string>
+    <string name="settings_public_send">Czy chcesz publikować zdarzenia publicznie?</string>
     <string name="settings_about">O aplikacji</string>
     <string name="settings_logout">Wyloguj</string>
 

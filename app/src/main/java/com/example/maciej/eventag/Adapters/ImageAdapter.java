@@ -106,9 +106,9 @@ public class ImageAdapter extends BaseAdapter {
     private String getAvatarUrl() {
         NetworkProvider networkProvider = new NetworkProvider(context);
         networkProvider.getUserId();
-        SharedPreferences prefs = context.getSharedPreferences(KEYS, Context.MODE_PRIVATE);
-
         networkProvider.getUser(myId);
+
+        SharedPreferences prefs = context.getSharedPreferences(KEYS, Context.MODE_PRIVATE);
         String userAvatar = prefs.getString(USER_AVATAR, null);
 
         return userAvatar;

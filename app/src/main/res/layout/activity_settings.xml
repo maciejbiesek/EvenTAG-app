@@ -40,7 +40,7 @@
                 android:id="@+id/seekBar_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="0 km"
                 android:textAppearance="@style/PrimaryText"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/seekBar"/>
@@ -55,21 +55,45 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/settings_public_text"
-                android:id="@+id/publicText"
+                android:text="@string/settings_public_see"
+                android:id="@+id/publicSee"
                 android:layout_centerVertical="true"
                 style="@style/AppTheme.ProfileEdit.Row"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginRight="15dp" />
 
-            <Switch
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/publicText"
-                android:id="@+id/switch1" />
+                android:layout_alignParentRight="true"
+                android:id="@+id/ckeck1" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_line">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_public_send"
+                android:id="@+id/publicSend"
+                android:layout_centerVertical="true"
+                style="@style/AppTheme.ProfileEdit.Row"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="15dp" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/check2" />
 
         </RelativeLayout>
 

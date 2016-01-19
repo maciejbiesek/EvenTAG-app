@@ -23,6 +23,7 @@ import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 
 import com.example.maciej.eventag.ExpandableHeightListView;
+import com.example.maciej.eventag.models.Comment;
 import com.example.maciej.eventag.models.Tag;
 
 import org.json.JSONException;
@@ -77,6 +78,20 @@ public class TagDetailsActivity extends BaseActivity {
         commentAdapter = new CommentAdapter(this);
         commentsListView.setAdapter(commentAdapter);
         commentsListView.setExpanded(true);
+
+        commentsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final Comment comment = commentAdapter.getItem(position);
+                if (comment.getUserId() == myId) {
+                    showPopUpComments(view, comment);
+                }
+                else if (tag.getUserId() == myId) { // when you're host
+                    showPopUpHostComments(view, comment);
+                }
+                return false;
+            }
+        });
 
         final ImageAdapter attendersAdapter = new ImageAdapter(this, myId, tag);
         networkProvider.getAttenders(tag, attendersAdapter);
@@ -206,6 +221,15 @@ public class TagDetailsActivity extends BaseActivity {
         else comHelper.showUserDialog(getString(R.string.edit_tag), getString(R.string.edit_inactive_tag));
     }
 
+    private void deleteComment(Comment comment) throws UnsupportedEncodingException, JSONException {
+        networkProvider.deleteComment(tag, comment, commentAdapter);
+    }
+
+    private void editComment(Comment comment) throws IOException, JSONException {
+        RelativeLayout relative = (RelativeLayout) findViewById(R.id.min_details_rel);
+        showEditCommentsDialog(relative, comment);
+    }
+
     private String getTimeDiff(Date shutdownDate) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timeDiff = "";
@@ -268,6 +292,41 @@ public class TagDetailsActivity extends BaseActivity {
         builder.create().show();
     }
 
+    private void showEditCommentsDialog(final RelativeLayout view, final Comment comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final EditText code = new EditText(this);
+        code.setText(comment.getComment());
+        code.setSelection(comment.getComment().length());
+
+        builder.setMessage(R.string.edit_comment_msg)
+                .setTitle(R.string.edit_comment_title)
+                .setView(code)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String commentContent = code.getText().toString();
+                        comment.setComment(commentContent);
+                        try {
+                            networkProvider.editComment(tag, comment, commentAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
+    }
+
     private void showDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -277,6 +336,34 @@ public class TagDetailsActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteTag();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    private void showDeleteCommentDialog(final Comment comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.delete_tag_dialog_message)
+                .setTitle(R.string.delete_tag_dialog_title)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            deleteComment(comment);
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         dialog.cancel();
                     }
                 })
@@ -326,6 +413,54 @@ public class TagDetailsActivity extends BaseActivity {
                     }
                     case R.id.delete_tag_item: {
                         showDeleteDialog();
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    private void showPopUpComments(View v, final Comment comment) {
+        PopupMenu popup = new PopupMenu(this, v);
+
+        popup.getMenuInflater().inflate(R.menu.popup_comments, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.edit_comment: {
+                        try {
+                            editComment(comment);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                    case R.id.delete_comment: {
+                        showDeleteCommentDialog(comment);
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    private void showPopUpHostComments(View v, final Comment comment) {
+        PopupMenu popup = new PopupMenu(this, v);
+
+        popup.getMenuInflater().inflate(R.menu.popup_host_comments, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete_comment: {
+                        showDeleteCommentDialog(comment);
                         break;
                     }
                 }

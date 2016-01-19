@@ -25,7 +25,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 seekBar.setProgress(progress);
-                distanceStatus.setText(String.valueOf(progress));
+                distanceStatus.setText(progress + " km");
             }
 
             @Override
