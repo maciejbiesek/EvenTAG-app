@@ -123,7 +123,7 @@
                     android:text="@string/tag_participants"
                     style="@style/PrimaryText"/>
 
-                <com.example.maciej.eventag.ExpandableHeightGridView
+                <com.example.maciej.eventag.Views.ExpandableHeightGridView
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/attenders"
                     android:layout_width="wrap_content"
@@ -146,7 +146,7 @@
                     android:text="@string/tag_comments"
                     style="@style/PrimaryText"/>
 
-                <com.example.maciej.eventag.ExpandableHeightListView
+                <com.example.maciej.eventag.Views.ExpandableHeightListView
                     android:id="@+id/comments_listview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

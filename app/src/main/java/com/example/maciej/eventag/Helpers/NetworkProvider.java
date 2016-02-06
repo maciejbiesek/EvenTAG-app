@@ -495,9 +495,8 @@ public class NetworkProvider {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
-                    Log.v("BANG", String.valueOf(response));
                     List<Comment> comments = getCommentsFromJson(response);
-                    Log.v("BANG", String.valueOf(comments));
+                    Log.e("COMMENT GET RESPONSE", response.toString());
                     commentAdapter.setComments(comments);
                     commentAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
@@ -519,6 +518,7 @@ public class NetworkProvider {
         jObject.put("comment", comment);
 
         StringEntity entity = new StringEntity(jObject.toString());
+        Log.e("COMMENT SEND", jObject.toString());
         entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
         this.restClient.post(addComment, entity, new JsonHttpResponseHandler() {
@@ -587,6 +587,7 @@ public class NetworkProvider {
             JSONObject jsonData = jArray.getJSONObject(i);
             try {
                 Comment comment = LoganSquare.parse(jsonData.toString(), Comment.class);
+                Log.e("COMMENT GET", comment.getComment());
                 comments.add(comment);
             } catch (IOException e) {
                 e.printStackTrace();

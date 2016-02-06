@@ -56,6 +56,8 @@
     <string name="settings_public_send">Czy chcesz publikować zdarzenia publicznie?</string>
     <string name="settings_about">O aplikacji</string>
     <string name="settings_logout">Wyloguj</string>
+    
+    <string name="gps_network_not_enabled">Usługa pobierania lokalizacji jest obecnie wyłączona. Czy chcesz ją włączyć?</string>
 
 
 </resources>

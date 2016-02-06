@@ -18,11 +18,11 @@ import android.widget.TextView;
 import com.example.maciej.eventag.R;
 import com.example.maciej.eventag.Adapters.CommentAdapter;
 import com.example.maciej.eventag.Adapters.ImageAdapter;
-import com.example.maciej.eventag.ExpandableHeightGridView;
+import com.example.maciej.eventag.Views.ExpandableHeightGridView;
 import com.example.maciej.eventag.Helpers.CommunicationHelper;
 import com.example.maciej.eventag.Helpers.NetworkProvider;
 
-import com.example.maciej.eventag.ExpandableHeightListView;
+import com.example.maciej.eventag.Views.ExpandableHeightListView;
 import com.example.maciej.eventag.models.Comment;
 import com.example.maciej.eventag.models.Tag;
 
@@ -85,9 +85,6 @@ public class TagDetailsActivity extends BaseActivity {
                 final Comment comment = commentAdapter.getItem(position);
                 if (comment.getUserId() == myId) {
                     showPopUpComments(view, comment);
-                }
-                else if (tag.getUserId() == myId) { // when you're host
-                    showPopUpHostComments(view, comment);
                 }
                 return false;
             }

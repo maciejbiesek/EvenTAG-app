@@ -88,8 +88,13 @@ public class MapActivity extends BaseActivity implements
             noIntent = true;
         }
 
-        getUserId();
-        initialize();
+        if (locationEnabled()) {
+            getUserId();
+            initialize();
+        }
+        else {
+            showLocationDialog();
+        }
     }
 
     private void initialize() {
@@ -163,14 +168,23 @@ public class MapActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if ( mGoogleApiClient.isConnected() ) {
-            location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            user_location_latitude = location.getLatitude();
-            user_location_longitude = location.getLongitude();
-            user_location = new LatLng(user_location_latitude, user_location_longitude);
-        }
+        if (locationEnabled()) {
+            if (mGoogleApiClient != null) {
+                if (mGoogleApiClient.isConnected()) {
+                    location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    user_location_latitude = location.getLatitude();
+                    user_location_longitude = location.getLongitude();
+                    user_location = new LatLng(user_location_latitude, user_location_longitude);
+                }
 
-        setUpMap();
+                setUpMap();
+            }
+            else {
+                getUserId();
+                initialize();
+            }
+        }
+        else showLocationDialog();
     }
 
     @Override
@@ -181,7 +195,7 @@ public class MapActivity extends BaseActivity implements
     @Override
     protected  void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
@@ -297,14 +311,17 @@ public class MapActivity extends BaseActivity implements
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == 0) {
-            if (mGoogleApiClient.isConnected()) {
-                location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                user_location_latitude = location.getLatitude();
-                user_location_longitude = location.getLongitude();
-                user_location = new LatLng(user_location_latitude, user_location_longitude);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
+            if (locationEnabled()) {
+                if (mGoogleApiClient.isConnected()) {
+                    location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    user_location_latitude = location.getLatitude();
+                    user_location_longitude = location.getLongitude();
+                    user_location = new LatLng(user_location_latitude, user_location_longitude);
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(user_location, 12));
+                }
+                setUpMap();
             }
-            setUpMap();
+            else showLocationDialog();
         }
     }
 
